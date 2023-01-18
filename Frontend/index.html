@@ -4,30 +4,71 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
     <title>Home</title>
+    <script src="https://kit.fontawesome.com/e85167c40f.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <header>        
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="registration.html">Registrierung</a></li>
-            <li><a href="#">Produkte</a></li>
-        </ul>
-    </header>
-    <main>
+    <div class="nav-container padding-bottom">
+    <div class="nav-item"><a href="#products">Products</a></div>
+    <div class="nav-item"><a href="shop.html">Shop</a></div>
+    <div class="nav-item-first">
+      <a href="index.html" class="logo"><i class="fa-solid fa-cookie-bite logo"></i> crazy cookie</a>  
+    </div>
+    <div class="nav-item"><a href="login.html">LogIn</a></div>
+    <div class="nav-item"><a href="registration.html">SignIn</a></div>    
+    </div>
+    <div class="content-container home hero">    
+        <div class="centered"> 
+            <h2 class="h2-hero">Welcome to crazy cookie!</h2>
+            <p class="p-hero">Lorem ipsum dolor, sit amet consectetur.</p>  
+            <a href="shop.html" class="btn-hero">shop now</a>                            
+        </div> 
+     </div>
 
-        <h3>Das ist die Index Page</h3>
-
-
-
-    </main>
-    <footer>
-        <div>
-            <ul>
-                <li><a href="help.html">Hilfe</a></li>
-                <li><a href="impressum.html">Impressum</a></li>
-            </ul>            
+     <div class="content-container">
+        <h4 class="h4-products" id="products">Our Products</h4>
+     </div>
+     <div class="content-container">
+        <div class="product category-1">
+            <div class=""><a href="#"><p>Cookies</p></a></div>      
+          </div>    
+          <div class="product category-2">
+            <div><a href="#"><p>Brownies</p></a></div>    
+          </div>    
+          <div class="product category-3">
+            <div><a href="#"><p>Cupcakes</p></a></div>      
+          </div>       
         </div>
-    </footer>
+        <div class="content-container margin-top">
+            <div class="product category-4">
+                <div><a href="#"><p>Mixed</p></a></div>      
+              </div>    
+              <div class="product category-5">
+                <div><a href="#"><p>Cookies XXL</p></a></div>    
+              </div>    
+        </div>   
+          
+     </div>
+    <div class="content-container">
+        <div class="product">
+            <h4 class="h4-products">Someting</h4>
+            <p class="p-products">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aperiam distinctio amet consequatur enim placeat dolore veritatis molestiae, ipsa saepe exercitationem suscipit dolores, ipsum, maxime fuga corporis ad delectus maiores deleniti. Exercitationem ea, minima recusandae dolore impedit libero sapiente sed nihil id odio quisquam accusamus voluptatem ipsam perspiciatis ab asperiores. Consequatur.</p>
+        </div>
+        <div class="product">
+            <h4 class="h4-products">Something more</h4>
+            <p class="p-products">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fuga, officiis quo hic adipisci officia ex?</p>
+        </div>
+
+    </div>
+    <div class="footer-container">
+        <div><a href="impressum.html">Impressum</a></div>
+        <div>         
+            <a href="#"><i class="fa-brands fa-instagram"></i></a> <a href="#"><i class="fa-brands fa-tiktok"></i></a>            
+        </div>
+        <div><a href="help.html">Help</a></div>
+       </div>
 </body>
 </html>
