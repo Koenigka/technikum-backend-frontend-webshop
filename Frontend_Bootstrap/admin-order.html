@@ -65,10 +65,7 @@
               <li>
                 <a class="dropdown-item text-warning fs-2" href="admin-order.html">Orders</a>
               </li>
-              <li>
-                <a class="dropdown-item text-warning fs-2" href="#">item5</a>
-              </li>
-            </ul>
+                          </ul>
           </li>
         </ul>
       </div>
@@ -81,25 +78,37 @@
         <div class="col">
             <form action="#" method="post" novalidate>
                 <div class="row mb-2">
-                    <div class="col-md-6">
-                        <label for="category-id" class="fs-5">Category Id</label>
-                        <input type="text" class="form-control" id="category-id" value="" placeholder="">                       
+                  <div class="col-md-6">
+                      <label for="email" class="fs-5">E-Mail</label>
+                      <input type="e-mail" class="form-control" id="email" value="" placeholder="dolores@bauer.com">                       
+                  </div>
+                  <div class="col-md-6">
+                      <label for="username" class="fs-5">Username</label>
+                      <input type="username" class="form-control " name="uesrname" id="username" value="">                        
+                  </div>
+                  
+                  </div> 
+                  <div class="row mb-2">
+                    <div class="col-md-4">
+                      <label for="order-id" class="fs-5">Order Id</label>
+                      <input type="text" class="form-control" id="order-id" value="" placeholder="">                       
+                  </div>
+                  <div class="col-md-4">
+                    <label for="order-date" class="fs-5">Order date</label>
+                    <input type="date" class="form-control" id="order-date" value="" placeholder="">                       
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                  <div class="form-check mb-2">
+                      <input type="checkbox" class="form-check-input"  name="status" id="status" >
+                      <label class="form-check-label  fs-5" for="status" >
+                        ordered
+                      </label>
                     </div>
-                    <div class="col-md-6">
-                        <label for="category-name" class="fs-5">Category Name</label>
-                        <input type="text" class="form-control " name="category-name" id="category-name" value="">                        
-                    </div>
-                  </div>                    
+              </div>
+                  </div>                   
                     
                     <div class="row mb-2">
-                    <div class="col-md-2 d-flex align-items-end">
-                        <div class="form-check mb-2">
-                            <input type="checkbox" class="form-check-input"  name="status" id="status" >
-                            <label class="form-check-label  fs-5" for="status" >
-                              active
-                            </label>
-                          </div>
-                    </div>
+                    
                     
                   </div>    
                         <button type="submit" class="btn btn-warning text-white float-end mt-2 mb-2">search</button>
@@ -114,15 +123,25 @@
     <table class="table bg-light mt-3 fs-5">
       <thead>
         <tr>
-          <th scope="col">Categroy Id</th>
-          <th scope="col">Category Name</th>          
+          <th scope="col">Order Id</th>
+          <th scope="col">User Id</th>  
+          <th scope="col">First Name</th>          
+          <th scope="col">Last Name</th> 
+          <th scope="col">E-Mail</th>          
+          <th scope="col">Order Date</th> 
+          <th scope="col">Status</th> 
           <th scope="col"></th>
         </tr>
       </thead>
       <tbody>
           <tr>
           <td scope="col">1</td>
-          <td scope="col">Cupcakes</td>          
+          <td scope="col">1</td>
+          <td scope="col">Dolores</td>          
+          <td scope="col">Bauer</td>          
+          <td scope="col">dolores@bauer.com</td>          
+          <td scope="col">12.01.2023</td>  
+          <td scope="col">shipped</td>  
           <td scope="col"><a href="#" class="btn btn-outline-warning">edit</a></td>
           <td scope="col">
               <form action="#" method="post" class="delete" data-title="delete" data-body="delete?">                 
@@ -132,7 +151,12 @@
       </tr>
       <tr>
         <td scope="col">2</td>
-          <td scope="col">Macarones</td>          
+          <td scope="col">1</td>
+          <td scope="col">Dolores</td>          
+          <td scope="col">Bauer</td>          
+          <td scope="col">dolores@bauer.com</td>          
+          <td scope="col">20.01.2023</td>       
+          <td scope="col">ordered</td>
           <td scope="col"><a href="#" class="btn btn-outline-warning">edit</a></td>
           <td scope="col">
               <form action="#" method="post" class="delete" data-title="delete" data-body="delete?">                 
@@ -145,56 +169,231 @@
   </div>
     
   
- <div class="container rounded mt-5 border border-warning bg-light shadow-lg">
-    <p class="fs-4 fw-bold pt-2">New Category</p>
+  <div
+      class="container rounded mt-5 border border-warning bg-light shadow-lg"
+    >
+      <p class="fs-4 fw-bold pt-2">Edit Order</p>
       <div class="row">
-          <div class="col">
-  <form method="POST" action="">
-     
-  
-      <div class="row mt-3 mb-3 ">
-        <div class="col-md-3">
-            <div class="form-group">
-            <label for="category-id" class=" fs-5">Category Id</label>
-            <input id="category-id" type="text" class="form-control " name="category-id" value="" required >
+        <div class="col">
+          <form method="POST" action="">
+            <div class="row mb-3">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="order-id" class="fs-5">Order Id</label>
+                  <input
+                    id="order-id"
+                    type="text"
+                    class="form-control"
+                    name="order-id"
+                    value=""
+                    required
+                  />
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="order-date" class="fs-5">Order Date</label>
+                  <input
+                    id="order-date"
+                    type="date"
+                    class="form-control"
+                    name="order-date"
+                    value=""
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="order-status" class="fs-5">Order Status</label>
+                  <select name="order-status" class="form-select fs-5" id="" required>
+                    <option value=""></option>
+                    <option value="1">ordered</option>
+                    <option value="2">shipped</option>
+                    <option value="3">canceled</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="row mt-3 mb-3">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="title" class="fs-5">Title</label>
+
+                  <select name="Title" class="form-select fs-5" id="" required>
+                    <option value=""></option>
+                    <option value="1">Mr</option>
+                    <option value="2">Mrs</option>
+                    <option value="3">Ms</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="first-name" class="fs-5">First Name</label>
+                  <input
+                    id="first-name"
+                    type="text"
+                    class="form-control"
+                    name="first-name"
+                    value=""
+                    required
+                  />
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="last-name" class="fs-5">Last Name</label>
+                  <input
+                    id="last-name"
+                    type="text"
+                    class="form-control"
+                    name="last-name"
+                    value=""
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="street" class="fs-5">Street</label>
+                  <input
+                    id="street"
+                    type="text"
+                    class="form-control"
+                    name="street"
+                    value=""
+                    required
+                  />
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="zip" class="fs-5">Zip</label>
+                  <input
+                    id="zip"
+                    type="text"
+                    class="form-control"
+                    name="zip"
+                    value=""
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="city" class="fs-5">City</label>
+                  <input
+                    id="city"
+                    type="text"
+                    class="form-control"
+                    name="city"
+                    value=""
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            
+
+            <div class="row mx-2">
+              
+              <table class="table bg-light mt-3  fs-5">
+                <thead>
+                  <tr>
+                    <th scope="col">Product Id</th>
+                    <th scope="col">Product Name</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td scope="col">1</td>
+                    <td scope="col">Cupcake Berries</td>
+                    <td scope="col">7.99</td>
+                    <td scope="col"> <input type="number" name="quantity" id="quantity" value="" placeholder="3">
+                       </td>
+                    <td scope="col">
+                     
+                    </td>
+                    <td scope="col">
+                      <form
+                        action="#"
+                        method="post"
+                        class="delete"
+                        data-title="delete"
+                        data-body="delete?"
+                      >
+                        <button
+                          type="submit"
+                          class="btn btn-outline-danger"
+                          data-bs-toggle="modal"
+                          data-bs-target="#deleteModal"
+                        >
+                          delete
+                        </button>
+                      </form>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td scope="col">2</td>
+                    <td scope="col">White Cookies</td>
+                    <td scope="col">3.99</td>
+                    <td scope="col"><input type="number" name="quantity" id="quantity" value="" placeholder="5"></td>
+                    <td scope="col">
+                    </td>
+                    <td scope="col">
+                      <form
+                        action="#"
+                        method="post"
+                        class="delete"
+                        data-title="delete"
+                        data-body="delete?"
+                      >
+                        <button
+                          type="submit"
+                          class="btn btn-outline-danger"
+                          data-bs-toggle="modal"
+                          data-bs-target="#deleteModal"
+                        >
+                          delete
+                        </button>
+                      </form>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td scope="col" class="fw-bold">Sum</td>
+                    <td scope="col"></td>
+                    <td scope="col" class="fw-bold">32.96</td>
+                    <td scope="col"></td>
+                    <td scope="col"></td>
+                    <td scope="col"></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <button
+              type="submit"
+              class="btn btn-warning text-white float-end mt-2 mb-2"
+            >
+              save
+            </button>
+          </form>
         </div>
-        </div>
-        <div class="col-md-9">
-          <div class="form-group">
-          <label for="category-name" class=" fs-5">Category Name</label>
-          <input id="category-name" type="text" class="form-control " name="category-name" value="" required >
       </div>
-      </div>
-      </div>
+    </div>
   
-  
-      <div class="row mb-3">
-          <div class="col-md-12">
-              <div class="form-group">
-              <label for="product-description" class=" fs-5">Category Description</label>
-              <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-          </div>
-          </div>
-      </div>
   
       
-    <div class="row mb-3">
-      <div class="col-md-12">
-      <label for="category-img" class="fs-5">Category Image</label>
-      <div class="input-group mb-2">
-          <input class="form-control" type="file" id="file" name="file"  required>
-        </div>
-    </div>
-    </div>
-              <button type="submit" class="btn btn-warning text-white float-end mt-2 mb-2"> save</button>
-  
-  </form>
-  </div>
-  </div>
-  </div>
-
-   
-    </div>
 
       <div class="container-fluid bg-warning mt-5 footer">
         <div class="row">
