@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/main.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style_bootstrap.css">
+    <title>template</title>
+    <script src="https://kit.fontawesome.com/e85167c40f.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-warning sticky-top">
+    <div class="container-fluid">
+      <a class="navbar-brand text-white fs-1 text" href="index.html"
+        ><i class="fa-solid fa-cookie-bite logo"></i> CrazyCookie</a>
+
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav nav justify-content-center">
+          <li class="nav-item mx-5">
+            <a class="nav-link text-white fs-2" href="#">Shop</a>
+          </li>          
+        </ul>
+        <ul class="navbar-nav nav justify-content-center">
+          <li class="nav-item mx-5">
+            <a href=""><i class="fa-solid fa-basket-shopping fs-1 text-white"></i></a>
+          </li>
+          <li class="nav-item mx-5">
+            <a href=""><i class="fa-solid fa-user fs-1 text-white"></i></a>
+          </li>
+        </ul>
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item dropdown mx-5">
+            <a class="nav-link dropdown-toggle text-white fs-2"data-bs-toggle="dropdown" href="#">Admin</a>
+            <ul class="dropdown-menu">
+                <li>
+                    <a class="dropdown-item text-warning fs-2" href="admin-user.html">Users</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item text-warning fs-2" href="admin-product.html"
+                      >Products</a
+                    >
+                  </li>
+                  <li>
+                    <a class="dropdown-item text-warning fs-2" href="admin-category.html"
+                      >Categories</a
+                    >
+                  </li>
+                  <li>
+                    <a class="dropdown-item text-warning fs-2" href="admin-order.html">Orders</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item text-warning fs-2" href="#">item5</a>
+                  </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+ <div class="container pt-5">
+    <button class="btn btn-warning text-white shadow-lg fs-5 ">new product</button> 
+ </div>
+
+ <div class="container rounded mt-5 border border-warning bg-light shadow-lg">
+  <p class="fs-4 fw-bold pt-2">New Product</p>
+    <div class="row">
+        <div class="col">
+<form method="POST" action="">
+   
+
+    <div class="row mt-3 mb-3 ">
+      <div class="col-md-6">
+        <div class="form-group">
+        <label for="product-name" class=" fs-5">Product Name</label>
+        <input id="product-name" type="text" class="form-control " name="product-name" value="" required >
+    </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+      <label for="product-category" class="fs-5">Product Category</label>
+
+      <select name="product-category" class="form-select fs-5" id="product-category" required>
+      <option value=""></option>
+      <option value="1">category1</option>
+      <option value="2">category2</option>
+      <option value="3">category3</option>
+    </select>
+  </div>  
+    </div>
+       
+   
+    </div>
+
+
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <div class="form-group">
+            <label for="product-description" class=" fs-5">Product Description</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+        </div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+
+      <div class="col-md-4">
+          <div class="form-group">
+          <label for="product-price" class="fs-5" >Product Price</label>
+          <input id="product-price" type="text" class="form-control " name="product-price" value="" required >
+
+        
+      </div>
+      </div>
+      <div class="col-md-4">
+          <div class="form-group">
+          <label for="product-stock" class="   fs-5">Product Stock</label>
+          <input id="product-stock" type="text" class="form-control " name="product-stock" value="" required >
+
+        </div>
+      </div>
+      <div class="col-md-4 d-flex align-items-end">
+        <div class="form-check mb-2 ">
+          <input type="checkbox" class="form-check-input"  name="status" id="status">
+          <label class="form-check-label fs-5" for="status" >
+            active
+          </label>
+        </div>
+      </div>
+     
+  </div>  
+  <div class="row mb-3">
+    <div class="col-md-12">
+    <label for="product-img" class="fs-5">Product Image</label>
+    <div class="input-group mb-2">
+        <input class="form-control" type="file" id="file" name="file"  required>
+      </div>
+  </div>
+  </div>
+            <button type="submit" class="btn btn-warning text-white float-end mt-2 mb-2"> create new product</button>
+
+</form>
+</div>
+</div>
+</div>
+
+      <div class="container bg-light mt-5 rounded border border-warning shadow-lg">
+        <p class="fs-4 fw-bold pt-2">Search for Products</p>      
+      <div class="row">
+        <div class="col">
+            <form action="#" method="post" novalidate>
+                <div class="row mb-2">
+                    <div class="col-md-6">
+                        <label for="product-id" class="fs-5">Product Id</label>
+                        <input type="text" class="form-control" id="product-id" value="" placeholder="">                       
+                    </div>
+                    <div class="col-md-6">
+                        <label for="product-title" class="fs-5">Product Title</label>
+                        <input type="product-title" class="form-control " name="product-title" id="product-title" value="">                        
+                    </div>
+                  </div> 
+                    <div class="row mb-2" >
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="product-category" class="fs-5">Product Category</label>
+        
+                          <select name="product-category" class="form-select fs-5" id="product-category" required>
+                          <option value=""></option>
+                          <option value="1">category1</option>
+                          <option value="2">category2</option>
+                          <option value="3">category3</option>
+                        </select>
+                      </div>                       
+                    </div>
+                    
+                    
+                    <div class="col-md-2 d-flex align-items-end">
+                        <div class="form-check mb-2">
+                            <input type="checkbox" class="form-check-input"  name="status" id="status" >
+                            <label class="form-check-label  fs-5" for="status" >
+                              active
+                            </label>
+                          </div>
+                    </div>
+                  </div>    
+                        <button type="submit" class="btn btn-warning text-white float-end mt-2 mb-2">search</button>
+
+            </form>
+        </div>
+
+    </div>
+    </div>
+
+    <div class="container bg-light mt-5 border border-warning rounded shadow-lg">
+    <table class="table bg-light mt-3 fs-5">
+      <thead>
+        <tr>
+          <th scope="col">Product Id</th>
+          <th scope="col">Product Name</th>
+          <th scope="col">Product Category</th>
+          <th scope="col">Product Price</th>
+          <th scope="col">Product Stock</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr>
+          <td scope="col">1</td>
+          <td scope="col">White Cookie</td>
+          <td scope="col">Cookies</td>
+          <td scope="col">5.99</td>
+          <td scope="col">35</td>
+          <td scope="col"><a href="#" class="btn btn-outline-warning">edit</a></td>
+          <td scope="col">
+              <form action="#" method="post" class="delete" data-title="delete" data-body="delete?">                 
+                  <button type="submit" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">delete</button>
+                </form>
+          </td>
+      </tr>
+      <tr>
+        <td scope="col">2</td>
+        <td scope="col">Cupcake Berries</td>
+        <td scope="col">Cupcakes</td>
+        <td scope="col">7.99</td>
+        <td scope="col">20</td>
+        <td scope="col"><a href="#" class="btn btn-outline-warning">edit</a></td>
+        <td scope="col">
+            <form action="#" method="post" class="delete" data-title="delete" data-body="delete?">                 
+                <button type="submit" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">delete</button>
+              </form>
+        </td>
+    </tr>
+      </tbody>
+    </table>
+  </div>
+    
+    <div class="container rounded mt-5 border border-warning bg-light shadow-lg">
+      <p class="fs-4 fw-bold pt-2">Edit Product</p>
+      <div class="row">
+        <div class="col">
+<form method="POST" action="">
+   
+
+    <div class="row mt-3 mb-3 ">
+      <div class="col-md-2">
+        <div class="form-group">
+        <label for="product-id" class=" fs-5">Product Id</label>
+        <input id="product-id" type="text" class="form-control " name="product-id" value="" required >
+    </div>
+    </div>
+      <div class="col-md-5">
+        <div class="form-group">
+        <label for="product-name" class=" fs-5">Product Name</label>
+        <input id="product-name" type="text" class="form-control " name="product-name" value="" required >
+    </div>
+    </div>
+    <div class="col-md-5">
+      <div class="form-group">
+      <label for="product-category" class="fs-5">Product Category</label>
+
+      <select name="product-category" class="form-select fs-5" id="product-category" required>
+      <option value=""></option>
+      <option value="1">category1</option>
+      <option value="2">category2</option>
+      <option value="3">category3</option>
+    </select>
+  </div>  
+    </div>
+       
+   
+    </div>
+
+
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <div class="form-group">
+            <label for="product-description" class=" fs-5">Product Description</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+        </div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+
+      <div class="col-md-4">
+          <div class="form-group">
+          <label for="product-price" class="fs-5" >Product Price</label>
+          <input id="product-price" type="text" class="form-control " name="product-price" value="" required >
+
+        
+      </div>
+      </div>
+      <div class="col-md-4">
+          <div class="form-group">
+          <label for="product-stock" class="   fs-5">Product Stock</label>
+          <input id="product-stock" type="text" class="form-control " name="product-stock" value="" required >
+
+        </div>
+      </div>
+      <div class="col-md-4 d-flex align-items-end">
+        <div class="form-check mb-2 ">
+          <input type="checkbox" class="form-check-input"  name="status" id="status">
+          <label class="form-check-label fs-5" for="status" >
+            active
+          </label>
+        </div>
+      </div>
+     
+  </div>  
+  <div class="row mb-3">
+    <div class="col-md-12">
+    <label for="product-img" class="fs-5">Product Image</label>
+    <div class="input-group mb-2">
+        <input class="form-control" type="file" id="file" name="file"  required>
+      </div>
+  </div>
+  </div>
+            <button type="submit" class="btn btn-warning text-white float-end mt-2 mb-2"> save</button>
+
+</form>
+</div>
+</div>
+
+   
+    </div>
+
+      <div class="container-fluid bg-warning mt-5 footer">
+        <div class="row">
+          <div class="col p-2 float-start ms-5"><a href="#" class="text-white text-decoration-none fs-4">Help</a></div>
+          <div class="col p-2"><a href="#"><i class="fa-brands fa-instagram text-white float-end fs-3"></i></a></div>
+          <div class="col p-2"><a href="#"><i class="fa-brands fa-tiktok text-white float-start fs-3"></i></a></div>
+          <div class="col p-2 float-end me-5"><a href="#" class="text-white text-decoration-none float-end fs-4">Impressum</a></div>
+        </div>
+      </div>
+
+    
+</body>
+</html>
