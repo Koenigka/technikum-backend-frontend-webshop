@@ -17,13 +17,13 @@ public class ProductController {
     public ProductController(){
 
         this.products = new ArrayList<>();
-        this.products.add(new Product(1L, "Chocolate Cookie", "wonderfull Cookie, with dark chocolate",1L, 5.99, 100));
-        this.products.add(new Product(2L, "White Cookie", "wonderfull Cookie, with white chocolate",2L, 6.99, 150));
+        this.products.add(new Product(1L, "Chocolate Cookie", "wonderfull Cookie with white", "img/cookie", 1L, 5.99, 100));
+        this.products.add(new Product(2L, "White Cookie", "wonderfull Cookie with dark", "img/cookie",2L, 6.99, 150));
 
     }
 
     @PostMapping("")
-    public Product create(Product product){
+    public Product create(@RequestBody Product product){
 
         this.products.add(product);
         return product;
