@@ -1,8 +1,6 @@
 package at.technikum.webshop_backend.model;
 
-import java.security.SecureRandom;
-
-public class Product {
+public class Category {
 
     private Long id;
 
@@ -12,22 +10,18 @@ public class Product {
 
     private String img;
 
-    private double price;
-
-    private int stock;
     private String type;
 
-    public Product(Long id, String title, String description, String img, double price, int stock, String type) {
+
+    public Category() {
+    }
+
+    public Category(Long id, String title, String description, String img, String type) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.img = img;
-        this.price = price;
-        this.stock = stock;
         this.type = type;
-    }
-
-    public Product() {
     }
 
     public Long getId() {
@@ -60,22 +54,6 @@ public class Product {
 
     public void setImg(String img) {
         this.img = img;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public int getStock() {
-        return stock;
-    }
-
-    public void setStock(int stock) {
-        this.stock = stock;
     }
 
     public String getType() {
