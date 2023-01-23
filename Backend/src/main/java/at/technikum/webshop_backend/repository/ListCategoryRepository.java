@@ -16,10 +16,10 @@ public class ListCategoryRepository implements CategoryRepository {
     private static final String MACARONES_URL = "img/macarons-5264197_1920.jpg";
 
     {
-        categories.add(new Category(1L, "Cookie", "dark & white chocolate", COOKIE_URL, "Cookie"));
-        categories.add(new Category(2L, "Cupcake", "with berries", CUPCAKE_URL, "Cupcake"));
-        categories.add(new Category(3L, "Brownie", "dark chocolate", BROWNIE_URL,  "Brownie"));
-        categories.add(new Category(4L, "Macaron", "strawberry", MACARONES_URL, "Macaron"));
+        categories.add(new Category(1L, "Cookie", "Some quick example text to build on the card title and make up the bulk of the card's content dark & white chocolate", COOKIE_URL, "Cookie"));
+        categories.add(new Category(2L, "Cupcake", "Some quick example text to build on the card title and make up the bulk of the card's content with berries", CUPCAKE_URL, "Cupcake"));
+        categories.add(new Category(3L, "Brownie", "Some quick example text to build on the card title and make up the bulk of the card's content dark chocolate", BROWNIE_URL,  "Brownie"));
+        categories.add(new Category(4L, "Macaron", "Some quick example text to build on the card title and make up the bulk of the card's content strawberry", MACARONES_URL, "Macaron"));
 
     }
 

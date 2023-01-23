@@ -22,13 +22,15 @@ function createCategory(category) {
 
 const img = $(`<img src="${category.img}" class="card-img-top" alt="...">`);
 const title = $(`<h5 class="card-title">${category.title}</h5>`);
-const description = $(`<p class="${category.description}"</p>`);
-const button = $(`<a href="#" class="btn btn-warning text-white">Buy ${category.title}</a>`);
+const description = $(`<p class="card-text">${category.description}</p>`);
+const button = $(`<a href="#" class="btn btn-warning text-white mt-auto">Buy ${category.title}</a>`);
 
 const wrapper = $(`<div class="col-12 col-md-6 col-lg-3 mb-4 ">`);
-const card = wrapper.append(`<div class="card" style="width: 100%;">`);
+const card = $(`<div class="card h-100" style="width: 100%;">`);
+wrapper.append(card);
 card.append(img);
-const cardbody = card.append(`<div class="card-body">`);
+const cardbody = $(`<div class="card-body d-flex flex-column">`);
+card.append(cardbody);
 cardbody.append(title);
 cardbody.append(description);
 cardbody.append(button);
