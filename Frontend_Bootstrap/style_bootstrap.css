@@ -5,7 +5,15 @@
 html,
 body {
   background-color: #f7eed2;
-  font-family: "Shadows Into Light", cursive;
+  font-family: "Comic Neue", cursive;
+  cursor: url("img/cookieIcon.png"), auto;
+}
+/* //"Shadows Into Light", cursive; */
+
+.card-img-top {
+  width: 100%;
+  height: 18rem;
+  object-fit: cover;
 }
 
 .carousel {
