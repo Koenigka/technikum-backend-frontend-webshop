@@ -11,22 +11,20 @@ public class Product {
     private String description;
 
     private String img;
-    private long fid_category;
-
-
 
     private double price;
 
     private int stock;
+    private String type;
 
-    public Product(Long id, String title, String description, String img, long fid_category, double price, int stock) {
+    public Product(Long id, String title, String description, String img, double price, int stock, String type) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.img = img;
-        this.fid_category = fid_category;
         this.price = price;
         this.stock = stock;
+        this.type = type;
     }
 
     public Product() {
@@ -34,14 +32,6 @@ public class Product {
 
     public Long getId() {
         return id;
-    }
-
-    public String getImg() {
-        return img;
-    }
-
-    public void setImg(String img) {
-        this.img = img;
     }
 
     public void setId(Long id) {
@@ -64,12 +54,12 @@ public class Product {
         this.description = description;
     }
 
-    public long getFid_category() {
-        return fid_category;
+    public String getImg() {
+        return img;
     }
 
-    public void setFid_category(long fid_category) {
-        this.fid_category = fid_category;
+    public void setImg(String img) {
+        this.img = img;
     }
 
     public double getPrice() {
@@ -86,5 +76,13 @@ public class Product {
 
     public void setStock(int stock) {
         this.stock = stock;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

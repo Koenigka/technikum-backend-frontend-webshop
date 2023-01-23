@@ -1,6 +1,8 @@
 package at.technikum.webshop_backend.controller;
 
 import at.technikum.webshop_backend.model.Product;
+import at.technikum.webshop_backend.repository.ListProductRepository;
+import at.technikum.webshop_backend.repository.ProductRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -12,16 +14,20 @@ import java.util.List;
 @RequestMapping("/products")
 public class ProductController {
 
-    private List<Product> products;
+    private final ProductRepository repo = new ListProductRepository();
 
-    public ProductController(){
 
-        this.products = new ArrayList<>();
-        this.products.add(new Product(1L, "Chocolate Cookie", "wonderfull Cookie with white", "img/cookie", 1L, 5.99, 100));
-        this.products.add(new Product(2L, "White Cookie", "wonderfull Cookie with dark", "img/cookie",2L, 6.99, 150));
-
+    @GetMapping
+    public List<Product> findAllProducts() {
+        return repo.findAll();
     }
 
+    @GetMapping("/{type}")
+    public List<Product> findAllProductsByType(@PathVariable String type) {
+        return repo.findAllByType(type);
+    }
+
+    /*
     @PostMapping("")
     public Product create(@RequestBody Product product){
 
@@ -56,6 +62,6 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public Product delete(){
         return null;
-    }
+    }*/
 }
 
