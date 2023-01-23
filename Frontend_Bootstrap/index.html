@@ -8,43 +8,19 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style_bootstrap.css">
-    <title>template</title>
     <script src="https://kit.fontawesome.com/e85167c40f.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous" defer></script>
+    <script src="/components/navbar/loadNavbar.js" defer></script>
+    <script src="/components/footer/loadFooter.js" defer></script>
+    <title>Home</title>
+
 </head>
 <body>
   
-
+<div id="navbarContainer"></div>
   
-    <nav class="navbar navbar-expand-lg navbar-light bg-warning sticky-top">
-      <div class="container-fluid">
-            <a class="navbar-brand text-white fs-1 text" href="index.html"><i class="fa-solid fa-cookie-bite logo"></i> CrazyCookie</a>
-            
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-
-          <div class="collapse navbar-collapse" id="navbarNav">
-            
-            <ul class="navbar-nav nav justify-content-center">              
-              <li class="nav-item mx-5">
-                <a class="nav-link text-white fs-2" href="#">Shop</a>
-              </li>  
-               </ul>
-              <ul class="navbar-nav ms-auto"> 
-              <li class="nav-item mx-5">
-                <a class="nav-link text-white fs-2" href="login.html">Login</a>
-              </li>
-              <li class="nav-item mx-5">
-                <a class="nav-link text-white fs-2" href="registration.html">Sign Up</a>
-              </li>                        
-            </ul>
-
-          </div>
-            
-        </div> 
-      </nav>
-
+    
     
       <div class="container-fluid">
         <div class="row">
@@ -138,14 +114,7 @@
 
       </div>
       </div>
-      <div class="container-fluid bg-warning mt-5 footer ">
-        <div class="row">
-          <div class="col p-2 float-start ms-5"><a href="help.html" class="text-white text-decoration-none fs-4">Help</a></div>
-          <div class="col p-2"><a href="#"><i class="fa-brands fa-instagram text-white float-end fs-3"></i></a></div>
-          <div class="col p-2"><a href="#"><i class="fa-brands fa-tiktok text-white float-start fs-3"></i></a></div>
-          <div class="col p-2 float-end me-5"><a href="impressum.html" class="text-white text-decoration-none float-end fs-4">Impressum</a></div>
-        </div>
-      </div>
+      <div id="footerContainer"></div>
 
 
 </body>
