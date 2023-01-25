@@ -1,0 +1,1 @@
+$("#basketContainer").load("/components/basket/basket.html");
