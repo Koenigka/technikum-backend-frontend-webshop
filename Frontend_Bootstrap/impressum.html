@@ -21,45 +21,16 @@
       integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
       crossorigin="anonymous"
     ></script>
+    <script
+      src="https://code.jquery.com/jquery-3.6.3.js"
+      integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
+      crossorigin="anonymous"
+    ></script>
+    <script src="/components/navbar/loadNavbar.js" defer></script>
+    <script src="/components/footer/loadFooter.js" defer></script>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-warning sticky-top">
-      <div class="container-fluid">
-        <a class="navbar-brand text-white fs-1 text" href="index.html"
-          ><i class="fa-solid fa-cookie-bite logo"></i> CrazyCookie</a
-        >
-
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav nav justify-content-center">
-            <li class="nav-item mx-5">
-              <a class="nav-link text-white fs-2" href="#">Shop</a>
-            </li>
-          </ul>
-          <ul class="navbar-nav ms-auto">
-            <li class="nav-item mx-5">
-              <a class="nav-link text-white fs-2" href="login.html">Login</a>
-            </li>
-            <li class="nav-item mx-5">
-              <a class="nav-link text-white fs-2" href="registration.html"
-                >Sign Up</a
-              >
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
+    <div id="navbarContainer"></div>
     <div class="container my-5 px-0 bg-white rounded">
       <h3 class="text-center bg-warning py-3 text-white rounded-top">
         Impressum
@@ -206,31 +177,6 @@
         </p>
       </div>
     </div>
-    <div class="container-fluid bg-warning mt-5 footer">
-      <div class="row">
-        <div class="col p-2 float-start ms-5">
-          <a href="help.html" class="text-white text-decoration-none fs-4"
-            >Help</a
-          >
-        </div>
-        <div class="col p-2">
-          <a href="#"
-            ><i class="fa-brands fa-instagram text-white float-end fs-3"></i
-          ></a>
-        </div>
-        <div class="col p-2">
-          <a href="#"
-            ><i class="fa-brands fa-tiktok text-white float-start fs-3"></i
-          ></a>
-        </div>
-        <div class="col p-2 float-end me-5">
-          <a
-            href="impressum.html"
-            class="text-white text-decoration-none float-end fs-4"
-            >Impressum</a
-          >
-        </div>
-      </div>
-    </div>
+    <div id="footerContainer"></div>
   </body>
 </html>
