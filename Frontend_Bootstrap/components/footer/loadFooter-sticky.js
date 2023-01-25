@@ -1,1 +1,1 @@
-$("#stickyfooterContainer").load("/components/footer/footer.html");
+$("#stickyfooterContainer").load("/components/footer/footer-sticky.html");
