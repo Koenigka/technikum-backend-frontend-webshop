@@ -1,20 +1,37 @@
 package at.technikum.webshop_backend.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+
+@Entity(name = "product")
 public class Product {
 
+    @Id
+    @GeneratedValue
+    @Column(name = "id")
     private Long id;
 
+    @Column(name = "title")
     private String title;
 
+    @Column(name = "description")
     private String description;
 
+    @Column(name = "img")
     private String img;
 
+    @Column(name = "price")
     private double price;
 
+    @Column(name = "stock")
     private int stock;
+
+    @Column(name = "f_id_category")
     private int category_id;
 
+    @Column(name = "is_active")
     private int isActive;
 
     public Product() {

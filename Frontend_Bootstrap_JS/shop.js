@@ -1,16 +1,16 @@
 $(document).ready(function(){
     
-    //Dropdown mit Kategorien laden
+    //Buttons mit Kategorien laden
     $.ajax({
         url: "http://localhost:8080/categories",
         type: "GET",
         cors: true,
-        success: function(categories) { addCategoriesToDropdown(categories) },
+        success: function(categories) { addCategories(categories) },
         error: function(error) { console.error(error) }
     })
 
 
-    function addCategoriesToDropdown(categories) {
+    function addCategories(categories) {
         const allCategories = $("#categories");
         allCategories.empty();
         
@@ -20,10 +20,11 @@ $(document).ready(function(){
     }
         
     function createCategory(category) {        
-            const list = $(`<li class="dropdown-item dropdown-item-warning fs-5" id="getProductsById" value="${category.id}">${category.title}</li>`);
-        return list;
+            const button = $(`<button class="col-md-4 me-2 mb-2  btn btn-warning text-white fs-4" id="getProductsById" value="${category.id}">${category.title}</button>`);
+        return button;
     }
 
+    
 
     //Alle Produkte laden
     $.ajax({
@@ -70,8 +71,8 @@ $(document).ready(function(){
     return wrapper;
     }
 
-    //Clickfunction Dropdown by ID --> list auf Buttons umschreiben ....
-    $("getProductsById").click(function(e)  {     
+    //Clickfunction Button by value (id) 
+    $("#getProductsById").click(function(e)  {     
         id = $(this).attr('value');  
         $.ajax({
             url: "http://localhost:8080/products/" + id ,            
@@ -83,10 +84,10 @@ $(document).ready(function(){
     });
 
     
-    //Clickfunction Dropdown allCategories
+    //Clickfunction allCategories
 
-    $("allCategories").click(function(e) {
-        alert("allCategories clicked");
+    $("#allCategories").click(function(e) {
+        //alert("allCategories clicked");
         $.ajax({
             url: "http://localhost:8080/products",
             type: "GET",

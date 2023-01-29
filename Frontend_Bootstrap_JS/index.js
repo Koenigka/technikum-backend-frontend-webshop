@@ -21,7 +21,7 @@ for (let category of categories) {
 
 function createCategory(category) {
 
-const img = $(`<img src="${category.img}" class="card-img-top" alt="...">`);
+const img = $(`<img src="${category.imgUrl}" class="card-img-top" alt="...">`);
 const title = $(`<h5 class="card-title">${category.title}</h5>`);
 const description = $(`<p class="card-text">${category.description}</p>`);
 const button = $(`<a href="#" class="btn btn-warning text-white mt-auto">Buy ${category.title}</a>`);
