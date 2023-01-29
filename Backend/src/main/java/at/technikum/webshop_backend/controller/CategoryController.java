@@ -26,9 +26,5 @@ public class CategoryController {
         return repo.findAll();
     }
 
-    @GetMapping("/{type}")
-    public List<Category> findAllCategoriesByType(@PathVariable String type) {
-        return repo.findAllByType(type);
-    }
 
 }

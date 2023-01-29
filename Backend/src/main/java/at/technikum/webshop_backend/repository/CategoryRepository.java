@@ -8,5 +8,4 @@ public interface CategoryRepository {
 
     List<Category> findAll();
 
-    List<Category> findAllByType(String type);
 }

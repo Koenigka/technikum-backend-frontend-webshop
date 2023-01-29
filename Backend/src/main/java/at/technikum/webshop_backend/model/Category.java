@@ -10,18 +10,17 @@ public class Category {
 
     private String img;
 
-    private String type;
-
+    private int isActive;
 
     public Category() {
     }
 
-    public Category(Long id, String title, String description, String img, String type) {
+    public Category(Long id, String title, String description, String img, int isActive) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.img = img;
-        this.type = type;
+        this.isActive = isActive;
     }
 
     public Long getId() {
@@ -56,11 +55,11 @@ public class Category {
         this.img = img;
     }
 
-    public String getType() {
-        return type;
+    public int getIsActive() {
+        return isActive;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setIsActive(int isActive) {
+        this.isActive = isActive;
     }
 }

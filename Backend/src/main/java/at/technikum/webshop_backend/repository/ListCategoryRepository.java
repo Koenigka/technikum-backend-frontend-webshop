@@ -16,10 +16,10 @@ public class ListCategoryRepository implements CategoryRepository {
     private static final String MACARONES_URL = "img/macarons-5264197_1920.jpg";
 
     {
-        categories.add(new Category(1L, "Cookie", "Some quick example text to build on the card title and make up the bulk of the card's content dark & white chocolate", COOKIE_URL, "Cookie"));
-        categories.add(new Category(2L, "Cupcake", "Some quick example text to build on the card title and make up the bulk of the card's content with berries", CUPCAKE_URL, "Cupcake"));
-        categories.add(new Category(3L, "Brownie", "Some quick example text to build on the card title and make up the bulk of the card's content dark chocolate", BROWNIE_URL,  "Brownie"));
-        categories.add(new Category(4L, "Macaron", "Some quick example text to build on the card title and make up the bulk of the card's content strawberry", MACARONES_URL, "Macaron"));
+        categories.add(new Category(1L, "Cookies", "Some quick example text to build on the card title and make up the bulk of the card's content dark & white chocolate", COOKIE_URL, 1));
+        categories.add(new Category(2L, "Cupcakes", "Some quick example text to build on the card title and make up the bulk of the card's content with berries", CUPCAKE_URL, 1));
+        categories.add(new Category(3L, "Brownies", "Some quick example text to build on the card title and make up the bulk of the card's content dark chocolate", BROWNIE_URL,  1));
+        categories.add(new Category(4L, "Macarons", "Some quick example text to build on the card title and make up the bulk of the card's content strawberry", MACARONES_URL, 1));
 
     }
 
@@ -31,19 +31,7 @@ public class ListCategoryRepository implements CategoryRepository {
         return categories;
     }
 
-    @Override
-    public List<Category> findAllByType(String type) {
-        // return products.stream().filter(p -> p.getType().contains(type)).toList();
 
-        List<Category> matches = new ArrayList<>();
-        for (Category c : categories) {
-            if (c.getType().contains(type)) {
-                matches.add(c);
-            }
-        }
-
-        return matches;
-    }
 
 
 }

@@ -15,10 +15,11 @@ private static final String BROWNIE_URL = "img/browniex_1920.jpg";
 private static final String MACARONES_URL = "img/macarons-5264197_1920.jpg";
 
     {
-        products.add(new Product(1L, "Cookie", "dark & white chocolate", COOKIE_URL, 4.99F, 50, "Cookie"));
-        products.add(new Product(2L, "Cupcake", "with berries", CUPCAKE_URL, 5.99F, 50, "Cupcake"));
-        products.add(new Product(3L, "Brownie", "dark chocolate", BROWNIE_URL, 6.99F, 50, "Brownie"));
-        products.add(new Product(4L, "Macaron", "strawberry", MACARONES_URL, 10.99F, 50, "Macaron"));
+        products.add(new Product(1L, "Cookie", "dark & white chocolate", COOKIE_URL, 4.99F, 50, 1, 1));
+        products.add(new Product(2L, "Cupcake", "with berries", CUPCAKE_URL, 5.99F, 50, 2,1));
+        products.add(new Product(3L, "Brownie", "dark chocolate", BROWNIE_URL, 6.99F, 50, 3,1));
+        products.add(new Product(4L, "Macaron", "strawberry", MACARONES_URL, 10.99F, 50, 4,1));
+        products.add(new Product(5L, "Macaron", "strawberry", MACARONES_URL, 10.99F, 50, 4,1));
 
     }
 
@@ -31,12 +32,12 @@ private static final String MACARONES_URL = "img/macarons-5264197_1920.jpg";
     }
 
     @Override
-    public List<Product> findAllByType(String type) {
+    public List<Product> findAllById(int category_id) {
         // return products.stream().filter(p -> p.getType().contains(type)).toList();
 
         List<Product> matches = new ArrayList<>();
         for (Product p : products) {
-            if (p.getType().contains(type)) {
+            if (p.getCategory_id() == (category_id)) {
                 matches.add(p);
             }
         }

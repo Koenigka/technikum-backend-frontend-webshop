@@ -22,9 +22,9 @@ public class ProductController {
         return repo.findAll();
     }
 
-    @GetMapping("/{type}")
-    public List<Product> findAllProductsByType(@PathVariable String type) {
-        return repo.findAllByType(type);
+    @GetMapping("/{category_id}")
+    public List<Product> findAllProductsByType(@PathVariable int category_id) {
+        return repo.findAllById(category_id);
     }
 
     /*

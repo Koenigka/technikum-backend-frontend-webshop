@@ -8,5 +8,5 @@ public interface ProductRepository {
 
     List<Product> findAll();
 
-    List<Product> findAllByType(String type);
+    List<Product> findAllById(int category_id);
 }

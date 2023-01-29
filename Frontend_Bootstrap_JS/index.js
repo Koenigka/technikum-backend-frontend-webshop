@@ -1,4 +1,5 @@
 $(document).ready(function(){
+    
 $.ajax({
     url: "http://localhost:8080/categories",
     type: "GET",
@@ -6,7 +7,7 @@ $.ajax({
     success: function(categories) { addCategoriesToPage(categories) },
     error: function(error) { console.error(error) }
 })
-});
+
 
 
 function addCategoriesToPage(categories) {
@@ -41,3 +42,4 @@ wrapper.append(`</div>`);
 return wrapper;
 }
 
+});
