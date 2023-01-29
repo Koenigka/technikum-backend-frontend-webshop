@@ -5,16 +5,16 @@
 html,
 body {
   background-color: #f7eed2;
-  font-family: "Shadows Into Light", cursive;;
+  font-family: "Shadows Into Light", cursive;
   /*font-family: "Comic Neue", cursive;
   cursor: url("img/cookieIcon.png"), auto;*/
 }
 /* //"Shadows Into Light", cursive; */
 
-.help, .impressum{
+.help,
+.impressum {
   font-family: "Comic Neue", cursive;
 }
-
 
 .card-img-top {
   width: 100%;
@@ -43,4 +43,74 @@ body {
 
 .dropdown-toggle::after {
   content: none;
+}
+
+.inner-img {
+  transition: 0.3s;
+  justify-content: center;
+}
+
+.inner-img:hover {
+  transform: scale(1.1);
+}
+.qty .count {
+  color: #2cb8b8;
+  display: inline-block;
+  vertical-align: top;
+  font-size: 25px;
+  font-weight: 700;
+  line-height: 30px;
+  padding: 0 2px;
+  min-width: 35px;
+  text-align: center;
+}
+.qty .plus {
+  cursor: pointer;
+  display: inline-block;
+  vertical-align: top;
+  color: #2cb8b8;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  border-radius: 50%;
+}
+.qty .minus {
+  cursor: pointer;
+  display: inline-block;
+  vertical-align: top;
+  color: #2cb8b8;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  border-radius: 50%;
+  background-clip: padding-box;
+}
+.counter {
+  text-align: center;
+}
+.minus:hover {
+  background-color: #2cb8b8 !important;
+  color: white;
+}
+.plus:hover {
+  background-color: #2cb8b8 !important;
+  color: white;
+}
+/*Prevent text selection*/
+span {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+input {
+  border: 0;
+  width: 2%;
+}
+nput::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input:disabled {
+  background-color: white;
 }
