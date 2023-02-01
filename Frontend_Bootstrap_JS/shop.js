@@ -20,9 +20,10 @@ $(document).ready(function(){
     }
         
     function createCategory(category) {        
-            const button = $(`<button class="col-md-4 me-2 mb-2  btn btn-warning text-white fs-4" id="getProductsById" value="${category.id}">${category.title}</button>`);
+            const button = $(`<button class="col-md-4 me-2 mb-2  btn btn-warning text-white fs-4 getProductsById" value="${category.id}">${category.title}</button>`);
         return button;
     }
+
 
     
 
@@ -72,10 +73,11 @@ $(document).ready(function(){
     }
 
     //Clickfunction Button by value (id) 
-    $("#getProductsById").click(function(e)  {     
+    $(document).on("click", ".getProductsById", function(event){
+        console.log('clicked');
         id = $(this).attr('value');  
         $.ajax({
-            url: "http://localhost:8080/products/" + id ,            
+            url: "http://localhost:8080/products/byCategory/" + id ,            
             type: "GET",
             cors: true,
             success: function(products) { addProducts(products) },
@@ -84,10 +86,12 @@ $(document).ready(function(){
     });
 
     
+
+    
     //Clickfunction allCategories
 
     $("#allCategories").click(function(e) {
-        //alert("allCategories clicked");
+        console.log("allCategories clicked");
         $.ajax({
             url: "http://localhost:8080/products",
             type: "GET",

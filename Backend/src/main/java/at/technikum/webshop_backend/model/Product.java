@@ -1,9 +1,6 @@
 package at.technikum.webshop_backend.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity(name = "product")
 public class Product {
@@ -12,6 +9,10 @@ public class Product {
     @GeneratedValue
     @Column(name = "id")
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
 
     @Column(name = "title")
     private String title;
@@ -28,25 +29,16 @@ public class Product {
     @Column(name = "stock")
     private int stock;
 
-    @Column(name = "f_id_category")
-    private int category_id;
+
+
+
 
     @Column(name = "is_active")
     private int isActive;
 
-    public Product() {
-    }
 
-    public Product(Long id, String title, String description, String img, double price, int stock, int category_id, int isActive) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.img = img;
-        this.price = price;
-        this.stock = stock;
-        this.category_id = category_id;
-        this.isActive = isActive;
-    }
+
+
 
     public Long getId() {
         return id;
@@ -96,12 +88,12 @@ public class Product {
         this.stock = stock;
     }
 
-    public int getCategory_id() {
-        return category_id;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setCategory_id(int category_id) {
-        this.category_id = category_id;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public int getIsActive() {

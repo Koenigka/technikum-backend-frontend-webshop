@@ -44,3 +44,8 @@ body {
 .dropdown-toggle::after {
   content: none;
 }
+
+.footer{
+  bottom: auto;
+ 
+}
