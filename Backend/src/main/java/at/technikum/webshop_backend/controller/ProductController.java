@@ -1,87 +1,74 @@
 package at.technikum.webshop_backend.controller;
 
 
+import at.technikum.webshop_backend.dto.ProductDTO;
 import at.technikum.webshop_backend.model.Product;
 import at.technikum.webshop_backend.repository.ProductRepository;
+import at.technikum.webshop_backend.service.ProductService;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/products")
 public class ProductController {
+    private final ProductService productService;
 
-    @Autowired
-    private ProductRepository repo;
+    public ProductController(ProductService productService){
+        this.productService = productService;
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping
+    public Product createProduct(@Valid @RequestBody ProductDTO productDTO){
+        return productService.save(fromDTO(productDTO), productDTO.getCategoryId());
+    }
+
+
+    private static Product fromDTO(ProductDTO productDTO){
+        return new Product(productDTO.getId(), productDTO.getTitle(), productDTO.getDescription(),
+                productDTO.getImg(), productDTO.getPrice(), productDTO.getStock(),productDTO.getActive());
+    }
 
     @GetMapping
-    public List<Product> findAllProducts(){
-        return repo.findAll();
+    public List<Product> findAllActiveProducts(){
+        return productService.findByActive();
     }
 
     @GetMapping("/{id}")
-    public List<Product> findProductsById(@PathVariable Long id){
-        return repo.findAllById(id);
+    public Product findById(@PathVariable Long id){
+        return productService.findById(id);
     }
-
-
-
     @GetMapping("/byCategory/{categoryId}")
-    public List<Product> findByCategory_id(@PathVariable int categoryId){
-        return repo.findByCategoryId(categoryId);
+    public List<Product> findProductByCategoryIdAndActive(@PathVariable Long categoryId){
+        return productService.findByCategoryIdAndActive(categoryId, true);
     }
-
-
-
-
 
     @GetMapping("/searchproduct/{title}")
-    public List<Product> findProductsByName(@PathVariable String title) {
+    public List<Product> findProductsByTitle(@PathVariable String title) {
 
-        return repo.findByTitleContains(title);
+        return productService.findByTitleContains(title);
     }
 
-    @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody Product product){
-
-        product = repo.save(product);
-        return ResponseEntity.created(URI.create("http://localhost:8080/products")).body(product);
-    }
-
-
-    /*
-    @GetMapping("")
-    public List<Product> readAll(){
-
-        return this.products;
-    }
-
-
-    @GetMapping ("/{id}")
-    public Product read(@PathVariable Long id){
-
-        for (Product product : this.products) {
-            if(id.equals( product.getId())){
-                return product;
-            }
-        }
-        //404 question not found
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-    }
 
     @PutMapping("/{id}")
-    public Product update(){
-        return null;
+    public Product update(@PathVariable Long id, @RequestBody @Valid Product product){
+        return productService.update(id, product);
     }
 
     @DeleteMapping("/{id}")
-    public Product delete(){
-        return null;
-    }*/
+    public void  deleteProduct(@PathVariable Long id){
+        productService.deleteById(id);
+    }
 
 
 }

@@ -1,44 +1,52 @@
 package at.technikum.webshop_backend.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 @Entity(name = "product")
+
+//@Data --> Lombok
 public class Product {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne
+
+    @NotNull
+    private String title;
+
+
+    private String description;
+
+
+    private String img;
+
+
+    private double price;
+
+
+    private int stock;
+
+    private Boolean active;
+
+    @ManyToOne(optional = false)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    @Column(name = "title")
-    private String title;
+    public Product(Long id, String title, String description, String img, double price, int stock, Boolean active) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.img = img;
+        this.price = price;
+        this.stock = stock;
+        this.active = active;
+    }
 
-    @Column(name = "description")
-    private String description;
-
-    @Column(name = "img")
-    private String img;
-
-    @Column(name = "price")
-    private double price;
-
-    @Column(name = "stock")
-    private int stock;
-
-
-
-
-
-    @Column(name = "is_active")
-    private int isActive;
-
-
-
-
+    public Product() {
+    }
 
     public Long getId() {
         return id;
@@ -96,11 +104,11 @@ public class Product {
         this.category = category;
     }
 
-    public int getIsActive() {
-        return isActive;
+    public Boolean getActive() {
+        return active;
     }
 
-    public void setIsActive(int isActive) {
-        this.isActive = isActive;
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 }

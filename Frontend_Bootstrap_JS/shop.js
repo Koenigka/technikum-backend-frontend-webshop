@@ -2,7 +2,8 @@ $(document).ready(function(){
     
     //Buttons mit Kategorien laden
     $.ajax({
-        url: "http://localhost:8080/categories",
+        
+        url: "http://localhost:8080/categories/" + true,
         type: "GET",
         cors: true,
         success: function(categories) { addCategories(categories) },

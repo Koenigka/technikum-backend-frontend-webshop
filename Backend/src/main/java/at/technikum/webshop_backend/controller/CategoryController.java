@@ -1,8 +1,9 @@
 package at.technikum.webshop_backend.controller;
 
 import at.technikum.webshop_backend.model.Category;
-import at.technikum.webshop_backend.repository.CategoryRepository;
+import at.technikum.webshop_backend.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,17 +14,21 @@ import java.util.List;
 @RequestMapping("/categories")
 public class CategoryController {
 
-    @Autowired
-    private CategoryRepository repo;
+    private final CategoryService categoryService;
 
-    @GetMapping
-    public List<Category> findAllCategories(){
-        return repo.findAll();
+    public CategoryController(CategoryService categoryService){
+        this.categoryService = categoryService;
     }
-
     @PostMapping
-    public ResponseEntity<Category> createCategory(@RequestBody Category category){
-        category = repo.save(category);
-        return ResponseEntity.created(URI.create("http://localhost:8080/categories")).body(category);
+    @ResponseStatus(HttpStatus.CREATED)
+    public Category createCategory(@RequestBody Category category){
+        return categoryService.save(category);
     }
+
+
+    @GetMapping("/{active}")
+    public List<Category> findAllActiveCategories(@PathVariable Boolean active){
+        return categoryService.findAllByActive(active);
+    }
+
 }
