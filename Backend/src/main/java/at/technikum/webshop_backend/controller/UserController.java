@@ -1,2 +1,4 @@
-package at.technikum.webshop_backend.controller;public class UserController {
+package at.technikum.webshop_backend.controller;
+
+public class UserController {
 }

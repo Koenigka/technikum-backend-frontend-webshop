@@ -8,36 +8,43 @@ import java.util.Set;
 @Entity(name = "category")
 public class Category {
 
+
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
 
 
-    @OneToMany(mappedBy = "category")
-    private Set<Product> products;
+    //@OneToMany(mappedBy = "category")
+    //private Set<Product> products;
 
-    @Column(name = "title")
     private String title;
 
-    @Column(name = "description")
+
     private String description;
 
-    @Column(name ="img_Url")
+
     private String imgUrl;
 
-    @Column(name = "is_Active")
-    private String isActive;
+    private Boolean active;
 
     public Category() {
     }
 
-    public Category(long id, String title, String description, String imgUrl, String isActive) {
+    public Category(long id, String title, String description, String imgUrl, Boolean active) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.imgUrl = imgUrl;
-        this.isActive = isActive;
+        this.active = active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public Boolean getActive() {
+        return active;
     }
 
     public long getId() {
@@ -72,11 +79,4 @@ public class Category {
         this.imgUrl = imgUrl;
     }
 
-    public String getIsActive() {
-        return isActive;
-    }
-
-    public void setIsActive(String isActive) {
-        this.isActive = isActive;
-    }
 }

@@ -1,2 +1,4 @@
-package at.technikum.webshop_backend.repository;public interface UserRepository {
+package at.technikum.webshop_backend.repository;
+
+public interface UserRepository {
 }
