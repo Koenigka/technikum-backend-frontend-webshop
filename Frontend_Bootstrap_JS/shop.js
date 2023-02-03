@@ -30,7 +30,7 @@ $(document).ready(function(){
 
     //Alle Produkte laden
     $.ajax({
-        url: "http://localhost:8080/products",
+        url: "http://localhost:8080/products/isActive/" + true,
         type: "GET",
         cors: true,
         success: function(products) { addProducts(products) },
@@ -78,7 +78,7 @@ $(document).ready(function(){
         console.log('clicked');
         id = $(this).attr('value');  
         $.ajax({
-            url: "http://localhost:8080/products/byCategory/" + id ,            
+            url: "http://localhost:8080/products/byCategory/" + id + "/" + true ,            
             type: "GET",
             cors: true,
             success: function(products) { addProducts(products) },
@@ -94,7 +94,7 @@ $(document).ready(function(){
     $("#allCategories").click(function(e) {
         console.log("allCategories clicked");
         $.ajax({
-            url: "http://localhost:8080/products",
+            url: "http://localhost:8080/products/isActive/" + true,
             type: "GET",
             cors: true,
             success: function(products) { addProducts(products) },

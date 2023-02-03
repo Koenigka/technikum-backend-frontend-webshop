@@ -19,6 +19,8 @@ public class CategoryController {
     public CategoryController(CategoryService categoryService){
         this.categoryService = categoryService;
     }
+
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Category createCategory(@RequestBody Category category){
@@ -26,8 +28,12 @@ public class CategoryController {
     }
 
 
+    @GetMapping
+    public List<Category> findAll(){
+        return categoryService.findAll();
+    }
     @GetMapping("/{active}")
-    public List<Category> findAllActiveCategories(@PathVariable Boolean active){
+    public List<Category> findAllCategoriesByActive(@PathVariable Boolean active){
         return categoryService.findAllByActive(active);
     }
 

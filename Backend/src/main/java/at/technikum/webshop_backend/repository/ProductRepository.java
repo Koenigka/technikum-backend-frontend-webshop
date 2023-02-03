@@ -17,7 +17,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>{
 
     List<Product> findAllByActive(Boolean active);
 
-    List<Product> findByActive(Boolean isActive);
+    List<Product> findByActive(Boolean active);
 
     List<Product> findByTitleContains(String title);
 

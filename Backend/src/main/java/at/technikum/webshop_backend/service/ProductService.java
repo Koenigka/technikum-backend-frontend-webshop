@@ -28,12 +28,12 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public List<Product> findByActive(){return productRepository.findByActive(true);}
+    public List<Product> findByActive(Boolean active){return productRepository.findByActive(active);}
     public List<Product> findByCategoryId(Long categoryId){
         return productRepository.findByCategoryId(categoryId);
     }
     public List<Product> findByCategoryIdAndActive(Long categoryId, Boolean active){
-        return productRepository.findByCategoryIdAndActive(categoryId, true);
+        return productRepository.findByCategoryIdAndActive(categoryId, active);
 
     }
 
