@@ -1,34 +1,44 @@
 package at.technikum.webshop_backend.model;
 
-import java.security.SecureRandom;
+import jakarta.persistence.*;
 
+@Entity(name = "product")
 public class Product {
 
+    @Id
+    @GeneratedValue
+    @Column(name = "id")
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
+
+    @Column(name = "title")
     private String title;
 
+    @Column(name = "description")
     private String description;
 
+    @Column(name = "img")
     private String img;
 
+    @Column(name = "price")
     private double price;
 
+    @Column(name = "stock")
     private int stock;
-    private String type;
 
-    public Product(Long id, String title, String description, String img, double price, int stock, String type) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.img = img;
-        this.price = price;
-        this.stock = stock;
-        this.type = type;
-    }
 
-    public Product() {
-    }
+
+
+
+    @Column(name = "is_active")
+    private int isActive;
+
+
+
+
 
     public Long getId() {
         return id;
@@ -78,11 +88,19 @@ public class Product {
         this.stock = stock;
     }
 
-    public String getType() {
-        return type;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public int getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(int isActive) {
+        this.isActive = isActive;
     }
 }

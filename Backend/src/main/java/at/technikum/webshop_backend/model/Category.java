@@ -1,34 +1,50 @@
 package at.technikum.webshop_backend.model;
 
+import jakarta.persistence.*;
+
+import java.util.List;
+import java.util.Set;
+
+@Entity(name = "category")
 public class Category {
 
-    private Long id;
+    @Id
+    @GeneratedValue
+    @Column(name = "id")
+    private long id;
 
+
+    @OneToMany(mappedBy = "category")
+    private Set<Product> products;
+
+    @Column(name = "title")
     private String title;
 
+    @Column(name = "description")
     private String description;
 
-    private String img;
+    @Column(name ="img_Url")
+    private String imgUrl;
 
-    private String type;
-
+    @Column(name = "is_Active")
+    private String isActive;
 
     public Category() {
     }
 
-    public Category(Long id, String title, String description, String img, String type) {
+    public Category(long id, String title, String description, String imgUrl, String isActive) {
         this.id = id;
         this.title = title;
         this.description = description;
-        this.img = img;
-        this.type = type;
+        this.imgUrl = imgUrl;
+        this.isActive = isActive;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -48,19 +64,19 @@ public class Category {
         this.description = description;
     }
 
-    public String getImg() {
-        return img;
+    public String getImgUrl() {
+        return imgUrl;
     }
 
-    public void setImg(String img) {
-        this.img = img;
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 
-    public String getType() {
-        return type;
+    public String getIsActive() {
+        return isActive;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setIsActive(String isActive) {
+        this.isActive = isActive;
     }
 }

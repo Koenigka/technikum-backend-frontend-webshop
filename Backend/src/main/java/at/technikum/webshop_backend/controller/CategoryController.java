@@ -1,34 +1,29 @@
 package at.technikum.webshop_backend.controller;
 
 import at.technikum.webshop_backend.model.Category;
-import at.technikum.webshop_backend.model.Product;
 import at.technikum.webshop_backend.repository.CategoryRepository;
-import at.technikum.webshop_backend.repository.ListCategoryRepository;
-import at.technikum.webshop_backend.repository.ListProductRepository;
-import at.technikum.webshop_backend.repository.ProductRepository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
 @RequestMapping("/categories")
 public class CategoryController {
 
-
-    private final CategoryRepository repo = new ListCategoryRepository();
-
+    @Autowired
+    private CategoryRepository repo;
 
     @GetMapping
-    public List<Category> findAllCategories() {
+    public List<Category> findAllCategories(){
         return repo.findAll();
     }
 
-    @GetMapping("/{type}")
-    public List<Category> findAllCategoriesByType(@PathVariable String type) {
-        return repo.findAllByType(type);
+    @PostMapping
+    public ResponseEntity<Category> createCategory(@RequestBody Category category){
+        category = repo.save(category);
+        return ResponseEntity.created(URI.create("http://localhost:8080/categories")).body(category);
     }
-
 }

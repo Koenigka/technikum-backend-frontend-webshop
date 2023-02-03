@@ -1,4 +1,5 @@
 $(document).ready(function(){
+    
 $.ajax({
     url: "http://localhost:8080/categories",
     type: "GET",
@@ -6,7 +7,7 @@ $.ajax({
     success: function(categories) { addCategoriesToPage(categories) },
     error: function(error) { console.error(error) }
 })
-});
+
 
 
 function addCategoriesToPage(categories) {
@@ -20,7 +21,7 @@ for (let category of categories) {
 
 function createCategory(category) {
 
-const img = $(`<img src="${category.img}" class="card-img-top" alt="...">`);
+const img = $(`<img src="${category.imgUrl}" class="card-img-top" alt="...">`);
 const title = $(`<h5 class="card-title">${category.title}</h5>`);
 const description = $(`<p class="card-text">${category.description}</p>`);
 const button = $(`<a href="#" class="btn btn-warning text-white mt-auto">Buy ${category.title}</a>`);
@@ -41,3 +42,4 @@ wrapper.append(`</div>`);
 return wrapper;
 }
 
+});

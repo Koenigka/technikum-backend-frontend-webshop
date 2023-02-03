@@ -1,12 +1,13 @@
 package at.technikum.webshop_backend.controller;
 
-import at.technikum.webshop_backend.model.Product;
-import at.technikum.webshop_backend.repository.ListProductRepository;
-import at.technikum.webshop_backend.repository.ProductRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
+import at.technikum.webshop_backend.model.Product;
+import at.technikum.webshop_backend.repository.ProductRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,27 +15,45 @@ import java.util.List;
 @RequestMapping("/products")
 public class ProductController {
 
-    private final ProductRepository repo = new ListProductRepository();
-
+    @Autowired
+    private ProductRepository repo;
 
     @GetMapping
-    public List<Product> findAllProducts() {
+    public List<Product> findAllProducts(){
         return repo.findAll();
     }
 
-    @GetMapping("/{type}")
-    public List<Product> findAllProductsByType(@PathVariable String type) {
-        return repo.findAllByType(type);
+    @GetMapping("/{id}")
+    public List<Product> findProductsById(@PathVariable Long id){
+        return repo.findAllById(id);
     }
+
+
+
+    @GetMapping("/byCategory/{categoryId}")
+    public List<Product> findByCategory_id(@PathVariable int categoryId){
+        return repo.findByCategoryId(categoryId);
+    }
+
+
+
+
+
+    @GetMapping("/searchproduct/{title}")
+    public List<Product> findProductsByName(@PathVariable String title) {
+
+        return repo.findByTitleContains(title);
+    }
+
+    @PostMapping
+    public ResponseEntity<Product> createProduct(@RequestBody Product product){
+
+        product = repo.save(product);
+        return ResponseEntity.created(URI.create("http://localhost:8080/products")).body(product);
+    }
+
 
     /*
-    @PostMapping("")
-    public Product create(@RequestBody Product product){
-
-        this.products.add(product);
-        return product;
-    }
-
     @GetMapping("")
     public List<Product> readAll(){
 
@@ -63,5 +82,6 @@ public class ProductController {
     public Product delete(){
         return null;
     }*/
-}
 
+
+}
