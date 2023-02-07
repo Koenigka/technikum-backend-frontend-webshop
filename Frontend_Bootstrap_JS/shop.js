@@ -73,7 +73,8 @@ $(document).ready(function(){
     function createProduct(product) {
 
         const img = $(`<a  href="productdetail.html?product=${product.id}"><img src="${product.img}" class="card-img-top img-fluid" alt="..."></a>`);
-        const title = $(`<h5 class="card-title text-warning">${product.title}</h5>`);
+        
+        const title = $(`<a href="productdetail.html?product=${product.id}" class="text-decoration-none text-warning"><h5 class="card-title text-warning">${product.title}</h5></a>`);
         const description = $(` <p class="card-text">${product.description}</p>`);
         const button = $(`<button class="btn btn-warning mt-auto text-white">Add to Basket</button>`)
         

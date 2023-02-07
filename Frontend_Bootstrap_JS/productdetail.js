@@ -26,28 +26,23 @@ $(document).ready(function(){
         const productdetail = $(`
         <div class="row pt-3">
         <div class="col-lg-6 col-md-6 col-sm-12">
-          <img class="inner-img img-fluid rounded border border-warning" src="img/macarons-7716569_1920.jpg" width="350px"
+          <img class="inner-img img-fluid rounded border border-warning" src="${product.img}" width="350px"
             height="250px" />
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12">
           <h3 class="text-warning text-decoration-none fs-1">
-            <strong>15 Macarons</strong>
+            <strong>${product.title}</strong>
           </h3>
-          <p class="bg-white border border-warning rounded px-5 fs-5">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem,
-            repellat ipsa ea totam sint molestias ab numquam deserunt voluptatem
-            eligendi dolore asperiores praesentium cupiditate, minima ullam nemo
-            voluptatum ipsum! Neque hic optio voluptatem cum. Ipsam qui harum
-            animi fugiat quae, earum labore id eius ex tenetur dolorum deleniti.
-            Quia, deleniti!
+          <p class="bg-white border border-warning rounded px-5 py-3 fs-5">
+          <b>${product.description}</b>
           </p>
-          <p class="bg-white border border-warning rounded px-3 fs-5 mx-5">
-            <em><b>
+          <p class="bg-white border border-warning rounded px-3 py-2 fs-5 mx-5">
+            <em>
                 inkl. 7 % MwSt. zzgl. Versandkosten <br />
-                140-150g <br />
-                100% Handmade vom Bäckermeister</b></em>
+                
+                100% Handmade vom Bäckermeister</em>
           </p>
-          <p class="fs-3 text-warning"><b>25,99 €</b></p>
+          <p class="fs-3 text-warning"><b>EUR ${product.price}</b></p>
           <div class="qty mt-5 mb-3 counter">
             <span class="minus bg-light fs-3">-</span>
             <input type="number" class="count" name="qty" value="1" />
