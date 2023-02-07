@@ -46,6 +46,7 @@ public class ProductService {
     }
 
     public Product save(Product product){
+
         return productRepository.save(product);
     }
 
@@ -75,6 +76,15 @@ public class ProductService {
         return productRepository.save(product);
     }
 
+    public Product update(Product product, Long categoryId){
+        var category = categoryRepository.findById(categoryId);
+
+        if(category.isEmpty()){
+            throw new EntityNotFoundException();
+        }
+        product.setCategory(category.get());
+        return save(product);
+    }
     public void deleteById(Long id){
         Product product = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
 
