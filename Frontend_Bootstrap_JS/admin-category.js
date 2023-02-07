@@ -7,12 +7,13 @@
 
 
     $("#createCategoryButton").on("click", _e => {
-        if($("#isActive").is(":checked")){
+        console.log(e);
+        /* if($("#isActive").is(":checked")){
             const isActive = 1;
         }
         else {
             const isActive = 0;
-        }   
+        }    */
     
         const category = {
     
@@ -22,7 +23,7 @@
             "description": $("#category-description").val(),
             "imgUrl": $("#category-img-url").val(),
             //Check if is checked --> value = 1 /0
-            "isActive": "1" 
+            "active": "1" 
             }
     
             $.ajax({

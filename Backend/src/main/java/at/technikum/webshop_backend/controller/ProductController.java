@@ -21,6 +21,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/products")
 public class ProductController {
+
     private final ProductService productService;
 
     public ProductController(ProductService productService){
@@ -39,6 +40,12 @@ public class ProductController {
                 productDTO.getImg(), productDTO.getPrice(), productDTO.getStock(),productDTO.getActive());
     }
 
+
+
+    @GetMapping()
+    public List<Product> findAll(){
+        return productService.findAll();
+    }
     @GetMapping("/isActive/{active}")
     public List<Product> findAllProductsByActive(@PathVariable Boolean active){
         return productService.findByActive(active);
@@ -48,6 +55,8 @@ public class ProductController {
     public Product findById(@PathVariable Long id){
         return productService.findById(id);
     }
+
+
     @GetMapping("/byCategory/{categoryId}/{active}")
     public List<Product> findByCategoryIdAndActive(@PathVariable Long categoryId, @PathVariable Boolean active){
         return productService.findByCategoryIdAndActive(categoryId, active);

@@ -1,7 +1,9 @@
 package at.technikum.webshop_backend.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity(name = "product")
 
@@ -15,20 +17,25 @@ public class Product {
 
 
     @NotNull
+    @Size(min = 2, max = 32)
     private String title;
 
-
+    @NotNull
+    @Size(min = 2, max = 200)
     private String description;
 
-
+    @NotNull
+    @Size(min = 2, max = 200)
     private String img;
 
 
+    @NotNull
     private double price;
 
-
+    @NotNull
     private int stock;
 
+    @NotNull
     private Boolean active;
 
     @ManyToOne(optional = false)

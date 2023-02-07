@@ -60,6 +60,8 @@ public class ProductService {
     }
 
 
+    //Anpassen - categoryID hinzufügen!
+
     public Product update(Long id, Product updatedProduct){
         Product product = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         product.setTitle(updatedProduct.getTitle());

@@ -1,5 +1,16 @@
 $(document).ready(function(){
     
+
+    const params = new Proxy(new URLSearchParams(window.location.search), {
+        get: (searchParams, prop) => searchParams.get(prop),
+      });
+      // Get the value of "some_key" in eg "https://example.com/?some_key=some_value"
+      let value = params.category; // "some_value"
+    //console.log(value);
+
+
+
+
     //Buttons mit Kategorien laden
     $.ajax({
         
@@ -26,7 +37,7 @@ $(document).ready(function(){
     }
 
 
-    
+    if (value == null){
 
     //Alle Produkte laden
     $.ajax({
@@ -36,6 +47,18 @@ $(document).ready(function(){
         success: function(products) { addProducts(products) },
         error: function(error) { console.error(error) }
     })
+    }
+
+    if (value != null){
+         
+        $.ajax({
+            url: "http://localhost:8080/products/byCategory/" + value + "/" + true ,            
+            type: "GET",
+            cors: true,
+            success: function(products) { addProducts(products) },
+            error: function(error) { console.error(error) }
+        })
+    }
     
     function addProducts(products){        
         const allProducts = $("#products");
@@ -44,10 +67,12 @@ $(document).ready(function(){
             allProducts.append(createProduct(product));
         }
     }
+
+ 
     
     function createProduct(product) {
 
-        const img = $(`<img src="${product.img}" class="card-img-top img-fluid" alt="...">`);
+        const img = $(`<a  href="productdetail.html?product=${product.id}"><img src="${product.img}" class="card-img-top img-fluid" alt="..."></a>`);
         const title = $(`<h5 class="card-title text-warning">${product.title}</h5>`);
         const description = $(` <p class="card-text">${product.description}</p>`);
         const button = $(`<button class="btn btn-warning mt-auto text-white">Add to Basket</button>`)
@@ -101,5 +126,7 @@ $(document).ready(function(){
             error: function(error) { console.error(error) }
         })
     });
+
+
         
 });

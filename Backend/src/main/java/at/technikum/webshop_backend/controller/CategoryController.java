@@ -37,4 +37,15 @@ public class CategoryController {
         return categoryService.findAllByActive(active);
     }
 
+    @PutMapping("/{id}")
+    public Category updateCategory(@PathVariable Long id, @RequestBody Category category){
+        return categoryService.update(id, category);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteCategory(@PathVariable Long id){
+        categoryService.deleteById(id);
+
+    }
+
 }
