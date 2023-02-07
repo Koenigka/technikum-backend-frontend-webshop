@@ -17,7 +17,6 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="style_bootstrap.css" />
-    <title>Registration</title>
     <script
       src="https://kit.fontawesome.com/e85167c40f.js"
       crossorigin="anonymous"
@@ -27,17 +26,21 @@
       integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
       crossorigin="anonymous"
     ></script>
+    <script
+      src="https://code.jquery.com/jquery-3.6.3.js"
+      integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="/components/navbar/loadNavbarSignedInSignedUp.js"
+      defer
+    ></script>
+    <script src="/components/footer/loadFooter.js" defer></script>
     <title>Registration</title>
   </head>
   <body>
     <main>
-        <nav class="navbar navbar-expand-lg navbar-light bg-warning">
-      <div class="container-fluid">
-            <a class="navbar-brand text-white fs-1 text" href="index.html"><i class="fa-solid fa-cookie-bite logo"></i> CrazyCookie</a> 
-          </div>
-            
-        </div> 
-      </nav>
+      <div id="navbarContainerLogin"></div>
       <div
         class="container d-flex justify-content-center align-items-center"
         style="min-height: 100vh"
@@ -93,7 +96,7 @@
               type="text"
               class="form-control"
               id="inputAddress"
-              placeholder="Huttengasse 69"
+              placeholder="Huttengasse 57"
               required
             />
           </div>
@@ -182,13 +185,6 @@
         </form>
       </div>
     </main>
-    <div class="container-fluid bg-warning mt-5 footer">
-        <div class="row">
-          <div class="col p-2 float-start ms-5"><a href="help.html" class="text-white text-decoration-none fs-4">Help</a></div>
-          <div class="col p-2"><a href="#"><i class="fa-brands fa-instagram text-white float-end fs-3"></i></a></div>
-          <div class="col p-2"><a href="#"><i class="fa-brands fa-tiktok text-white float-start fs-3"></i></a></div>
-          <div class="col p-2 float-end me-5"><a href="impressum.html" class="text-white text-decoration-none float-end fs-4">Impressum</a></div>
-        </div>
-      </div>
+    <div id="footerContainer"></div>
   </body>
 </html>
