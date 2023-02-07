@@ -1,5 +1,16 @@
 $(document).ready(function(){
     
+
+    const params = new Proxy(new URLSearchParams(window.location.search), {
+        get: (searchParams, prop) => searchParams.get(prop),
+      });
+      // Get the value of "some_key" in eg "https://example.com/?some_key=some_value"
+      let value = params.category; // "some_value"
+    //console.log(value);
+
+
+
+
     //Buttons mit Kategorien laden
     $.ajax({
         
@@ -26,16 +37,28 @@ $(document).ready(function(){
     }
 
 
-    
+    if (value == null){
 
     //Alle Produkte laden
     $.ajax({
-        url: "http://localhost:8080/products",
+        url: "http://localhost:8080/products/isActive/" + true,
         type: "GET",
         cors: true,
         success: function(products) { addProducts(products) },
         error: function(error) { console.error(error) }
     })
+    }
+
+    if (value != null){
+         
+        $.ajax({
+            url: "http://localhost:8080/products/byCategory/" + value + "/" + true ,            
+            type: "GET",
+            cors: true,
+            success: function(products) { addProducts(products) },
+            error: function(error) { console.error(error) }
+        })
+    }
     
     function addProducts(products){        
         const allProducts = $("#products");
@@ -44,11 +67,14 @@ $(document).ready(function(){
             allProducts.append(createProduct(product));
         }
     }
+
+ 
     
     function createProduct(product) {
 
-        const img = $(`<img src="${product.img}" class="card-img-top img-fluid" alt="...">`);
-        const title = $(`<h5 class="card-title text-warning">${product.title}</h5>`);
+        const img = $(`<a  href="productdetail.html?product=${product.id}"><img src="${product.img}" class="card-img-top img-fluid" alt="..."></a>`);
+        
+        const title = $(`<a href="productdetail.html?product=${product.id}" class="text-decoration-none text-warning"><h5 class="card-title text-warning">${product.title}</h5></a>`);
         const description = $(` <p class="card-text">${product.description}</p>`);
         const button = $(`<button class="btn btn-warning mt-auto text-white">Add to Basket</button>`)
         
@@ -78,7 +104,7 @@ $(document).ready(function(){
         console.log('clicked');
         id = $(this).attr('value');  
         $.ajax({
-            url: "http://localhost:8080/products/byCategory/" + id ,            
+            url: "http://localhost:8080/products/byCategory/" + id + "/" + true ,            
             type: "GET",
             cors: true,
             success: function(products) { addProducts(products) },
@@ -94,12 +120,14 @@ $(document).ready(function(){
     $("#allCategories").click(function(e) {
         console.log("allCategories clicked");
         $.ajax({
-            url: "http://localhost:8080/products",
+            url: "http://localhost:8080/products/isActive/" + true,
             type: "GET",
             cors: true,
             success: function(products) { addProducts(products) },
             error: function(error) { console.error(error) }
         })
     });
+
+
         
 });

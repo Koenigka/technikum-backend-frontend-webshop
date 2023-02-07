@@ -21,11 +21,13 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/products")
 public class ProductController {
+
     private final ProductService productService;
 
     public ProductController(ProductService productService){
         this.productService = productService;
     }
+
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
@@ -33,24 +35,31 @@ public class ProductController {
         return productService.save(fromDTO(productDTO), productDTO.getCategoryId());
     }
 
-
     private static Product fromDTO(ProductDTO productDTO){
         return new Product(productDTO.getId(), productDTO.getTitle(), productDTO.getDescription(),
                 productDTO.getImg(), productDTO.getPrice(), productDTO.getStock(),productDTO.getActive());
     }
 
-    @GetMapping
-    public List<Product> findAllActiveProducts(){
-        return productService.findByActive();
+
+
+    @GetMapping()
+    public List<Product> findAll(){
+        return productService.findAll();
+    }
+    @GetMapping("/isActive/{active}")
+    public List<Product> findAllProductsByActive(@PathVariable Boolean active){
+        return productService.findByActive(active);
     }
 
     @GetMapping("/{id}")
     public Product findById(@PathVariable Long id){
         return productService.findById(id);
     }
-    @GetMapping("/byCategory/{categoryId}")
-    public List<Product> findProductByCategoryIdAndActive(@PathVariable Long categoryId){
-        return productService.findByCategoryIdAndActive(categoryId, true);
+
+
+    @GetMapping("/byCategory/{categoryId}/{active}")
+    public List<Product> findByCategoryIdAndActive(@PathVariable Long categoryId, @PathVariable Boolean active){
+        return productService.findByCategoryIdAndActive(categoryId, active);
     }
 
     @GetMapping("/searchproduct/{title}")

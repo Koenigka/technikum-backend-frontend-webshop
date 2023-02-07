@@ -19,6 +19,8 @@ public class CategoryController {
     public CategoryController(CategoryService categoryService){
         this.categoryService = categoryService;
     }
+
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Category createCategory(@RequestBody Category category){
@@ -26,9 +28,24 @@ public class CategoryController {
     }
 
 
+    @GetMapping
+    public List<Category> findAll(){
+        return categoryService.findAll();
+    }
     @GetMapping("/{active}")
-    public List<Category> findAllActiveCategories(@PathVariable Boolean active){
+    public List<Category> findAllCategoriesByActive(@PathVariable Boolean active){
         return categoryService.findAllByActive(active);
+    }
+
+    @PutMapping("/{id}")
+    public Category updateCategory(@PathVariable Long id, @RequestBody Category category){
+        return categoryService.update(id, category);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteCategory(@PathVariable Long id){
+        categoryService.deleteById(id);
+
     }
 
 }

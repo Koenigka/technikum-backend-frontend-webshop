@@ -15,6 +15,9 @@ $(document).ready(function () {
     }*/
 
     //Validation fehlt!!!
+
+
+    
     const product = {
       title: $("#product-title").val(),
       description: $("#product-description").val(),
@@ -24,7 +27,7 @@ $(document).ready(function () {
       categoryId: $("#product-category").val(),
       //categoryObject[0],
       //Check if is checked --> value = 1 /0
-      isActive: "true",
+      active: "true",
     };
     $.ajax({
       url: "http://localhost:8080/products",

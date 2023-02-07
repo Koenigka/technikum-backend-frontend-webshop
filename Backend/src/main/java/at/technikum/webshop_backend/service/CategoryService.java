@@ -32,4 +32,21 @@ public class CategoryService {
         return categoryRepository.findAllByActive(active);
     }
 
+    public Category update(Long id, Category updatedCategory){
+        Category category = categoryRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        category.setTitle(updatedCategory.getTitle());
+        category.setDescription(updatedCategory.getDescription());
+        category.setImgUrl(updatedCategory.getImgUrl());
+        category.setActive(updatedCategory.getActive());
+
+        return categoryRepository.save(category);
+
+    }
+
+    public void deleteById(Long id){
+        Category category = categoryRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        categoryRepository.deleteById(id);
+    }
+
+
 }
