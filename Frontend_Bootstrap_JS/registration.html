@@ -36,6 +36,7 @@
       defer
     ></script>
     <script src="/components/footer/loadFooter.js" defer></script>
+    <script src="registration.js" defer></script>
     <title>Registration</title>
   </head>
   <body>
@@ -47,7 +48,6 @@
       >
         <form
           class="border shadow p-3 rounded row g-3 border-warning bg-white my-4"
-          method="post"
           style="width: 450px"
         >
           <h4 class="text-center text-white rounded p-3 bg-warning">
@@ -57,7 +57,7 @@
           </h4>
 
           <div class="col-6 mb-3">
-            <select name="Title" class="form-select fs-5" id="" required>
+            <select name="Title" class="form-select fs-5" id="title" required>
               <option selected>Title</option>
               <option value="">Mr</option>
               <option value="">Ms</option>
@@ -107,15 +107,11 @@
               class="form-control"
               id="inputCountry"
               placeholder="Austria"
-              required
             />
           </div>
           <div class="col-md-4">
             <label for="inputCity" class="form-label fs-5">City</label>
-            <select id="inputCity" class="form-select">
-              <option selected>Choose...</option>
-              <option>...</option>
-            </select>
+            <input type="text" id="inputCity" class="form-control" required />
           </div>
           <div class="col-md-2">
             <label for="inputZip" class="form-label fs-5">Zip</label>
@@ -173,12 +169,15 @@
               name="password2"
               id="password2"
               value=""
-              required
             />
           </div>
 
           <div class="col-12">
-            <button type="submit" class="btn btn-warning text-white fs-5">
+            <button
+              type=""
+              id="registerUserButton"
+              class="btn btn-warning text-white fs-5"
+            >
               Sign up
             </button>
           </div>
