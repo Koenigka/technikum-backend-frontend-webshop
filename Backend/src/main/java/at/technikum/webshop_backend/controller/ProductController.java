@@ -41,6 +41,10 @@ public class ProductController {
     }
 
 
+    @PutMapping("/{id}")
+    public Product update(@PathVariable Long id, @RequestBody @Valid Product product){
+        return productService.update(id, product );
+    }
 
     @GetMapping()
     public List<Product> findAll(){
@@ -69,10 +73,6 @@ public class ProductController {
     }
 
 
-    @PutMapping("/{id}")
-    public Product update(@PathVariable Long id, @RequestBody @Valid Product product){
-        return productService.update(id, product);
-    }
 
     @DeleteMapping("/{id}")
     public void  deleteProduct(@PathVariable Long id){

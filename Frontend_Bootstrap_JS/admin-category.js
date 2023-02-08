@@ -1,4 +1,4 @@
-
+$(document).ready(function () {
     $('#showNewCategory').click(function() {
       $('#createNewCategory').toggle();
     });
@@ -6,8 +6,8 @@
 
 
 
-    $("#createCategoryButton").on("click", _e => {
-        console.log(e);
+    $("#createCategoryButton").on("click", (_e) => {
+        
         /* if($("#isActive").is(":checked")){
             const isActive = 1;
         }
@@ -17,13 +17,12 @@
     
         const category = {
     
-          
-    
-            "title": $("#category-name").val(),
-            "description": $("#category-description").val(),
-            "imgUrl": $("#category-img-url").val(),
+            
+            title: $("#category-title").val(),
+            description: $("#category-description").val(),
+            imgUrl: $("#category-img-url").val(),
             //Check if is checked --> value = 1 /0
-            "active": "1" 
+            active: "true"
             }
     
             $.ajax({
@@ -39,7 +38,7 @@
         
     });
 
-
+});
     
 
     

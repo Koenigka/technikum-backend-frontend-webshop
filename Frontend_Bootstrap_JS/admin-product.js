@@ -53,10 +53,7 @@ $(document).ready(function () {
     },
     
   });
-
-  
-  //Speichert alle Kategorie-Objekte um das gewählte dann im neuen Produkt übergeben zu können
-  //const allCategoriesArray = [];
+ 
 
   function addCategories(categories) {
     const allCategories = $(".product-category");
@@ -64,8 +61,7 @@ $(document).ready(function () {
     const selectNone = `<option value="">please choose</option>`;
     allCategories.append(selectNone);
     for (let category of categories) {
-      allCategories.append(createCategory(category));
-      //allCategoriesArray.push(category);
+      allCategories.append(createCategory(category));      
     }
   }
 
@@ -92,10 +88,15 @@ $(document).ready(function () {
     });
   });
 
-  //ADD SEARCHED (FOUNDED) PRODUCTS TO LIST
+  //ADD SEARCHED PRODUCTS FROM DATABASE TO LIST
   function addProducts(products) {
+
+
     const allSearchedProducts = $("#searchResult");
     allSearchedProducts.empty();
+
+   
+
     for (let product of products) {
       allSearchedProducts.append(createProduct(product));
     }
@@ -122,7 +123,7 @@ $(document).ready(function () {
   //LOAD PRODUCT TO EDIT FORM
   $(document).on("click", ".editProduct", function (event) {
     const id = event.target.value;
-    console.log(id);
+    //console.log(id);
 
     $.ajax({
       url: "http://localhost:8080/products/" + id,
@@ -136,11 +137,15 @@ $(document).ready(function () {
       },
     });
 
+   
     const addEditProduct = $("#addEditProduct");
     addEditProduct.empty();
 
     function editProducts(product) {
       const editProduct = $(`
+      <div class="container rounded mt-5 border border-warning bg-light shadow-lg">
+
+  
     <p class="fs-4 fw-bold pt-2">Edit Product</p>
     <div class="row">
       <div class="col">
@@ -214,13 +219,78 @@ $(document).ready(function () {
             <input id="product-img" type="text" class="form-control " name="product-img" value="${product.img}" required>
             </div>
           </div>
-          <button type="button" class="btn btn-warning text-white float-end mt-2 mb-2" id="saveEditProduct"> save</button>
+          <button class="btn btn-warning text-white float-end mt-2 mb-2" id="saveEditProduct"> save</button>
 
         </form>
       </div>
+    </div>
     </div>`);
 
       addEditProduct.append(editProduct);
     }
+
+     // LOAD CATEGORIES FOR EDIT
+     //OFFEN: die gewählte kommt zur Zeit doppelt vor
+
+     $.ajax({
+      url: "http://localhost:8080/categories",
+      type: "GET",
+      cors: true,
+      success: function (categories) {
+        addCategories(categories);
+      },
+      error: function (error) {
+        console.error(error);
+      },
+      
+    });
+   
+  
+    function addCategories(categories) {
+      const allCategories = $(".product-category");
+
+      console.log(allCategories);
+      
+      for (let category of categories) {
+        allCategories.append(createCategory(category));      
+      }
+    }
+  
+    function createCategory(category) {
+      const select = `<option value='${category.id}'>${category.title}</option>`;
+      return select;
+    }
+
   });
+
+//EDIT PRODUCT
+
+
+$("#saveEditProduct").on("click", (_e) => {  
+  
+  const id = $("#product-id").val();
+  const product = {
+    title: $("#product-title").val(),
+    description: $("#product-description").val(),
+    price: $("#product-price").val(),
+    stock: $("#product-stock").val(),
+    img: $("#product-img").val(),
+    categoryId: $("#product-category").val(),
+    //categoryObject[0],
+    //Check if is checked --> value = 1 /0
+    active: "true",
+  };
+  $.ajax({
+    url: "http://localhost:8080/products/" + id,
+    type: "PUT",
+    cors: true,
+    contentType: "application/json",
+    data: JSON.stringify(product),
+    success: console.log,
+    error: console.error,
+  });
+});
+
+//DELETE PRODUCT
+
 });
