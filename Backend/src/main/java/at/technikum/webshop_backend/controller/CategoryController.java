@@ -32,9 +32,22 @@ public class CategoryController {
     public List<Category> findAll(){
         return categoryService.findAll();
     }
-    @GetMapping("/{active}")
+
+
+    @GetMapping("/{id}")
+    public Category findById(@PathVariable Long id){
+        return categoryService.findById(id);
+    }
+
+
+    @GetMapping("/isActive/{active}")
     public List<Category> findAllCategoriesByActive(@PathVariable Boolean active){
         return categoryService.findAllByActive(active);
+    }
+
+    @GetMapping("/searchCategoryTitle/{title}")
+    public List<Category> findByTitleContains(@PathVariable String title){
+        return categoryService.findByTitleContains(title);
     }
 
     @PutMapping("/{id}")

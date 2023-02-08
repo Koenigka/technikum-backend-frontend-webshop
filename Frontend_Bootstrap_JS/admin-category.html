@@ -52,7 +52,7 @@
           <div class="row mb-3">
             <div class="col-md-12">
               <div class="form-group">
-                <label for="product-description" class=" fs-5">Category Description</label>
+                <label for="category-description" class=" fs-5">Category Description</label>
                 <textarea class="form-control" id="category-description" rows="3"></textarea>
               </div>
             </div>
@@ -95,8 +95,12 @@
         <form novalidate>
           <div class="row mb-2">
             <div class="col-md-6">
+              <label for="category-id" class="fs-5">Category Id</label>
+              <input type="text" class="form-control" name="category-id" id="category-id" value="">
+            </div>
+            <div class="col-md-6">
               <label for="category-name" class="fs-5">Category Name</label>
-              <input type="text" class="form-control " name="category-name" id="category-name" value="">
+              <input type="text" class="form-control " name="category-name" id="category-name-search" value="">
             </div>
           </div>
 
@@ -111,7 +115,7 @@
             </div>
 
           </div>
-          <button class="btn btn-warning text-white float-end mt-2 mb-2"
+          <button type="button" class="btn btn-warning text-white float-end mt-2 mb-2"
             id="showSearchCategory">search</button>
 
         </form>
@@ -120,9 +124,10 @@
     </div>
   </div>
 
-  <!-- SEARCH RESULT  style="display: none;"-->
+  <!-- SEARCH RESULT -->
+  <div id="SearchCategoryResult">
   <div class="container bg-light mt-5 border border-warning rounded shadow-lg table-responsive-md"
-    id="SearchCategory">
+    >
     <table class="table bg-light mt-3 fs-5">
       <thead>
         <tr>
@@ -131,86 +136,15 @@
           <th scope="col"></th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td scope="col">1</td>
-          <td scope="col">Cupcakes</td>
-          <td scope="col"><a href="#" class="btn btn-outline-warning">edit</a></td>
-          <td scope="col">
-            <form action="#" method="post" class="delete" data-title="delete" data-body="delete?">
-              <button type="submit" class="btn btn-outline-danger" data-bs-toggle="modal"
-                data-bs-target="#deleteModal">delete</button>
-            </form>
-          </td>
-        </tr>
-        <tr>
-          <td scope="col">2</td>
-          <td scope="col">Macarones</td>
-          <td scope="col"><a href="#" class="btn btn-outline-warning">edit</a></td>
-          <td scope="col">
-            <form action="#" method="post" class="delete" data-title="delete" data-body="delete?">
-              <button type="submit" class="btn btn-outline-danger" data-bs-toggle="modal"
-                data-bs-target="#deleteModal">delete</button>
-            </form>
-          </td>
-        </tr>
+      <tbody id="searchResult">
+       
       </tbody>
     </table>
   </div>
-
+</div>
   <!-- EDIT CATEGORY -->
-
-  <div class="container rounded mt-5 border border-warning bg-light shadow-lg">
-    <p class="fs-4 fw-bold pt-2">Edit Category</p>
-    <div class="row">
-      <div class="col">
-        <form method="POST" action="">
-
-
-          <div class="row mt-3 mb-3 ">
-            <div class="col-md-3">
-              <div class="form-group">
-                <label for="category-id" class=" fs-5">Category Id</label>
-                <input id="category-id" type="text" class="form-control " name="category-id" value="" required>
-              </div>
-            </div>
-            <div class="col-md-9">
-              <div class="form-group">
-                <label for="category-name" class=" fs-5">Category Name</label>
-                <input id="category-name" type="text" class="form-control " name="category-name" value="" required>
-              </div>
-            </div>
-          </div>
-
-
-          <div class="row mb-3">
-            <div class="col-md-12">
-              <div class="form-group">
-                <label for="product-description" class=" fs-5">Category Description</label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-              </div>
-            </div>
-          </div>
-
-
-          <div class="row mb-3">
-            <div class="col-md-12">
-              <label for="category-img" class="fs-5">Category Image</label>
-              <div class="input-group mb-2">
-                <input class="form-control" type="file" id="file" name="file" required>
-              </div>
-            </div>
-          </div>
-          <button type="submit" class="btn btn-warning text-white float-end mt-2 mb-2"> save</button>
-
-        </form>
-      </div>
-    </div>
-  </div>
-
-
-  </div>
-
+  <div id="addEditCategory"></div>
+<!-- LAOD FOOTER -->
   <div id="footerContainer"></div>
 
 

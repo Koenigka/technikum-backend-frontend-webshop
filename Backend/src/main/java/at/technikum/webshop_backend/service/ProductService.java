@@ -1,5 +1,7 @@
 package at.technikum.webshop_backend.service;
 
+import at.technikum.webshop_backend.dto.ProductDTO;
+import at.technikum.webshop_backend.model.Category;
 import at.technikum.webshop_backend.model.Product;
 import at.technikum.webshop_backend.repository.CategoryRepository;
 import at.technikum.webshop_backend.repository.ProductRepository;
@@ -61,30 +63,32 @@ public class ProductService {
     }
 
 
-    //Anpassen - categoryID hinzufügen!
 
+    //UPDATE FUNKT nicht
     public Product update(Long id, Product updatedProduct){
         Product product = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+
+        //hier muss ich die category vom updated product bekommen
+        var categoryId = product.getCategory();
+
         product.setTitle(updatedProduct.getTitle());
         product.setDescription(updatedProduct.getDescription());
         product.setImg(updatedProduct.getImg());
         product.setPrice(updatedProduct.getPrice());
         product.setStock(updatedProduct.getStock());
         product.setActive(updatedProduct.getActive());
-        product.setCategory(updatedProduct.getCategory());
 
-        return productRepository.save(product);
-    }
-
-    public Product update(Product product, Long categoryId){
-        var category = categoryRepository.findById(categoryId);
-
+        //brauche ich DTO???
+        var category = categoryRepository.findById(categoryId.getId());
         if(category.isEmpty()){
             throw new EntityNotFoundException();
         }
         product.setCategory(category.get());
-        return save(product);
+
+
+        return productRepository.save(product);
     }
+
     public void deleteById(Long id){
         Product product = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
 

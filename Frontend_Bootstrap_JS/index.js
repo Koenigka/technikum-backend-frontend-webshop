@@ -1,7 +1,7 @@
 $(document).ready(function(){
     
 $.ajax({
-    url: "http://localhost:8080/categories/" + true,
+    url: "http://localhost:8080/categories/isActive/" + true,
     type: "GET",
     cors: true,
     success: function(categories) { addCategoriesToPage(categories) },

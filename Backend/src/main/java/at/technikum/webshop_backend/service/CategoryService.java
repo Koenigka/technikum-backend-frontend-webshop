@@ -1,6 +1,7 @@
 package at.technikum.webshop_backend.service;
 
 import at.technikum.webshop_backend.model.Category;
+import at.technikum.webshop_backend.model.Product;
 import at.technikum.webshop_backend.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,14 @@ public class CategoryService {
     public List<Category> findAll(){
         return categoryRepository.findAll();
 
+    }
+
+    public Category findById(Long id) {
+        return categoryRepository.findById(id).orElseThrow(jakarta.persistence.EntityNotFoundException::new);
+    }
+
+    public List<Category> findByTitleContains(String title){
+        return categoryRepository.findByTitleContains(title);
     }
 
     public List<Category> findAllByActive(Boolean active){

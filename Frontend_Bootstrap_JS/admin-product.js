@@ -1,32 +1,22 @@
 $(document).ready(function () {
-  //LOAD "NEW" PRODUCT FORM
+
+  //TOOGLE FOR CREATE PRODUCT FORM
   $("#showNewProduct").click(function () {
     $("#createNewProduct").toggle();
   });
 
   //CREATE NEW PRODUCT
-  $("#createProductButton").on("click", (_e) => {
-    /*const categoryObject = [];
-    const selectedCategory = $("#product-category").val();
-    for (let item of allCategoriesArray) {
-      if (item.id == selectedCategory) {
-        categoryObject.push(item);
-      }
-    }*/
-
-    //Validation fehlt!!!
-
-
-    
+  $("#createProductButton").on("click", (_e) => {    
+    //Validation open
+    //Checkbox true false open    
     const product = {
       title: $("#product-title").val(),
       description: $("#product-description").val(),
       price: $("#product-price").val(),
       stock: $("#product-stock").val(),
       img: $("#product-img").val(),
-      categoryId: $("#product-category").val(),
-      //categoryObject[0],
-      //Check if is checked --> value = 1 /0
+      categoryId: $("#product-category").val(),      
+      //Check if is checked --> value = true/false
       active: "true",
     };
     $.ajax({
@@ -53,8 +43,6 @@ $(document).ready(function () {
     },
     
   });
- 
-
   function addCategories(categories) {
     const allCategories = $(".product-category");
     allCategories.empty();
@@ -70,7 +58,7 @@ $(document).ready(function () {
     return select;
   }
 
-  //SEARCH FUNCTION (dzt nur nach title möglich)
+  //SEARCH FUNCTION (dzt nur nach title möglich ohne aktiv!)
   $(document).on("click", "#showSearchProduct", function (event) {
     const searchId = $("#product-id").val();
     const search = $("#product-title-search").val();
@@ -93,9 +81,7 @@ $(document).ready(function () {
 
 
     const allSearchedProducts = $("#searchResult");
-    allSearchedProducts.empty();
-
-   
+    allSearchedProducts.empty();   
 
     for (let product of products) {
       allSearchedProducts.append(createProduct(product));
@@ -156,7 +142,7 @@ $(document).ready(function () {
             <div class="col-md-2">
               <div class="form-group">
                 <label for="product-id" class=" fs-5">Product Id</label>
-                <input id="product-id" type="text" class="form-control " name="product-id" value="${product.id}" required>
+                <input id="product-id-edit" type="text" class="form-control " name="product-id" value="${product.id}" required>
               </div>
             </div>
             <div class="col-md-5">
@@ -170,7 +156,7 @@ $(document).ready(function () {
             <div class="form-group">
               <label for="product-category" class="fs-5">Product Category</label>
               <!-- Load Categories -->
-              <select name="product-category" class="form-select fs-5 product-category" required>
+              <select name="product-category" class="form-select fs-5 product-category" id="product-category-edit" required>
               <option value='${product.category.id}'>${product.category.title}</option>              
               </select>
             </div>
@@ -181,7 +167,7 @@ $(document).ready(function () {
             <div class="col-md-12">
               <div class="form-group">
                 <label for="product-description" class=" fs-5">Product Description</label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" >${product.description}</textarea>
+                <textarea class="form-control" id="product-description-edit" rows="3" >${product.description}</textarea>
               </div>
             </div>
           </div>
@@ -191,7 +177,7 @@ $(document).ready(function () {
             <div class="col-md-4">
               <div class="form-group">
                 <label for="product-price" class="fs-5">Product Price</label>
-                <input id="product-price" type="text" class="form-control " name="product-price" value="${product.price}" required>
+                <input id="product-price-edit" type="text" class="form-control " name="product-price" value="${product.price}" required>
 
 
               </div>
@@ -199,7 +185,7 @@ $(document).ready(function () {
             <div class="col-md-4">
               <div class="form-group">
                 <label for="product-stock" class="   fs-5">Product Stock</label>
-                <input id="product-stock" type="text" class="form-control " name="product-stock" value="${product.stock}" required>
+                <input id="product-stock-edit" type="text" class="form-control " name="product-stock" value="${product.stock}" required>
 
               </div>
             </div>
@@ -216,10 +202,10 @@ $(document).ready(function () {
           <div class="row mb-3">
             <div class="col-md-12">
             <label for="product-img" class="fs-5">Product Image Url</label>
-            <input id="product-img" type="text" class="form-control " name="product-img" value="${product.img}" required>
+            <input id="product-img-edit" type="text" class="form-control " name="product-img-edit" value="${product.img}" required>
             </div>
           </div>
-          <button class="btn btn-warning text-white float-end mt-2 mb-2" id="saveEditProduct"> save</button>
+          <button type="button" class="btn btn-warning text-white float-end mt-2 mb-2" id="saveEditProduct"> save</button>
 
         </form>
       </div>
@@ -249,7 +235,7 @@ $(document).ready(function () {
     function addCategories(categories) {
       const allCategories = $(".product-category");
 
-      console.log(allCategories);
+      //console.log(allCategories);
       
       for (let category of categories) {
         allCategories.append(createCategory(category));      
@@ -265,21 +251,25 @@ $(document).ready(function () {
 
 //EDIT PRODUCT
 
-
-$("#saveEditProduct").on("click", (_e) => {  
+$(document).on("click", "#saveEditProduct", function (event) {
+ 
   
-  const id = $("#product-id").val();
+  const id = $("#product-id-edit").val();
+  console.log(id);
+
   const product = {
-    title: $("#product-title").val(),
-    description: $("#product-description").val(),
-    price: $("#product-price").val(),
-    stock: $("#product-stock").val(),
-    img: $("#product-img").val(),
-    categoryId: $("#product-category").val(),
+    title: $("#product-name").val(),
+    description: $("#product-description-edit").val(),
+    price: $("#product-price-edit").val(),
+    stock: $("#product-stock-edit").val(),
+    img: $("#product-img-edit").val(),
+    categoryId: $("#product-category-edit").val(),
     //categoryObject[0],
     //Check if is checked --> value = 1 /0
     active: "true",
   };
+
+  console.log(product);
   $.ajax({
     url: "http://localhost:8080/products/" + id,
     type: "PUT",
