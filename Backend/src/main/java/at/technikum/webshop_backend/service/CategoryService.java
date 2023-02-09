@@ -54,7 +54,7 @@ public class CategoryService {
 
     public void deleteById(Long id){
         Category category = categoryRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        categoryRepository.deleteById(id);
+        categoryRepository.delete(category);
     }
 
 

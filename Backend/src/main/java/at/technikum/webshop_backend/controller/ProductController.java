@@ -29,7 +29,8 @@ public class ProductController {
     }
 
 
-    @ResponseStatus(HttpStatus.CREATED)
+
+    @ResponseStatus(value = HttpStatus.CREATED)
     @PostMapping
     public Product createProduct(@Valid @RequestBody ProductDTO productDTO){
         return productService.save(fromDTO(productDTO), productDTO.getCategoryId());
@@ -42,9 +43,10 @@ public class ProductController {
 
 
     //OPEN !!!
+    @ResponseStatus(value = HttpStatus.OK)
     @PutMapping("/{id}")
-    public Product update(@PathVariable Long id, @RequestBody Product product){
-        return productService.update(id, product);
+    public Product updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO){
+        return productService.update(id, fromDTO(productDTO), productDTO.getCategoryId());
     }
 
     @GetMapping()

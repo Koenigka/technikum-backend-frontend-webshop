@@ -48,13 +48,11 @@ public class ProductService {
     }
 
     public Product save(Product product){
-
         return productRepository.save(product);
     }
 
     public Product save(Product product, Long categoryId){
         var category = categoryRepository.findById(categoryId);
-
         if(category.isEmpty()){
             throw new EntityNotFoundException();
         }
@@ -65,11 +63,9 @@ public class ProductService {
 
 
     //UPDATE FUNKT nicht
-    public Product update(Long id, Product updatedProduct){
+    public Product update(Long id, Product updatedProduct, Long categoryId){
         Product product = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
 
-        //hier muss ich die category vom updated product bekommen
-        var categoryId = product.getCategory();
 
         product.setTitle(updatedProduct.getTitle());
         product.setDescription(updatedProduct.getDescription());
@@ -77,9 +73,7 @@ public class ProductService {
         product.setPrice(updatedProduct.getPrice());
         product.setStock(updatedProduct.getStock());
         product.setActive(updatedProduct.getActive());
-
-        //brauche ich DTO???
-        var category = categoryRepository.findById(categoryId.getId());
+        var category = categoryRepository.findById(categoryId);
         if(category.isEmpty()){
             throw new EntityNotFoundException();
         }
@@ -92,7 +86,7 @@ public class ProductService {
     public void deleteById(Long id){
         Product product = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
 
-        productRepository.deleteById(id);
+        productRepository.delete(product);
     }
 
 

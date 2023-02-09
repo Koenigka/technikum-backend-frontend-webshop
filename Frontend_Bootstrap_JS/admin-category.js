@@ -7,14 +7,18 @@ $(document).ready(function () {
 
     //CREATE NEW CATEGORY
     $("#createCategoryButton").on("click", (_e) => {
+
+      isActive = $("#isActive").is(":checked") ? true : false;
+
+      //console.log(isActive);
          //Validation open
-    //Checkbox true false open    
+     
         const category = {
             title: $("#category-title").val(),
             description: $("#category-description").val(),
             imgUrl: $("#category-img-url").val(),
             //Check if is checked --> value = true/false
-            active: "true"
+            active: isActive
             };
     
             $.ajax({
@@ -66,10 +70,8 @@ $(document).ready(function () {
     <td scope="col">${category.title}</td>    
     <td scope="col"><button class="btn btn-outline-warning editCategory" value="${category.id}">edit</button></td>
     <td scope="col">
-      <form action="#" method="post" class="delete" data-title="delete" data-body="delete?">
-        <button type="submit" class="btn btn-outline-danger" data-bs-toggle="modal"
-          data-bs-target="#deleteModal">delete</button>
-      </form>
+       <button class="btn btn-outline-danger delete" value="${category.id}">delete</button>
+     
     </td>
   </tr>`)
   return searchedCategory;
@@ -106,7 +108,7 @@ $(document).ready(function () {
               <div class="col-md-3">
                 <div class="form-group">
                   <label for="category-id" class=" fs-5">Category Id</label>
-                  <input id="category-id-edit" type="text" class="form-control " name="category-id-edit" value="${category.id}" required>
+                  <input id="category-id-edit" type="text" class="form-control " name="category-id-edit" value="${category.id}" required disabled>
                 </div>
               </div>
               <div class="col-md-9">
@@ -177,6 +179,20 @@ $(document).on("click", "#saveEditCategory", function (event) {
   });
   
   //DELETE CATEGORY
+  $(document).on("click", ".delete", function (event) {
+    const deleteId = event.target.value;
+    
+    //console.log(deleteId);
+    
+
+    $.ajax({
+      url: "http://localhost:8080/categories/" + deleteId,
+      type: "DELETE",
+      cors: true,
+      success: console.log,
+      error: console.error,
+    });
+  });
 
 });
     
