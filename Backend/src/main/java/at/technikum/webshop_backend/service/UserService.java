@@ -27,6 +27,10 @@ public class UserService {
         return userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
+    public List<User> findByEmail(String email){
+        return userRepository.findByEmail(email);
+    }
+
     public User save(User user){
         return userRepository.save(user);
     }

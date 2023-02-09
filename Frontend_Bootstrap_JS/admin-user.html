@@ -21,258 +21,51 @@
       integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
       crossorigin="anonymous"
     ></script>
-    <script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>    <script src="/components/navbar/loadNavbar.js" defer></script>
+    <script
+      src="https://code.jquery.com/jquery-3.6.3.js"
+      integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
+      crossorigin="anonymous"
+    ></script>
+    <script src="/components/navbar/loadNavbar.js" defer></script>
     <script src="/components/navbar/loadNavbarAdmin.js" defer></script>
-    <script src="/components/footer/loadFooter.js" defer></script>
+    <script src="/components/footer/loadStickyFooter.js" defer></script>
     <script src="/components/cart/loadCart.js" defer></script>
+    <script src="admin-user.js"></script>
   </head>
   <body>
     <div id="navbarContainerAdmin"></div>
     <div id="basketContainer"></div>
-    
-
- 
-
-      <div class="container bg-light mt-5 rounded border border-warning shadow-lg">
-        <p class="fs-4 fw-bold pt-2">Search for Users</p>      
-      <div class="row">
-        <div class="col">
-            <form action="#" method="post" novalidate>
-                <div class="row mb-2">
-                    <div class="col-md-5">
-                        <label for="email" class="fs-5">E-mail</label>
-                        <input type="e-mail" class="form-control" id="email" value="" placeholder="dolores">                       
-                    </div>
-                    <div class="col-md-5">
-                        <label for="username" class="fs-5">Username</label>
-                        <input type="username" class="form-control " name="uesrname" id="username" value="">                        
-                    </div>
-                    
-                    <div class="col-md-2 d-flex align-items-end">
-                        <div class="form-check mb-2">
-                            <input type="checkbox" class="form-check-input"  name="status" id="status" >
-                            <label class="form-check-label  fs-5" for="status" >
-                              active
-                            </label>
-                          </div>
-                    </div>
-                </div>                
-                        <button type="submit" class="btn btn-warning text-white float-end mt-2 mb-2">search</button>
-
-              
-          </form>
-        </div>
-      </div>
-    </div>
 
     <div
-      class="container bg-light mt-5 border border-warning rounded shadow-lg table-responsive-md"
+      class="container bg-light mt-5 rounded border border-warning shadow-lg"
     >
-      <table class="table bg-light mt-3 fs-5">
-        <thead>
-          <tr>
-            <th scope="col">Username</th>
-            <th scope="col">E-Mail</th>
-            <th scope="col">First Name</th>
-            <th scope="col">Last Name</th>
-            <th scope="col"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td scope="col">DoloresB</td>
-            <td scope="col">dolores@bauer.com</td>
-            <td scope="col">Dolores</td>
-            <td scope="col">Bauer</td>
-            <td scope="col">
-              <a href="#" class="btn btn-outline-warning">edit</a>
-            </td>
-            <td scope="col">
-              <form
-                action="#"
-                method="post"
-                class="delete"
-                data-title="delete"
-                data-body="delete?"
-              >
-                <button
-                  type="submit"
-                  class="btn btn-outline-danger"
-                  data-bs-toggle="modal"
-                  data-bs-target="#deleteModal"
-                >
-                  delete
-                </button>
-              </form>
-            </td>
-          </tr>
-          <tr>
-            <td scope="col">DolBau</td>
-            <td scope="col">dbauer@gmail.com</td>
-            <td scope="col">Dolores</td>
-            <td scope="col">Bauer</td>
-            <td scope="col">
-              <a href="#" class="btn btn-outline-warning">edit</a>
-            </td>
-            <td scope="col">
-              <form
-                action="#"
-                method="post"
-                class="delete"
-                data-title="delete"
-                data-body="delete?"
-              >
-                <button
-                  type="submit"
-                  class="btn btn-outline-danger"
-                  data-bs-toggle="modal"
-                  data-bs-target="#deleteModal"
-                >
-                  delete
-                </button>
-              </form>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div
-      class="container rounded mt-5 border border-warning bg-light shadow-lg"
-    >
-      <p class="fs-4 fw-bold pt-2">Edit User</p>
+      <p class="fs-4 fw-bold pt-2">Search for Users</p>
       <div class="row">
         <div class="col">
-          <form method="POST" action="">
-            <div class="row mt-3 mb-3">
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="title" class="fs-5">Title</label>
-
-                  <select name="Title" class="form-select fs-5" id="" required>
-                    <option value=""></option>
-                    <option value="1">Mr</option>
-                    <option value="2">Mrs</option>
-                    <option value="3">Ms</option>
-                  </select>
-                </div>
+          <form action="#" method="post" novalidate>
+            <div class="row mb-2">
+              <div class="col-md-5">
+                <label for="email" class="fs-5">E-mail</label>
+                <input
+                  type="e-mail"
+                  class="form-control"
+                  id="email"
+                  value=""
+                  placeholder="dolores"
+                />
               </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="first-name" class="fs-5">First Name</label>
-                  <input
-                    id="first-name"
-                    type="text"
-                    class="form-control"
-                    name="first-name"
-                    value=""
-                    required
-                  />
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="last-name" class="fs-5">Last Name</label>
-                  <input
-                    id="last-name"
-                    type="text"
-                    class="form-control"
-                    name="last-name"
-                    value=""
-                    required
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div class="row mb-3">
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="street" class="fs-5">Street</label>
-                  <input
-                    id="street"
-                    type="text"
-                    class="form-control"
-                    name="street"
-                    value=""
-                    required
-                  />
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="zip" class="fs-5">Zip</label>
-                  <input
-                    id="zip"
-                    type="text"
-                    class="form-control"
-                    name="zip"
-                    value=""
-                    required
-                  />
-                </div>
+              <div class="col-md-5">
+                <label for="username" class="fs-5">Username</label>
+                <input
+                  type="username"
+                  class="form-control"
+                  name="uesrname"
+                  id="username"
+                  value=""
+                />
               </div>
 
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="city" class="fs-5">City</label>
-                  <input
-                    id="city"
-                    type="text"
-                    class="form-control"
-                    name="city"
-                    value=""
-                    required
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div class="row mb-3">
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="email" class="fs-5">E-mail</label>
-                  <input
-                    id="email"
-                    type="email"
-                    class="form-control"
-                    name="email"
-                    value=""
-                    required
-                  />
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="username" class="fs-5">Username</label>
-                  <input
-                    id="username"
-                    type="text"
-                    class="form-control"
-                    name="username"
-                    value=""
-                    required
-                  />
-                </div>
-              </div>
-
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="password" class="fs-5">Password</label>
-                  <input
-                    id="password"
-                    type="text"
-                    class="form-control"
-                    name="password"
-                    value=""
-                    required
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-4">
+              <div class="col-md-2 d-flex align-items-end">
                 <div class="form-check mb-2">
                   <input
                     type="checkbox"
@@ -285,33 +78,42 @@
                   </label>
                 </div>
               </div>
-
-              <div class="col-md-4">
-                <div class="form-check mb-2">
-                  <input
-                    type="checkbox"
-                    class="form-check-input"
-                    name="is-admin"
-                    id="is-admin"
-                  />
-                  <label class="form-check-label fs-5" for="is-admin">
-                    User is Admin
-                  </label>
-                </div>
-              </div>
             </div>
-
             <button
-              type="submit"
+              type="button"
+              id="showSearchUser"
               class="btn btn-warning text-white float-end mt-2 mb-2"
             >
-              save
+              search
             </button>
           </form>
         </div>
       </div>
     </div>
 
+    <!-- SEARCH RESULT   -->
+
+    <div
+      id="searchUserResult"
+      class="container bg-light mt-5 border border-warning rounded shadow-lg table-responsive-md"
+    >
+      <table class="table bg-light mt-3 fs-5">
+        <thead>
+          <tr>
+            <th scope="col">Username</th>
+            <th scope="col">E-Mail</th>
+            <th scope="col">First Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody id="searchResult"></tbody>
+      </table>
+    </div>
+
+    <!-- EDIT USERS -->
+
+    <div id="addEditUser"></div>
     <div id="footerContainer"></div>
   </body>
 </html>

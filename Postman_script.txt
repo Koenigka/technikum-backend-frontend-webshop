@@ -119,4 +119,19 @@
 
 },
 
+//Users
+{
+    "title": "Ms",
+    "firstname" : "Karin",
+    "lastname" : "Koenig",
+    "address" : "Ringstrasse 55",
+    "city" : "Wien",
+    "zip" : 1010,
+    "username" : "karinka",
+    "email" : "karin@test.at",
+    "password" : "karin1234",
+    "Active" : true,
+    "Admin" : true
+}
+
 
