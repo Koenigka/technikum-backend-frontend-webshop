@@ -1,144 +1,116 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="/css/main.min.css" rel="stylesheet" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="style_bootstrap.css" />
-    <title>admin-user</title>
-    <script
-      src="https://kit.fontawesome.com/e85167c40f.js"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://code.jquery.com/jquery-3.6.3.js"
-      integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
-      crossorigin="anonymous"
-    ></script>
-    <script src="/components/navbar/loadNavbar.js" defer></script>
-    <script src="/components/navbar/loadNavbarAdmin.js" defer></script>
-    <script src="/components/footer/loadFooter.js" defer></script>
-    <script src="/components/cart/loadCart.js" defer></script>
-    <script src="admin-user.js"></script>
-  </head>
-  <body>
-    <div id="navbarContainerAdmin"></div>
-    <div id="basketContainer"></div>
+//LOAD USERS FROM DATABASE
+$.ajax({
+  url: "http://localhost:8080/users/email",
+  type: "GET",
+  cors: true,
+  success: function (users) {
+    addUsers(users);
+  },
+  error: function (error) {
+    console.error(error);
+  },
+});
 
-    <div
-      class="container bg-light mt-5 rounded border border-warning shadow-lg"
-    >
-      <p class="fs-4 fw-bold pt-2">Search for Users</p>
-      <div class="row">
-        <div class="col">
-          <form action="#" method="post" novalidate>
-            <div class="row mb-2">
-              <div class="col-md-5">
-                <label for="email" class="fs-5">E-mail</label>
-                <input
-                  type="e-mail"
-                  class="form-control"
-                  id="email"
-                  value=""
-                  placeholder="dolores"
-                />
-              </div>
-              <div class="col-md-5">
-                <label for="username" class="fs-5">Username</label>
-                <input
-                  type="username"
-                  class="form-control"
-                  name="uesrname"
-                  id="username"
-                  value=""
-                />
-              </div>
+//SEARCH FUNCTION (dzt nur nach title möglich)
+$(document).on("click", "#showSearchUser", function (event) {
+  const search = $("#email").val();
 
-              <div class="col-md-2 d-flex align-items-end">
-                <div class="form-check mb-2">
-                  <input
-                    type="checkbox"
-                    class="form-check-input"
-                    name="status"
-                    id="status"
-                  />
-                  <label class="form-check-label fs-5" for="status">
-                    active
-                  </label>
-                </div>
-              </div>
-            </div>
-            <button
-              type="button"
-              id="showSearchUser"
-              class="btn btn-warning text-white float-end mt-2 mb-2"
-            >
-              search
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
+  $.ajax({
+    url: "http://localhost:8080/users/email/" + search,
+    type: "GET",
+    cors: true,
+    success: function (users) {
+      addUsers(users);
+    },
+    error: function (error) {
+      console.error(error);
+    },
+  });
+});
 
-    <!-- SEARCH RESULT   -->
+//ADD SEARCHED USER FROM DATABASE
+function addUsers(users) {
+  const allSearchedUsers = $("#searchResult");
+  allSearchedUsers.empty();
 
-    <div
-      id="searchUserResult"
-      class="container bg-light mt-5 border border-warning rounded shadow-lg table-responsive-md"
-    >
-      <table class="table bg-light mt-3 fs-5">
-        <thead>
-          <tr>
-            <th scope="col">Username</th>
-            <th scope="col">E-Mail</th>
-            <th scope="col">First Name</th>
-            <th scope="col">Last Name</th>
-            <th scope="col"></th>
-          </tr>
-        </thead>
-        <tbody id="searchResult"></tbody>
-      </table>
-    </div>
+  for (let user of users) {
+    allSearchedUsers.append(createUser(user));
+  }
+}
 
-    <!-- <div
+function createUser(user) {
+  const searchedUser = $(`<tr>
+    <td scope="col">${user.username}</td>
+    <td scope="col">${user.email}</td>
+    <td scope="col">${user.firstname}</td>
+    <td scope="col">${user.lastname}</td>
+    <td scope="col"><button class="btn btn-outline-warning editUser" value="${user.id}">edit</button></td>
+    <td scope="col">
+      <form class="delete" data-title="delete" data-body="delete?">
+        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+          data-bs-target="#deleteModal">delete</button>
+      </form>
+    </td>
+  </tr>`);
+  return searchedUser;
+}
+
+//LOAD PRODUCT TO EDIT FORM
+$(document).on("click", ".editUser", function (event) {
+  const id = event.target.value;
+  //console.log(id);
+
+  $.ajax({
+    url: "http://localhost:8080/users/" + id,
+    type: "GET",
+    cors: true,
+    success: function (user) {
+      editUsers(user);
+    },
+    error: function (error) {
+      console.error(error);
+    },
+  });
+
+  const addEditUser = $("#addEditUser");
+  addEditUser.empty();
+
+  function editUsers(user) {
+    const editUser = $(`
+      <div
       class="container rounded mt-5 border border-warning bg-light shadow-lg"
     >
       <p class="fs-4 fw-bold pt-2">Edit User</p>
       <div class="row">
         <div class="col">
-          <form method="POST" action="">
+          <form method="PUT" action="">
             <div class="row mt-3 mb-3">
               <div class="col-md-4">
                 <div class="form-group">
                   <label for="title" class="fs-5">Title</label>
 
-                  <select name="Title" class="form-select fs-5" id="" required>
-                    <option value=""></option>
-                    <option value="1">Mr</option>
-                    <option value="2">Ms</option>
+                  <select name="Title" class="form-select fs-5 user-title" id="title-edit" >
+                    <option value="">${user.title}</option>
                   </select>
                 </div>
               </div>
+              <input
+                    id="user-id-edit"
+                    type="hidden"
+                    class="form-control"
+                    name=""
+                    value="${user.id}"
+                    required
+                  />
               <div class="col-md-4">
                 <div class="form-group">
                   <label for="first-name" class="fs-5">First Name</label>
                   <input
-                    id="first-name"
+                    id="first-name-edit"
                     type="text"
                     class="form-control"
                     name="first-name"
-                    value=""
+                    value="${user.firstname}"
                     required
                   />
                 </div>
@@ -147,11 +119,11 @@
                 <div class="form-group">
                   <label for="last-name" class="fs-5">Last Name</label>
                   <input
-                    id="last-name"
+                    id="last-name-edit"
                     type="text"
                     class="form-control"
                     name="last-name"
-                    value=""
+                    value="${user.lastname}"
                     required
                   />
                 </div>
@@ -163,11 +135,11 @@
                 <div class="form-group">
                   <label for="address" class="fs-5">Address</label>
                   <input
-                    id="address"
+                    id="address-edit"
                     type="text"
                     class="form-control"
                     name="address"
-                    value=""
+                    value="${user.address}"
                     required
                   />
                 </div>
@@ -176,11 +148,11 @@
                 <div class="form-group">
                   <label for="zip" class="fs-5">Zip</label>
                   <input
-                    id="zip"
+                    id="zip-edit"
                     type="text"
                     class="form-control"
                     name="zip"
-                    value=""
+                    value="${user.zip}"
                     required
                   />
                 </div>
@@ -190,11 +162,11 @@
                 <div class="form-group">
                   <label for="city" class="fs-5">City</label>
                   <input
-                    id="city"
+                    id="city-edit"
                     type="text"
                     class="form-control"
                     name="city"
-                    value=""
+                    value="${user.city}"
                     required
                   />
                 </div>
@@ -206,11 +178,11 @@
                 <div class="form-group">
                   <label for="email" class="fs-5">E-mail</label>
                   <input
-                    id="email"
+                    id="email-edit"
                     type="email"
                     class="form-control"
                     name="email"
-                    value=""
+                    value="${user.email}"
                     required
                   />
                 </div>
@@ -219,11 +191,11 @@
                 <div class="form-group">
                   <label for="username" class="fs-5">Username</label>
                   <input
-                    id="username"
+                    id="username-edit"
                     type="text"
                     class="form-control"
                     name="username"
-                    value=""
+                    value="${user.username}"
                     required
                   />
                 </div>
@@ -233,11 +205,11 @@
                 <div class="form-group">
                   <label for="password" class="fs-5">Password</label>
                   <input
-                    id="password"
+                    id="password-edit"
                     type="text"
                     class="form-control"
                     name="password"
-                    value=""
+                    value="${user.password}"
                     required
                   />
                 </div>
@@ -275,19 +247,48 @@
             </div>
 
             <button
-              type="submit"
+              type="button"
               class="btn btn-warning text-white float-end mt-2 mb-2"
+              id="saveEditUser"
             >
               save
             </button>
           </form>
         </div>
       </div>
-    </div> -->
+    </div>`);
 
-    <!-- EDIT USERS -->
+    addEditUser.append(editUser);
+  }
+});
 
-    <div id="addEditUser"></div>
-    <div id="footerContainer"></div>
-  </body>
-</html>
+//EDIT USER
+
+$(document).on("click", "#saveEditUser", function (event) {
+  const id = $("#user-id-edit").val();
+
+  const user = {
+    title: $("#title-edit").val(),
+    firstname: $("#first-name-edit").val(),
+    lastname: $("#last-name-edit").val(),
+    address: $("#address-edit").val(),
+    city: $("#city-edit").val(),
+    zip: $("#zip-edit").val(),
+    username: $("#username-edit").val(),
+    email: $("#email-edit").val(),
+    password: $("#password-edit").val(),
+    isActive: "true",
+    isAdmin: "false",
+  };
+
+  console.log(user);
+  $.ajax({
+    url: "http://localhost:8080/users/" + id,
+    type: "PUT",
+    cors: true,
+    contentType: "application/json",
+    data: JSON.stringify(user),
+    success: console.log,
+    error: console.error,
+  });
+});
