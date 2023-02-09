@@ -2,6 +2,7 @@ package at.technikum.webshop_backend.controller;
 
 import at.technikum.webshop_backend.model.Category;
 import at.technikum.webshop_backend.service.CategoryService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class CategoryController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Category createCategory(@RequestBody Category category){
+    public Category createCategory(@RequestBody @Valid Category category){
         return categoryService.save(category);
     }
 
@@ -51,7 +52,7 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    public Category updateCategory(@PathVariable Long id, @RequestBody Category category){
+    public Category updateCategory(@PathVariable Long id, @RequestBody @Valid Category category){
         return categoryService.update(id, category);
     }
 

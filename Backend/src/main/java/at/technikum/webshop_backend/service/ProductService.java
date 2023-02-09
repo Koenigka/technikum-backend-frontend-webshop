@@ -62,7 +62,7 @@ public class ProductService {
 
 
 
-    //UPDATE FUNKT nicht
+
     public Product update(Long id, Product updatedProduct, Long categoryId){
         Product product = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
 

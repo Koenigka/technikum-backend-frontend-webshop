@@ -16,26 +16,23 @@ public class Product {
     private Long id;
 
 
-    @NotNull
-    @Size(min = 2, max = 32)
+
     private String title;
 
-    @NotNull
-    @Size(min = 2, max = 200)
+
     private String description;
 
-    @NotNull
-    @Size(min = 2, max = 200)
+
     private String img;
 
 
-    @NotNull
+
     private double price;
 
-    @NotNull
+
     private int stock;
 
-    @NotNull
+
     private Boolean active;
 
     @ManyToOne(optional = false)

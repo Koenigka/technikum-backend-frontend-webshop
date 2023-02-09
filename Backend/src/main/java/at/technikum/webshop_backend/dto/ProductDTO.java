@@ -2,16 +2,41 @@ package at.technikum.webshop_backend.dto;
 
 
 import at.technikum.webshop_backend.model.Product;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.Length;
+
+/**
+ * DTO for {@link Product}
+ */
 
 public class ProductDTO {
 
+
     private Long id;
+
+    @NotBlank
+    @Length(min = 2, max = 40)
     private String title;
+
+    @NotBlank
+    @Length(min = 2, max = 200)
     private String description;
+
+    @NotBlank
+    @Length(min = 2, max = 100)
     private String img;
+
+    @NotNull
+    @DecimalMin("0.01")
     private double price;
+
+    @NotNull
     private int stock;
+    @NotNull
     private Boolean active;
+    @NotNull
     private Long categoryId;
 
     public Long getId() {

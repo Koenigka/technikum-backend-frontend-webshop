@@ -1,6 +1,9 @@
 package at.technikum.webshop_backend.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.Length;
 
 import java.util.List;
 import java.util.Set;
@@ -18,14 +21,20 @@ public class Category {
     //@OneToMany(mappedBy = "category")
     //private Set<Product> products;
 
+    @NotBlank
+    @Length(min = 2, max = 40)
     private String title;
 
-
+    @NotBlank
+    @Length(min = 2, max = 200)
     private String description;
 
 
+    @NotBlank
+    @Length(min = 2, max = 100)
     private String imgUrl;
 
+    @NotNull
     private Boolean active;
 
     public Category() {
