@@ -8,7 +8,8 @@ $(document).ready(function () {
   //CREATE NEW PRODUCT
   $("#createProductButton").on("click", (_e) => {    
     //Validation open
-    //Checkbox true false open    
+    
+    isActive = $("#isActive").is(":checked") ? true : false;
     const product = {
       title: $("#product-title").val(),
       description: $("#product-description").val(),
@@ -17,7 +18,7 @@ $(document).ready(function () {
       img: $("#product-img").val(),
       categoryId: $("#product-category").val(),      
       //Check if is checked --> value = true/false
-      active: "true",
+      active: isActive,
     };
     $.ajax({
       url: "http://localhost:8080/products",
@@ -125,6 +126,13 @@ $(document).ready(function () {
     addEditProduct.empty();
 
     function editProducts(product) {
+
+      if(product.active == true){
+        productedit = "checked";
+      }
+      else{
+        productedit = "";
+      }
       const editProduct = $(`
       <div class="container rounded mt-5 border border-warning bg-light shadow-lg">
 
@@ -153,7 +161,7 @@ $(document).ready(function () {
             <div class="form-group">
               <label for="product-category" class="fs-5">Product Category</label>
               <!-- Load Categories -->
-              <select name="product-category" class="form-select fs-5 product-category" id="product-category-edit" required>
+              <select name="product-category" class="form-select fs-5" id="product-category-edit" required>
               <option value='${product.category.id}'>${product.category.title}</option>              
               </select>
             </div>
@@ -188,7 +196,7 @@ $(document).ready(function () {
             </div>
             <div class="col-md-4 d-flex align-items-end">
               <div class="form-check mb-2 ">
-                <input type="checkbox" class="form-check-input" name="status" id="status" checked>
+                <input type="checkbox" class="form-check-input status" name="status""  ${productedit}>
                 <label class="form-check-label fs-5" for="status">
                   active
                 </label>
@@ -230,7 +238,7 @@ $(document).ready(function () {
    
   
     function addCategories(categories) {
-      const allCategories = $(".product-category");
+      const allCategories = $("#product-category-edit");
 
       //console.log(allCategories);
       
@@ -256,6 +264,7 @@ $(document).on("click", "#saveEditProduct", function (event) {
   
   const id = $("#product-id-edit").val();
   console.log(id);
+  isActive = $(".status").is(":checked") ? true : false;
 
   const product = {
     title: $("#product-name").val(),
@@ -266,7 +275,7 @@ $(document).on("click", "#saveEditProduct", function (event) {
     categoryId: $("#product-category-edit").val(),
     //categoryObject[0],
     //Check if is checked --> value = 1 /0
-    active: "true",
+    active: isActive,
   };
 
   console.log(product);
