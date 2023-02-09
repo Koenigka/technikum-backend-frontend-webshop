@@ -78,7 +78,7 @@ $(document).on("click", ".editUser", function (event) {
   function editUsers(user) {
     const editUser = $(`
       <div
-      class="container rounded mt-5 border border-warning bg-light shadow-lg"
+      class="container rounded my-5 border border-warning bg-light shadow-lg"
     >
       <p class="fs-4 fw-bold pt-2">Edit User</p>
       <div class="row">
@@ -224,6 +224,7 @@ $(document).on("click", ".editUser", function (event) {
                     class="form-check-input"
                     name="status"
                     id="status"
+                     checked
                   />
                   <label class="form-check-label fs-5" for="status">
                     active
@@ -238,6 +239,7 @@ $(document).on("click", ".editUser", function (event) {
                     class="form-check-input"
                     name="is-admin"
                     id="is-admin"
+                    
                   />
                   <label class="form-check-label fs-5" for="is-admin">
                     User is Admin
@@ -277,8 +279,8 @@ $(document).on("click", "#saveEditUser", function (event) {
     username: $("#username-edit").val(),
     email: $("#email-edit").val(),
     password: $("#password-edit").val(),
-    isActive: "true",
-    isAdmin: "false",
+    active: "true",
+    admin: "false",
   };
 
   console.log(user);

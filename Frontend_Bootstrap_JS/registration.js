@@ -11,8 +11,8 @@ $(document).ready(function () {
       username: $("#un").val(),
       email: $("#email").val(),
       password: $("#password1").val(),
-      isActive: "true",
-      isAdmin: "false",
+      active: "true",
+      admin: "false",
     };
     $.ajax({
       url: "http://localhost:8080/users",
