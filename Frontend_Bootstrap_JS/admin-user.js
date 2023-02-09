@@ -47,7 +47,7 @@ function createUser(user) {
     <td scope="col"><button class="btn btn-outline-warning editUser" value="${user.id}">edit</button></td>
     <td scope="col">
       <form class="delete" data-title="delete" data-body="delete?">
-        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+        <button type="button" class="btn btn-outline-danger delete" value="${user.id}" data-bs-toggle="modal"
           data-bs-target="#deleteModal">delete</button>
       </form>
     </td>
@@ -262,6 +262,9 @@ $(document).on("click", ".editUser", function (event) {
 
     addEditUser.append(editUser);
   }
+
+  //WHEN EDIT USER OPENS, THE FOOTER IS NOT STICKY ANYMORE
+  $(".footer").removeClass("fixed-bottom");
 });
 
 //EDIT USER
@@ -290,6 +293,19 @@ $(document).on("click", "#saveEditUser", function (event) {
     cors: true,
     contentType: "application/json",
     data: JSON.stringify(user),
+    success: console.log,
+    error: console.error,
+  });
+});
+
+//DELETE USER
+$(document).on("click", ".delete", function (event) {
+  const deleteId = event.target.value;
+
+  $.ajax({
+    url: "http://localhost:8080/users/" + deleteId,
+    type: "DELETE",
+    cors: true,
     success: console.log,
     error: console.error,
   });
