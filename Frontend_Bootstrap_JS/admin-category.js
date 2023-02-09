@@ -148,7 +148,7 @@ $(document).ready(function () {
     addEditCategory.append(editCategory);
     }
 
-
+    $(".footer").removeClass("fixed-bottom");
 
 });
 

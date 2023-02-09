@@ -244,6 +244,9 @@ $(document).ready(function () {
       return select;
     }
 
+  $(".footer").removeClass("fixed-bottom");
+
+
   });
 
 //EDIT PRODUCT
