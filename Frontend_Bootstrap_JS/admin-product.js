@@ -32,7 +32,7 @@ $(document).ready(function () {
 
   //LOAD CATEGORIES FROM DATABASE  & generate Dropdown values in new product form
   $.ajax({
-    url: "http://localhost:8080/categories",
+    url: "http://localhost:8080/categories/isActive/true",
     type: "GET",
     cors: true,
     success: function (categories) {
@@ -97,11 +97,8 @@ $(document).ready(function () {
     <td scope="col">${product.stock}</td>
     <td scope="col"><button class="btn btn-outline-warning editProduct" value="${product.id}">edit</button></td>
     <td scope="col">
-      <form class="delete" data-title="delete" data-body="delete?">
-        <button type="submit" class="btn btn-outline-danger" data-bs-toggle="modal"
-          data-bs-target="#deleteModal">delete</button>
-      </form>
-    </td>
+    <button class="btn btn-outline-danger delete" value="${product.id}">delete</button>  
+ </td>
   </tr>`);
     return searchedProduct;
   }
@@ -142,7 +139,7 @@ $(document).ready(function () {
             <div class="col-md-2">
               <div class="form-group">
                 <label for="product-id" class=" fs-5">Product Id</label>
-                <input id="product-id-edit" type="text" class="form-control " name="product-id" value="${product.id}" required>
+                <input id="product-id-edit" type="text" class="form-control " name="product-id" value="${product.id}" required disabled>
               </div>
             </div>
             <div class="col-md-5">
@@ -219,7 +216,7 @@ $(document).ready(function () {
      //OFFEN: die gewählte kommt zur Zeit doppelt vor
 
      $.ajax({
-      url: "http://localhost:8080/categories",
+      url: "http://localhost:8080/categories/isActive/true",
       type: "GET",
       cors: true,
       success: function (categories) {
@@ -282,5 +279,19 @@ $(document).on("click", "#saveEditProduct", function (event) {
 });
 
 //DELETE PRODUCT
+$(document).on("click", ".delete", function (event) {
+  const deleteId = event.target.value;
+  
+  //console.log(deleteId);
+  
+
+  $.ajax({
+    url: "http://localhost:8080/products/" + deleteId,
+    type: "DELETE",
+    cors: true,
+    success: console.log,
+    error: console.error,
+  });
+});
 
 });
