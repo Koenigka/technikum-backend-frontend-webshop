@@ -99,6 +99,13 @@ $(document).ready(function () {
     addEditCategory.empty();
 
     function editCategories(category) {
+      if(category.active == true){
+        categoryedit = "checked";
+      }
+      else{
+        categoryedit = "";
+      }
+
       const editCategory = $(`  <div class="container rounded mt-5 border border-warning bg-light shadow-lg">
       <p class="fs-4 fw-bold pt-2">Edit Category</p>
       <div class="row">
@@ -131,13 +138,25 @@ $(document).ready(function () {
   
   
             <div class="row mb-3">
-              <div class="col-md-12">
+              <div class="col-md-9">
                 <label for="category-img" class="fs-5">Category Image Url</label>
                 <div class="input-group mb-2">
                   <input class="form-control" type="text" id="category-img" name="category-img" value="${category.imgUrl}"required>
                 </div>
               </div>
+            
+            
+            <div class="col-md-3 d-flex align-items-end">
+              <div class="form-check mb-2">
+                <input type="checkbox" class="form-check-input status" name="status"  ${categoryedit}>
+                <label class="form-check-label  fs-5" for="status">
+                  active
+                </label>
+              </div>
             </div>
+            </div>
+
+
             <button type="button" class="btn btn-warning text-white float-end mt-2 mb-2" id="saveEditCategory"> save</button>
   
           </form>
@@ -157,13 +176,14 @@ $(document).ready(function () {
 $(document).on("click", "#saveEditCategory", function (event) {
   
     const id = $("#category-id-edit").val();
+    isActive = $(".status").is(":checked") ? true : false;
 
     //console.log(id);    
     const category = {
       title: $("#category-name").val(),
       description: $("#category-description-edit").val(),      
       imgUrl: $("#category-img").val(),      
-      active: "true"
+      active: isActive
     };
 
     //console.log(category);
