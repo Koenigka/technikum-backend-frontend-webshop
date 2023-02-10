@@ -121,6 +121,18 @@ $(document).ready(function () {
       },
     });
 
+    $.ajax({
+      url: "http://localhost:8080/categories/isActive/true",
+      type: "GET",
+      cors: true,
+      success: function (categories) {
+        addCategories(categories);
+      },
+      error: function (error) {
+        console.error(error);
+      },
+      
+    });
    
     const addEditProduct = $("#addEditProduct");
     addEditProduct.empty();
@@ -196,7 +208,7 @@ $(document).ready(function () {
             </div>
             <div class="col-md-4 d-flex align-items-end">
               <div class="form-check mb-2 ">
-                <input type="checkbox" class="form-check-input status" name="status""  ${productedit}>
+                <input type="checkbox" class="form-check-input status" name="status"  ${productedit}>
                 <label class="form-check-label fs-5" for="status">
                   active
                 </label>
@@ -223,18 +235,7 @@ $(document).ready(function () {
      // LOAD CATEGORIES FOR EDIT
      //OFFEN: die gewählte kommt zur Zeit doppelt vor
 
-     $.ajax({
-      url: "http://localhost:8080/categories/isActive/true",
-      type: "GET",
-      cors: true,
-      success: function (categories) {
-        addCategories(categories);
-      },
-      error: function (error) {
-        console.error(error);
-      },
-      
-    });
+    
    
   
     function addCategories(categories) {

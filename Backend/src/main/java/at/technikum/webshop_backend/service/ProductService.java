@@ -39,8 +39,8 @@ public class ProductService {
 
     }
 
-    public Product findById(Long id) {
-        return productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+    public Optional<Product> findById(Long id) {
+        return productRepository.findById(id);
     }
 
     public List<Product> findByTitleContains(String title){
