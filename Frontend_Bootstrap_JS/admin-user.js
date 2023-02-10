@@ -90,7 +90,9 @@ $(document).on("click", ".editUser", function (event) {
                   <label for="title" class="fs-5">Title</label>
 
                   <select name="Title" class="form-select fs-5 user-title" id="title-edit" >
-                    <option value="">${user.title}</option>
+                      <option value="">Mr</option>
+              <option value="">Ms</option>
+                    <option value="" selected>${user.title}</option>
                   </select>
                 </div>
               </div>

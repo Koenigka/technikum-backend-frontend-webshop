@@ -1,6 +1,8 @@
 package at.technikum.webshop_backend.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+import org.hibernate.validator.constraints.Length;
 
 @Entity(name = "user")
 public class User {
@@ -14,36 +16,52 @@ public class User {
     @Column(name = "title")
     private String title;
 
+    @NotBlank
+    @Length(min = 2, max = 80)
     @Column(name= "firstname")
     private String firstname;
 
+    @NotBlank
+    @Length(min = 2, max = 80)
     @Column(name = "lastname")
     private String lastname;
 
+    @NotBlank
+    @Length(min = 2, max = 100)
     @Column(name = "address")
     private String address;
 
+    @NotBlank
+    @Length(min = 2, max = 50)
     @Column(name ="city")
     private String city;
 
+    @NotNull
     @Column(name = "zip")
     private int zip;
 
+    @NotBlank
+    @Length(min = 3, max = 40)
     @Column(name = "username")
     private String username;
 
-    @Column(name = "email")
+    @Email
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
+    @NotEmpty
+    @Size(min = 5, message = "The password should have at least 5 characters")
     @Column(name = "password")
     private String password;
 
+    @NotNull
     @Column(name = "isActive")
     private Boolean isActive;
 
+    @NotNull
     private Boolean isAdmin;
 
-    public User() {
+    public User() {  // default constructor for jpa
     }
 
     public User(Long id, String title, String firstname, String lastname, String address, String city, int zip, String username, String email, String password, Boolean isActive, Boolean isAdmin) {
@@ -60,6 +78,10 @@ public class User {
         this.isActive = isActive;
         this.isAdmin = isAdmin;
     }
+
+    // /////////////////////////////////////////////////////////////////////////
+    // Getters and Setters
+    // /////////////////////////////////////////////////////////////////////////
 
     public Long getId() {
         return id;
