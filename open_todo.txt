@@ -1,0 +1,3 @@
+FRONTEND 
+
+Formulare: bei Fehler in Validierung im Frontend gar keinen AJAX schicken!

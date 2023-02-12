@@ -23,16 +23,18 @@ $(document).ready(function(){
 
 
     function addCategories(categories) {
-        const allCategories = $("#categories");
+        const allCategories = $("#categories");        
         allCategories.empty();
-        
+        const all = $(`<li ><button class="dropdown-item text-center" type="button" id="allCategories">All Categories</button></li> `)
+        allCategories.append(all)
         for (let category of categories) {
             allCategories.append(createCategory(category));
         }
     }
         
-    function createCategory(category) {        
-            const button = $(`<button class="col-md-4 me-2 mb-2  btn btn-warning text-white fs-4 getProductsById" value="${category.id}">${category.title}</button>`);
+    function createCategory(category) {          
+       
+            const button = $(`<li><button class="dropdown-item getProductsById text-center" type="button" value="${category.id}">${category.title}</button></li>`);
         return button;
     }
 
@@ -101,7 +103,7 @@ $(document).ready(function(){
 
     //Clickfunction Button by value (id) 
     $(document).on("click", ".getProductsById", function(event){
-        console.log('clicked');
+        console.log('value clicked');
         id = $(this).attr('value');  
         $.ajax({
             url: "http://localhost:8080/products/byCategory/" + id + "/" + true ,            
@@ -117,7 +119,7 @@ $(document).ready(function(){
     
     //Clickfunction allCategories
 
-    $("#allCategories").click(function(e) {
+    $(document).on("click", "#allCategories", function(event){
         console.log("allCategories clicked");
         $.ajax({
             url: "http://localhost:8080/products/isActive/" + true,
