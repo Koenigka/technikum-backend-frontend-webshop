@@ -118,4 +118,11 @@ input:disabled {
 
 .dropdown-menu-shop{
   background-color:  #2cb8b8ce ;
+  --bs-dropdown-link-active-bg: #2cb8b8 ;
+  --bs-dropdown-link-hover-bg: #2cb8b8 
+}
+
+.navbar .dropdown-menu{
+
+  --bs-dropdown-link-active-bg: white;
 }
