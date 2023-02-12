@@ -25,7 +25,7 @@ $(document).ready(function(){
     function addCategories(categories) {
         const allCategories = $("#categories");        
         allCategories.empty();
-        const all = $(`<li ><button class="dropdown-item text-center" type="button" id="allCategories">All Categories</button></li> `)
+        const all = $(`<li ><button class="dropdown-item text-center text-white fs-3" type="button" id="allCategories">All Categories</button></li> `)
         allCategories.append(all)
         for (let category of categories) {
             allCategories.append(createCategory(category));
@@ -34,7 +34,7 @@ $(document).ready(function(){
         
     function createCategory(category) {          
        
-            const button = $(`<li><button class="dropdown-item getProductsById text-center" type="button" value="${category.id}">${category.title}</button></li>`);
+            const button = $(`<li><button class="dropdown-item getProductsById text-center text-white fs-3" type="button" value="${category.id}">${category.title}</button></li>`);
         return button;
     }
 
