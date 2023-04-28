@@ -60,7 +60,7 @@ Schreiben Sie Ihr derzeitiges JavaScript auf Klassen im OOP Stil um.
 uebung 10:
 Integrieren Sie jQuery in Ihren Webshop und verwenden Sie AJAX um Teile Ihres Webshops dynamisch zu laden.
 
-Milestone 2 - Präsenz 11:
+Milestone 2 - Präsenz 11: 28.07.2023
 Registration – (5 points): Ein User muss sich registrieren können
 Authetication/Authorization – (10 points): ein User muss sich einloggen können & ...
 Permission-based Navigation (Admin, User, Visitor) – (5 points): ... ein User darf nur die Bereiche einsehen können, die seine Rolle zulässt (Admin, User, Visitor)

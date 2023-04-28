@@ -1,1 +1,0 @@
-# technikum-backend-frontend-webshop

@@ -1,1 +1,0 @@
-$("#navbarContainerAdmin").load("/components/navbar/navbar-signedin-admin.html");

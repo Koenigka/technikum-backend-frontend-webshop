@@ -52,7 +52,7 @@ public class ProductService {
     }
 
     public Product save(Product product, Long categoryId){
-        var category = categoryRepository.findById(categoryId);
+        Optional<Category> category = categoryRepository.findById(categoryId);
         if(category.isEmpty()){
             throw new EntityNotFoundException();
         }

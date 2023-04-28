@@ -1,1 +1,0 @@
-$("#navbarContainer").load("/components/navbar/navbar-unsigned.html");

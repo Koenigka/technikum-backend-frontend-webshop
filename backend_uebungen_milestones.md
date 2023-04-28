@@ -16,7 +16,7 @@ Personal contribution
 Answering questions correctly
 Question Topics: Spring Boot, REST, ORM, HTTP, MVC, CRUD
 
-2. Milestone - Class 11
+2. Milestone - Class 11 --> 28.07.2023
 What should be implemented:
 
 Login functionality
