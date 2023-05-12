@@ -16,5 +16,8 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedMethods("*")
                 .allowedOrigins("*");
+
+        System.out.println("Hallo");
+        System.out.println("AAAAAAAAAAAAAAAAAH");
     }
 }
