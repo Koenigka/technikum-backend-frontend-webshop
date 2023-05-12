@@ -1,70 +1,63 @@
 $(document).ready(function () {
+  //TOGGLE FOR CREATE CATEGORY FORM
+  $("#showNewCategory").click(function () {
+    $("#createNewCategory").toggle();
+  });
 
-    //TOGGLE FOR CREATE CATEGORY FORM
-    $('#showNewCategory').click(function() {
-      $('#createNewCategory').toggle();
+  //CREATE NEW CATEGORY
+  $("#createCategoryButton").on("click", (_e) => {
+    isActive = $("#isActive").is(":checked") ? true : false;
+
+    //console.log(isActive);
+    //Validation open
+
+    const category = {
+      title: $("#category-title").val(),
+      description: $("#category-description").val(),
+      imgUrl: $("#category-img-url").val(),
+      //Check if is checked --> value = true/false
+      active: isActive,
+    };
+
+    $.ajax({
+      url: "http://localhost:8080/categories",
+      type: "POST",
+      cors: true,
+      contentType: "application/json",
+      data: JSON.stringify(category),
+      success: console.log,
+      error: console.error,
     });
+  });
+  //SEARCH FUNCTION (dzt nur nach Title ohne aktiv!)
+  $(document).on("click", "#showSearchCategory", function (event) {
+    const searchId = $("#category-id").val();
+    const search = $("#category-name-search").val();
 
-    //CREATE NEW CATEGORY
-    $("#createCategoryButton").on("click", (_e) => {
-
-      isActive = $("#isActive").is(":checked") ? true : false;
-
-      //console.log(isActive);
-         //Validation open
-     
-        const category = {
-            title: $("#category-title").val(),
-            description: $("#category-description").val(),
-            imgUrl: $("#category-img-url").val(),
-            //Check if is checked --> value = true/false
-            active: isActive
-            };
-    
-            $.ajax({
-                url: "http://localhost:8080/categories",
-                type: "POST",
-                cors: true,
-                contentType: "application/json",
-                data: JSON.stringify(category),
-                success: console.log,
-                error: console.error
-            });
+    $.ajax({
+      url: "http://localhost:8080/categories/searchCategoryTitle/" + search,
+      type: "GET",
+      cors: true,
+      success: function (categories) {
+        addCategories(categories);
+      },
+      error: function (error) {
+        console.error(error);
+      },
     });
-    //SEARCH FUNCTION (dzt nur nach Title ohne aktiv!)
-    $(document).on("click", "#showSearchCategory", function (event) {
-        const searchId = $("#category-id").val();
-        const search = $("#category-name-search").val();
-        
-    
-        $.ajax({
-          url: "http://localhost:8080/categories/searchCategoryTitle/" + search,
-          type: "GET",
-          cors: true,
-          success: function (categories) {
-            addCategories(categories);
-          },
-          error: function (error) {
-            console.error(error);
-          },
-        });
-      });
+  });
 
-
-      //ADD SEARCHED CATEGORIES FROM DATABASE TO LIST
+  //ADD SEARCHED CATEGORIES FROM DATABASE TO LIST
   function addCategories(categories) {
-
-
     const allSearchedCategories = $("#searchResult");
-    allSearchedCategories.empty();  
+    allSearchedCategories.empty();
 
     for (let category of categories) {
-        allSearchedCategories.append(createCategory(category));
+      allSearchedCategories.append(createCategory(category));
     }
   }
 
   function createCategory(category) {
-
     const searchedCategory = $(`<tr>
     <td scope="col">${category.id}</td>
     <td scope="col">${category.title}</td>    
@@ -73,10 +66,8 @@ $(document).ready(function () {
        <button class="btn btn-outline-danger delete" value="${category.id}">delete</button>
      
     </td>
-  </tr>`)
-  return searchedCategory;
-    
-   
+  </tr>`);
+    return searchedCategory;
   }
 
   //LOAD CATEGORY TO EDIT FORM
@@ -99,14 +90,14 @@ $(document).ready(function () {
     addEditCategory.empty();
 
     function editCategories(category) {
-      if(category.active == true){
+      if (category.active == true) {
         categoryedit = "checked";
-      }
-      else{
+      } else {
         categoryedit = "";
       }
 
-      const editCategory = $(`  <div class="container rounded mt-5 border border-warning bg-light shadow-lg">
+      const editCategory =
+        $(`  <div class="container rounded mt-5 border border-warning bg-light shadow-lg">
       <p class="fs-4 fw-bold pt-2">Edit Category</p>
       <div class="row">
         <div class="col">
@@ -139,20 +130,23 @@ $(document).ready(function () {
   
             <div class="row mb-3">
               <div class="col-md-9">
+              <div class="form-group">
                 <label for="category-img" class="fs-5">Category Image Url</label>
                 <div class="input-group mb-2">
                   <input class="form-control" type="text" id="category-img" name="category-img" value="${category.imgUrl}"required>
                 </div>
               </div>
-            
+            </div>
             
             <div class="col-md-3 d-flex align-items-end">
               <div class="form-check mb-2">
+              <div class="form-group">
                 <input type="checkbox" class="form-check-input status" name="status"  ${categoryedit}>
                 <label class="form-check-label  fs-5" for="status">
                   active
                 </label>
               </div>
+            </div>
             </div>
             </div>
 
@@ -164,26 +158,24 @@ $(document).ready(function () {
       </div>
     </div>`);
 
-    addEditCategory.append(editCategory);
+      addEditCategory.append(editCategory);
     }
 
     $(".footer").removeClass("fixed-bottom");
+  });
 
-});
+  //EDIT CATEGORY
 
-//EDIT CATEGORY
-
-$(document).on("click", "#saveEditCategory", function (event) {
-  
+  $(document).on("click", "#saveEditCategory", function (event) {
     const id = $("#category-id-edit").val();
     isActive = $(".status").is(":checked") ? true : false;
 
-    //console.log(id);    
+    //console.log(id);
     const category = {
       title: $("#category-name").val(),
-      description: $("#category-description-edit").val(),      
-      imgUrl: $("#category-img").val(),      
-      active: isActive
+      description: $("#category-description-edit").val(),
+      imgUrl: $("#category-img").val(),
+      active: isActive,
     };
 
     //console.log(category);
@@ -197,13 +189,12 @@ $(document).on("click", "#saveEditCategory", function (event) {
       error: console.error,
     });
   });
-  
+
   //DELETE CATEGORY
   $(document).on("click", ".delete", function (event) {
     const deleteId = event.target.value;
-    
+
     //console.log(deleteId);
-    
 
     $.ajax({
       url: "http://localhost:8080/categories/" + deleteId,
@@ -213,10 +204,4 @@ $(document).on("click", "#saveEditCategory", function (event) {
       error: console.error,
     });
   });
-
 });
-    
-
-    
-    
-

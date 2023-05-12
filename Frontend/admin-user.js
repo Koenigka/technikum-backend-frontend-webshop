@@ -221,6 +221,7 @@ $(document).on("click", ".editUser", function (event) {
             <div class="row">
               <div class="col-md-4">
                 <div class="form-check mb-2">
+                <div class="form-group">
                   <input
                     type="checkbox"
                     class="form-check-input"
@@ -233,9 +234,11 @@ $(document).on("click", ".editUser", function (event) {
                   </label>
                 </div>
               </div>
+              </div>
 
               <div class="col-md-4">
                 <div class="form-check mb-2">
+                <div class="form-group">
                   <input
                     type="checkbox"
                     class="form-check-input"
@@ -247,6 +250,7 @@ $(document).on("click", ".editUser", function (event) {
                     User is Admin
                   </label>
                 </div>
+              </div>
               </div>
             </div>
 
