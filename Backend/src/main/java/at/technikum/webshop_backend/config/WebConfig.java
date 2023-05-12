@@ -17,7 +17,5 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedMethods("*")
                 .allowedOrigins("*");
 
-        System.out.println("Hallo");
-        System.out.println("AAAAAAAAAAAAAAAAAH");
     }
 }
