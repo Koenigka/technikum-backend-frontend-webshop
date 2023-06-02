@@ -51,7 +51,7 @@ public class User {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @JsonIgnore
+
     @Size(min = 5, message = "The password should have at least 5 characters")
     @Column(name = "password")
     private String password;

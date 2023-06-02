@@ -7,8 +7,11 @@ import at.technikum.webshop_backend.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,19 +30,27 @@ public class AuthController {
     @PostMapping("/api/auth/login")
     public LoginResponse login(@RequestBody @Validated LoginRequest request) {
 
-        var authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-        );
+        try {
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            var authentication = authenticationManager.authenticate(
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+            );
 
-        var principal = (UserPrincipal) authentication.getPrincipal();
-        var roles = principal.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
-        var token = jwtIssuer.issue(principal.getUserId(), principal.getEmail(), roles);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return LoginResponse.builder()
-                .accessToken(token)
-                .build();
+            var principal = (UserPrincipal) authentication.getPrincipal();
+            var roles = principal.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
+            var token = jwtIssuer.issue(principal.getUserId(), principal.getEmail(), roles);
 
+            return LoginResponse.builder()
+                    .accessToken(token)
+                    .build();
+
+        } catch( AuthenticationException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }

@@ -21,8 +21,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public User createUser(@RequestBody @Valid User user){
-        user.setPassword(user.getPassword()); // Passwort hashen
-        return userService.save(user);
+                return userService.save(user);
     }
 
     @GetMapping("/{id}")
