@@ -1,2 +1,11 @@
-package at.technikum.webshop_backend.model;public class LoginResponse {
+package at.technikum.webshop_backend.model;
+
+import lombok.Builder;
+import lombok.Getter;
+
+@Getter
+@Builder
+public class LoginResponse {
+
+    private final String accessToken;
 }

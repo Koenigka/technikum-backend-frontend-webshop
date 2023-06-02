@@ -1,14 +1,12 @@
 package at.technikum.webshop_backend.controller;
 
-import at.technikum.webshop_backend.model.Category;
 import at.technikum.webshop_backend.model.User;
-import at.technikum.webshop_backend.repository.UserRepository;
 import at.technikum.webshop_backend.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
@@ -23,6 +21,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public User createUser(@RequestBody @Valid User user){
+        user.setPassword(user.getPassword()); // Passwort hashen
         return userService.save(user);
     }
 
@@ -32,7 +31,7 @@ public class UserController {
     }
 
     @GetMapping("/email/{email}")
-    public List<User> findByEmail(@PathVariable String email){
+    public Optional<User> findByEmail(@PathVariable String email){
         return userService.findByEmail(email);
     }
 

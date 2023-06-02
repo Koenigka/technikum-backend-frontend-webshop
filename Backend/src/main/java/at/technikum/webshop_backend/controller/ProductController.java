@@ -53,6 +53,10 @@ public class ProductController {
     public List<Product> findAll(){
         return productService.findAll();
     }
+
+
+
+
     @GetMapping("/isActive/{active}")
     public List<Product> findAllProductsByActive(@PathVariable Boolean active){
         return productService.findByActive(active);

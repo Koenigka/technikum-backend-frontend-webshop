@@ -1,8 +1,10 @@
 package at.technikum.webshop_backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Entity(name = "user")
 public class User {
@@ -49,22 +51,21 @@ public class User {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @NotEmpty
+    @JsonIgnore
     @Size(min = 5, message = "The password should have at least 5 characters")
     @Column(name = "password")
     private String password;
 
     @NotNull
     @Column(name = "isActive")
-    private Boolean isActive;
+    private Boolean isActive = true;
 
-    @NotNull
-    private Boolean isAdmin;
+    private String role;
 
     public User() {  // default constructor for jpa
     }
 
-    public User(Long id, String title, String firstname, String lastname, String address, String city, int zip, String username, String email, String password, Boolean isActive, Boolean isAdmin) {
+    public User(Long id, String title, String firstname, String lastname, String address, String city, int zip, String username, String email, String password, Boolean isActive, String role) {
         this.id = id;
         this.title = title;
         this.firstname = firstname;
@@ -76,7 +77,7 @@ public class User {
         this.email = email;
         this.password = password;
         this.isActive = isActive;
-        this.isAdmin = isAdmin;
+        this.role = role;
     }
 
     // /////////////////////////////////////////////////////////////////////////
@@ -160,7 +161,8 @@ public class User {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        this.password = passwordEncoder.encode(password);
     }
 
     public Boolean getActive() {
@@ -171,11 +173,11 @@ public class User {
         isActive = active;
     }
 
-    public Boolean getAdmin() {
-        return isAdmin;
+    public String getRole() {
+        return role;
     }
 
-    public void setAdmin(Boolean admin) {
-        isAdmin = admin;
+    public void setRole(String role) {
+        this.role = role;
     }
 }
