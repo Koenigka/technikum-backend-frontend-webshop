@@ -3,6 +3,7 @@ package at.technikum.webshop_backend.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -26,25 +27,25 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain applicationSecurity(HttpSecurity http) throws Exception{
 
-        http
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-        http
-                .cors().disable()
-                .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .formLogin().disable()
-                .securityMatcher("/**")
-                .authorizeHttpRequests(registry -> registry
-                        .requestMatchers("/").permitAll()
-                        .requestMatchers("/api/auth/login").permitAll()
-                        .requestMatchers("/users").permitAll()
-                        .requestMatchers("/products").permitAll()
-                        .requestMatchers("/categories").permitAll()
+            http
+                    .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+            http
+                    .cors().disable()
+                    .csrf().disable()
+                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                    .formLogin().disable()
+                    .securityMatcher("/**")
+                    .authorizeHttpRequests(registry -> registry
+                            .requestMatchers("/").permitAll()
+                            .requestMatchers("/api/auth/login").permitAll()
+                            .requestMatchers("/users/{id}", "/users").permitAll()
+                            .requestMatchers("/products").permitAll()
+                            .requestMatchers(  "/categories/*", "/categories/isActive/true").permitAll()
+                            .requestMatchers(HttpMethod.POST,"/categories").permitAll()
+                            .anyRequest().authenticated()
 
-
-                        .anyRequest().authenticated()
-                );
-        return http.build();
+                    );
+            return http.build();
 
     }
 
