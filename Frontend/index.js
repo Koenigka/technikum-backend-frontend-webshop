@@ -3,7 +3,8 @@ $(document).ready(function(){
 $.ajax({
     url: "http://localhost:8080/categories/isActive/" + true,
     type: "GET",
-    cors: true,
+    cors: true, 
+    auth: window.sessionStorage.getItem('token') !== null ? window.sessionStorage.getItem("token") : "",
     success: function(categories) { addCategoriesToPage(categories) },
     error: function(error) { console.error(error) }
 })
