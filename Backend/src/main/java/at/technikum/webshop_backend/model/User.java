@@ -60,7 +60,7 @@ public class User {
     @Column(name = "isActive")
     private Boolean isActive = true;
 
-    private String role;
+    private String role = "USER";
 
     public User() {  // default constructor for jpa
     }

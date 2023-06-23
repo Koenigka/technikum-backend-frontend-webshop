@@ -4,6 +4,7 @@ import at.technikum.webshop_backend.model.User;
 import at.technikum.webshop_backend.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -18,10 +19,11 @@ public class UserController {
         this.userService = userService;
     }
 
-    @ResponseStatus(HttpStatus.CREATED)
+
     @PostMapping
-    public User createUser(@RequestBody @Valid User user){
-                return userService.save(user);
+    public ResponseEntity<User> createUser(@RequestBody @Valid User user) {
+        User createdUser = userService.save(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
     @GetMapping("/{id}")

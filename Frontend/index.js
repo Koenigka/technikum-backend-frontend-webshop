@@ -1,4 +1,30 @@
 $(document).ready(function(){
+
+    if (sessionStorage.getItem("accessToken")) {
+        // Benutzer ist eingeloggt
+    
+        // Anmelde- und Registrierungslinks ausblenden
+        $(".login-link").hide();
+        $(".signup-link").hide();
+    
+        // Benutzernamen anzeigen
+        var username = "UserName"; // Hier den Benutzernamen aus dem Token oder der Serverantwort einfügen
+        $("#username").text(username);
+    
+        // Überprüfen, ob der Benutzer ein Administrator ist
+        var isAdmin = true; // Hier die Überprüfung, ob der Benutzer ein Administrator ist, einfügen
+    
+        if (isAdmin) {
+          // Admin-Link anzeigen
+          $(".admin-link").show();
+        }
+      } else {
+        // Benutzer ist nicht eingeloggt
+    
+        // Benutzernamen und Admin-Link ausblenden
+        $("#username").hide();
+        $(".admin-link").hide();
+      }
     
 $.ajax({
     url: "http://localhost:8080/categories/isActive/" + true,

@@ -43,6 +43,8 @@ public class AuthController {
             var roles = principal.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
             var token = jwtIssuer.issue(principal.getUserId(), principal.getEmail(), roles);
 
+            System.out.println("Roles: " + roles.toString());
+
             return LoginResponse.builder()
                     .accessToken(token)
                     .build();

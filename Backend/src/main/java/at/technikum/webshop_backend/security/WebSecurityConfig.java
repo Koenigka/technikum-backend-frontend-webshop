@@ -40,7 +40,8 @@ public class WebSecurityConfig {
                             .requestMatchers("/api/auth/login").permitAll()
                             .requestMatchers("/users/{id}", "/users").permitAll()
                             .requestMatchers("/products").permitAll()
-                            .requestMatchers(  "/categories/*", "/categories/isActive/true").permitAll()
+                            .requestMatchers("/products/**").permitAll()
+                            .requestMatchers(  "/categories/**", "/categories/isActive/true").permitAll()
                             .requestMatchers(HttpMethod.POST,"/categories").permitAll()
                             .anyRequest().authenticated()
 

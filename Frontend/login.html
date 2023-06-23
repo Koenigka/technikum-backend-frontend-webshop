@@ -18,7 +18,8 @@
         integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
     <script src="/components/navbar/loadNavbarSignedInSignedUp.js" defer></script>
     <script src="/components/footer/loadStickyFooter.js" defer></script>
-    <script src="login.js" defer></script>
+    <script src="/node_modules/jwt-decode/build/jwt-decode.js"></script>
+    <script src="/js/login.js" defer></script>
 </head>
 
 <body>
@@ -27,6 +28,9 @@
     <div id="navbarContainerLogin"></div>
 
     <div class="container my-5">
+        <!-- HTML-Code für die Erfolgsmeldung -->
+        <div id="registrationSuccessMessage" class="alert alert-success" style="display: none;"></div>
+
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="card border-warning">
@@ -36,7 +40,7 @@
                     </div>
 
                     <div class="card-body shadow-lg">
-                        <form action="#" method="POST">
+                        <div action="#" method="POST">
 
                             <div class="row mb-3">
                                 <label for="email" class="col-md-4 col-form-label text-md-end fs-4">E-mail</label>
@@ -65,7 +69,8 @@
 
                             <div class="row">
                                 <div class="col offset-md-4">
-                                    <button type="button" id="loginUserButton" class="btn btn-warning text-white fs-4 shadow">Login</button>
+                                    <button type="button" id="loginUserButton"
+                                        class="btn btn-warning text-white fs-4 shadow">Login</button>
                                 </div>
                             </div>
 
@@ -78,7 +83,7 @@
                                 </div>
                             </div>
 
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
