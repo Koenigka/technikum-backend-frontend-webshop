@@ -1,14 +1,13 @@
 $(document).ready(function () {
-
   //TOOGLE FOR CREATE PRODUCT FORM
   $("#showNewProduct").click(function () {
     $("#createNewProduct").toggle();
   });
 
   //CREATE NEW PRODUCT
-  $("#createProductButton").on("click", (_e) => {    
+  $("#createProductButton").on("click", (_e) => {
     //Validation open
-    
+
     isActive = $("#isActive").is(":checked") ? true : false;
     const product = {
       title: $("#product-title").val(),
@@ -16,7 +15,7 @@ $(document).ready(function () {
       price: $("#product-price").val(),
       stock: $("#product-stock").val(),
       img: $("#product-img").val(),
-      categoryId: $("#product-category").val(),      
+      categoryId: $("#product-category").val(),
       //Check if is checked --> value = true/false
       active: isActive,
     };
@@ -42,7 +41,6 @@ $(document).ready(function () {
     error: function (error) {
       console.error(error);
     },
-    
   });
   function addCategories(categories) {
     const allCategories = $(".product-category");
@@ -50,7 +48,7 @@ $(document).ready(function () {
     const selectNone = `<option value="">please choose</option>`;
     allCategories.append(selectNone);
     for (let category of categories) {
-      allCategories.append(createCategory(category));      
+      allCategories.append(createCategory(category));
     }
   }
 
@@ -79,10 +77,8 @@ $(document).ready(function () {
 
   //ADD SEARCHED PRODUCTS FROM DATABASE TO LIST
   function addProducts(products) {
-
-
     const allSearchedProducts = $("#searchResult");
-    allSearchedProducts.empty();   
+    allSearchedProducts.empty();
 
     for (let product of products) {
       allSearchedProducts.append(createProduct(product));
@@ -131,18 +127,15 @@ $(document).ready(function () {
       error: function (error) {
         console.error(error);
       },
-      
     });
-   
+
     const addEditProduct = $("#addEditProduct");
     addEditProduct.empty();
 
     function editProducts(product) {
-
-      if(product.active == true){
+      if (product.active == true) {
         productedit = "checked";
-      }
-      else{
+      } else {
         productedit = "";
       }
       const editProduct = $(`
@@ -208,18 +201,22 @@ $(document).ready(function () {
             </div>
             <div class="col-md-4 d-flex align-items-end">
               <div class="form-check mb-2 ">
+              <div class="form-group">
                 <input type="checkbox" class="form-check-input status" name="status"  ${productedit}>
                 <label class="form-check-label fs-5" for="status">
                   active
                 </label>
+              </div>
               </div>
             </div>
 
           </div>
           <div class="row mb-3">
             <div class="col-md-12">
+            <div class="form-group">
             <label for="product-img" class="fs-5">Product Image Url</label>
             <input id="product-img-edit" type="text" class="form-control " name="product-img-edit" value="${product.img}" required>
+            </div>
             </div>
           </div>
           <button type="button" class="btn btn-warning text-white float-end mt-2 mb-2" id="saveEditProduct"> save</button>
@@ -232,79 +229,70 @@ $(document).ready(function () {
       addEditProduct.append(editProduct);
     }
 
-     // LOAD CATEGORIES FOR EDIT
-     //OFFEN: die gewählte kommt zur Zeit doppelt vor
+    // LOAD CATEGORIES FOR EDIT
+    //OFFEN: die gewählte kommt zur Zeit doppelt vor
 
-    
-   
-  
     function addCategories(categories) {
       const allCategories = $("#product-category-edit");
 
       //console.log(allCategories);
-      
+
       for (let category of categories) {
-        allCategories.append(createCategory(category));      
+        allCategories.append(createCategory(category));
       }
     }
-  
+
     function createCategory(category) {
       const select = `<option value='${category.id}'>${category.title}</option>`;
       return select;
     }
 
-  $(".footer").removeClass("fixed-bottom");
-
-
+    $(".footer").removeClass("fixed-bottom");
   });
 
-//EDIT PRODUCT
+  //EDIT PRODUCT
 
-$(document).on("click", "#saveEditProduct", function (event) {
- 
-  
-  const id = $("#product-id-edit").val();
-  console.log(id);
-  isActive = $(".status").is(":checked") ? true : false;
+  $(document).on("click", "#saveEditProduct", function (event) {
+    const id = $("#product-id-edit").val();
+    console.log(id);
+    isActive = $(".status").is(":checked") ? true : false;
 
-  const product = {
-    title: $("#product-name").val(),
-    description: $("#product-description-edit").val(),
-    price: $("#product-price-edit").val(),
-    stock: $("#product-stock-edit").val(),
-    img: $("#product-img-edit").val(),
-    categoryId: $("#product-category-edit").val(),
-    //categoryObject[0],
-    //Check if is checked --> value = 1 /0
-    active: isActive,
-  };
+    const product = {
+      title: $("#product-name").val(),
+      description: $("#product-description-edit").val(),
+      price: $("#product-price-edit").val(),
+      stock: $("#product-stock-edit").val(),
+      img: $("#product-img-edit").val(),
+      categoryId: $("#product-category-edit").val(),
+      //categoryObject[0],
+      //Check if is checked --> value = 1 /0
+      active: isActive,
+    };
 
-  console.log(product);
-  $.ajax({
-    url: "http://localhost:8080/products/" + id,
-    type: "PUT",
-    cors: true,
-    contentType: "application/json",
-    data: JSON.stringify(product),
-    success: console.log,
-    error: console.error,
+    console.log(product);
+    $.ajax({
+      url: "http://localhost:8080/products/" + id,
+      type: "PUT",
+      cors: true,
+      contentType: "application/json",
+      data: JSON.stringify(product),
+      success: console.log,
+      error: console.error,
+    });
   });
-});
 
-//DELETE PRODUCT
-$(document).on("click", ".delete", function (event) {
-  const deleteId = event.target.value;
-  
-  //console.log(deleteId);
-  
+  //DELETE PRODUCT
+  $(document).on("click", ".delete", function (event) {
+    const deleteId = event.target.value;
 
-  $.ajax({
-    url: "http://localhost:8080/products/" + deleteId,
-    type: "DELETE",
-    cors: true,
-    success: console.log,
-    error: console.error,
+    //console.log(deleteId);
+
+    $.ajax({
+      url: "http://localhost:8080/products/" + deleteId,
+      type: "DELETE",
+      cors: true,
+      success: console.log,
+      error: console.error,
+    });
   });
-});
-
 });
