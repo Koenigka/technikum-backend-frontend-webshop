@@ -5,18 +5,18 @@ import at.technikum.webshop_backend.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
     private UserRepository userRepository;
 
 
-    //Constructor
+
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    //METHODS
 
 
     public List<User> findAll(){
@@ -27,8 +27,12 @@ public class UserService {
         return userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
-    public List<User> findByEmail(String email){
-        return userRepository.findByEmail(email);
+    public Optional<User> findByEmail(String email){
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        if (userOptional.isEmpty()) {
+            return Optional.empty();
+        }
+        return userOptional;
     }
 
     public User save(User user){
@@ -47,7 +51,7 @@ public class UserService {
         user.setEmail(updatedUser.getEmail());
         user.setPassword(updatedUser.getPassword());
         user.setActive(updatedUser.getActive());
-        user.setAdmin(updatedUser.getAdmin());
+        user.setRole(updatedUser.getRole());
 
         return userRepository.save(user);
     }
