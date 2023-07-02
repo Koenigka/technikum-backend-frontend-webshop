@@ -1,6 +1,6 @@
 package at.technikum.webshop_backend.controller;
 
-import at.technikum.webshop_backend.dto.PositionDTO;
+import at.technikum.webshop_backend.dto.PositionDto;
 import at.technikum.webshop_backend.model.Position;
 import at.technikum.webshop_backend.service.PositionService;
 import jakarta.validation.Valid;
@@ -22,11 +22,11 @@ public class PositionController {
 
     //USER IS hardcoded!!!!
     @PostMapping
-    public Position createPosition(@RequestBody @Valid PositionDTO positionDTO){
+    public Position createPosition(@RequestBody @Valid PositionDto positionDTO){
         return positionService.save(fromDTO(positionDTO), 1L, positionDTO.getProductId());
     }
 
-    private static Position fromDTO(PositionDTO positionDTO) {
+    private static Position fromDTO(PositionDto positionDTO) {
         return new Position(positionDTO.getId(),
                 positionDTO.getQuantity());
     }

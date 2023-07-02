@@ -11,7 +11,7 @@ $(document).ready(function(){
 
 
     $.ajax({
-        url: "http://localhost:8080/products/" + value,
+        url: "http://localhost:8080/api/products/" + value,
         type: "GET",
         cors: true,
         success: function(product) { addProduct(product) },

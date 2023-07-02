@@ -15,7 +15,7 @@ $(document).ready(function () {
       admin: "false",
     };
     $.ajax({
-      url: "http://localhost:8080/users",
+      url: "http://localhost:8080/api/users/register",
       type: "POST",
       dataType: "json",
       contentType: "application/json",

@@ -1,6 +1,6 @@
 //LOAD USERS FROM DATABASE
 $.ajax({
-  url: "http://localhost:8080/users/email",
+  url: "http://localhost:8080/api/users/email",
   type: "GET",
   cors: true,
   success: function (users) {
@@ -16,7 +16,7 @@ $(document).on("click", "#showSearchUser", function (event) {
   const search = $("#email").val();
 
   $.ajax({
-    url: "http://localhost:8080/users/email/" + search,
+    url: "http://localhost:8080/api/users/email/" + search,
     type: "GET",
     cors: true,
     success: function (users) {
@@ -61,7 +61,7 @@ $(document).on("click", ".editUser", function (event) {
   //console.log(id);
 
   $.ajax({
-    url: "http://localhost:8080/users/" + id,
+    url: "http://localhost:8080/api/users/" + id,
     type: "GET",
     cors: true,
     success: function (user) {
@@ -294,7 +294,7 @@ $(document).on("click", "#saveEditUser", function (event) {
 
   console.log(user);
   $.ajax({
-    url: "http://localhost:8080/users/" + id,
+    url: "http://localhost:8080/api/users/" + id,
     type: "PUT",
     cors: true,
     contentType: "application/json",
@@ -309,7 +309,7 @@ $(document).on("click", ".delete", function (event) {
   const deleteId = event.target.value;
 
   $.ajax({
-    url: "http://localhost:8080/users/" + deleteId,
+    url: "http://localhost:8080/api/users/" + deleteId,
     type: "DELETE",
     cors: true,
     success: console.log,

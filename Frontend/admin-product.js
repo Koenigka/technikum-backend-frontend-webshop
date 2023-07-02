@@ -20,7 +20,7 @@ $(document).ready(function () {
       active: isActive,
     };
     $.ajax({
-      url: "http://localhost:8080/products",
+      url: "http://localhost:8080/api/products",
       type: "POST",
       cors: true,
       contentType: "application/json",
@@ -63,7 +63,7 @@ $(document).ready(function () {
     const search = $("#product-title-search").val();
 
     $.ajax({
-      url: "http://localhost:8080/products/searchproduct/" + search,
+      url: "http://localhost:8080/api/products/searchproduct/" + search,
       type: "GET",
       cors: true,
       success: function (products) {
@@ -106,7 +106,7 @@ $(document).ready(function () {
     //console.log(id);
 
     $.ajax({
-      url: "http://localhost:8080/products/" + id,
+      url: "http://localhost:8080/api/products/" + id,
       type: "GET",
       cors: true,
       success: function (product) {
@@ -271,7 +271,7 @@ $(document).ready(function () {
 
     console.log(product);
     $.ajax({
-      url: "http://localhost:8080/products/" + id,
+      url: "http://localhost:8080/api/products/" + id,
       type: "PUT",
       cors: true,
       contentType: "application/json",
@@ -288,7 +288,7 @@ $(document).ready(function () {
     //console.log(deleteId);
 
     $.ajax({
-      url: "http://localhost:8080/products/" + deleteId,
+      url: "http://localhost:8080/api/products/" + deleteId,
       type: "DELETE",
       cors: true,
       success: console.log,

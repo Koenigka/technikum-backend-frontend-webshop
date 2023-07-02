@@ -1,12 +1,14 @@
 package at.technikum.webshop_backend.service;
 
-import at.technikum.webshop_backend.dto.ProductDTO;
+import at.technikum.webshop_backend.dto.ProductDto;
 import at.technikum.webshop_backend.model.Category;
 import at.technikum.webshop_backend.model.Product;
 import at.technikum.webshop_backend.repository.CategoryRepository;
 import at.technikum.webshop_backend.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +19,8 @@ public class ProductService {
     private ProductRepository productRepository;
     private CategoryRepository categoryRepository;
 
+    private CategoryService categoryService;
+
 
 
     public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
@@ -24,7 +28,51 @@ public class ProductService {
         this.categoryRepository = categoryRepository;
     }
 
-    //METHODS
+
+
+    public Product createProduct(ProductDto productDto) {
+        Product product = new Product();
+
+        product.setTitle(productDto.getTitle());
+        product.setDescription(productDto.getDescription());
+        product.setImg(productDto.getImg());
+        product.setPrice(productDto.getPrice());
+        product.setStock(productDto.getStock());
+        product.setActive(productDto.getActive());
+
+        Category category = categoryService.findById(productDto.getCategoryId());
+        product.setCategory(category);
+
+        return productRepository.save(product);
+    }
+
+    public Product updateProduct(ProductDto productDto) {
+        Product product = productRepository.findById(productDto.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Product not found with ID: " + productDto.getId()));
+
+        product.setTitle(productDto.getTitle());
+        product.setDescription(productDto.getDescription());
+        product.setImg(productDto.getImg());
+        product.setPrice(productDto.getPrice());
+        product.setStock(productDto.getStock());
+        product.setActive(productDto.getActive());
+
+        Category category = categoryService.findById(productDto.getCategoryId());
+        product.setCategory(category);
+
+        return productRepository.save(product);
+    }
+
+
+    public void deleteById(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found with ID: " + id));
+
+        productRepository.delete(product);
+    }
+
+
+    //methods old
 
     public List<Product> findAll() {
         return productRepository.findAll();
@@ -63,31 +111,7 @@ public class ProductService {
 
 
 
-    public Product update(Long id, Product updatedProduct, Long categoryId){
-        Product product = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
 
-
-        product.setTitle(updatedProduct.getTitle());
-        product.setDescription(updatedProduct.getDescription());
-        product.setImg(updatedProduct.getImg());
-        product.setPrice(updatedProduct.getPrice());
-        product.setStock(updatedProduct.getStock());
-        product.setActive(updatedProduct.getActive());
-        var category = categoryRepository.findById(categoryId);
-        if(category.isEmpty()){
-            throw new EntityNotFoundException();
-        }
-        product.setCategory(category.get());
-
-
-        return productRepository.save(product);
-    }
-
-    public void deleteById(Long id){
-        Product product = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-
-        productRepository.delete(product);
-    }
 
 
 

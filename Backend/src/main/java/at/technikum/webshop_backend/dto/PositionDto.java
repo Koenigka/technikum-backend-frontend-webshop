@@ -2,7 +2,7 @@ package at.technikum.webshop_backend.dto;
 
 import jakarta.validation.constraints.NotNull;
 
-public class PositionDTO {
+public class PositionDto {
 
     private Long id;
 

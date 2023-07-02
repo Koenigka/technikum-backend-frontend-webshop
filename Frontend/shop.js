@@ -43,7 +43,7 @@ $(document).ready(function(){
 
     //Alle Produkte laden
     $.ajax({
-        url: "http://localhost:8080/products/isActive/" + true,
+        url: "http://localhost:8080/api/products/isActive/" + true,
         type: "GET",
         cors: true,
         success: function(products) { addProducts(products) },
@@ -54,7 +54,7 @@ $(document).ready(function(){
     if (value != null){
          
         $.ajax({
-            url: "http://localhost:8080/products/byCategory/" + value + "/" + true ,            
+            url: "http://localhost:8080/api/products/byCategory/" + value + "/" + true ,            
             type: "GET",
             cors: true,
             success: function(products) { addProducts(products) },
@@ -106,7 +106,7 @@ $(document).ready(function(){
         console.log('value clicked');
         id = $(this).attr('value');  
         $.ajax({
-            url: "http://localhost:8080/products/byCategory/" + id + "/" + true ,            
+            url: "http://localhost:8080/api/products/byCategory/" + id + "/" + true ,            
             type: "GET",
             cors: true,
             success: function(products) { addProducts(products) },
@@ -122,7 +122,7 @@ $(document).ready(function(){
     $(document).on("click", "#allCategories", function(event){
         console.log("allCategories clicked");
         $.ajax({
-            url: "http://localhost:8080/products/isActive/" + true,
+            url: "http://localhost:8080/api/products/isActive/" + true,
             type: "GET",
             cors: true,
             success: function(products) { addProducts(products) },
