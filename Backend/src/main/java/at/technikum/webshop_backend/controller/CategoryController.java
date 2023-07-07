@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/categories")
+@RequestMapping("/api/categories")
 public class CategoryController {
 
     private final CategoryService categoryService;
@@ -23,6 +23,7 @@ public class CategoryController {
     }
 
 
+    //TODO Alles auf Response Entity CategoryDto ändern
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Category createCategory(@RequestBody @Valid Category category){

@@ -38,11 +38,10 @@ public class WebSecurityConfig {
                     .authorizeHttpRequests(registry -> registry
                             .requestMatchers("/").permitAll()
                             .requestMatchers("/api/auth/login").permitAll()
-                            .requestMatchers("/api/users/{id}", "/api/users/register").permitAll()
-                            .requestMatchers("/api/products").permitAll()
-                            .requestMatchers("/api/products/**").permitAll()
-                            .requestMatchers(  "/categories/**", "/categories/isActive/true").permitAll()
-                            .requestMatchers(HttpMethod.POST,"/categories").permitAll()
+                            .requestMatchers( "/api/users/register").permitAll()
+                            .requestMatchers(HttpMethod.GET,"/api/products").permitAll()
+                            .requestMatchers(HttpMethod.GET,"/api/products/**").permitAll()
+                            .requestMatchers( HttpMethod.GET, "/api/categories/**", "/api/categories/isActive/true").permitAll()
                             .anyRequest().authenticated()
 
                     );

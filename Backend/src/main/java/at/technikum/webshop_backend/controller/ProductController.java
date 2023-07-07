@@ -90,6 +90,7 @@ public class ProductController {
     }
 
 
+    //TODO alles auf Response Entity ProductDto ändern
     @GetMapping()
     public List<Product> findAll(){
         return productService.findAll();

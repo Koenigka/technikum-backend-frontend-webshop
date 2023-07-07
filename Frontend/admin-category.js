@@ -20,7 +20,7 @@ $(document).ready(function () {
     };
 
     $.ajax({
-      url: "http://localhost:8080/categories",
+      url: "http://localhost:8080/api/categories",
       type: "POST",
       cors: true,
       contentType: "application/json",
@@ -35,7 +35,7 @@ $(document).ready(function () {
     const search = $("#category-name-search").val();
 
     $.ajax({
-      url: "http://localhost:8080/categories/searchCategoryTitle/" + search,
+      url: "http://localhost:8080/api/categories/searchCategoryTitle/" + search,
       type: "GET",
       cors: true,
       success: function (categories) {
@@ -75,7 +75,7 @@ $(document).ready(function () {
     const id = event.target.value;
     //console.log(id);
     $.ajax({
-      url: "http://localhost:8080/categories/" + id,
+      url: "http://localhost:8080/api/categories/" + id,
       type: "GET",
       cors: true,
       success: function (category) {
@@ -180,7 +180,7 @@ $(document).ready(function () {
 
     //console.log(category);
     $.ajax({
-      url: "http://localhost:8080/categories/" + id,
+      url: "http://localhost:8080/api/categories/" + id,
       type: "PUT",
       cors: true,
       contentType: "application/json",
@@ -197,7 +197,7 @@ $(document).ready(function () {
     //console.log(deleteId);
 
     $.ajax({
-      url: "http://localhost:8080/categories/" + deleteId,
+      url: "http://localhost:8080/api/categories/" + deleteId,
       type: "DELETE",
       cors: true,
       success: console.log,

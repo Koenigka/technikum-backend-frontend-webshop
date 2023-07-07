@@ -14,7 +14,7 @@ $(document).ready(function(){
     //Buttons mit Kategorien laden
     $.ajax({
         
-        url: "http://localhost:8080/categories/isActive/" + true,
+        url: "http://localhost:8080/api/categories/isActive/" + true,
         type: "GET",
         cors: true,
         success: function(categories) { addCategories(categories) },

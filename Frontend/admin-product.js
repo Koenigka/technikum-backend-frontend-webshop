@@ -32,7 +32,7 @@ $(document).ready(function () {
 
   //LOAD CATEGORIES FROM DATABASE  & generate Dropdown values in new product form
   $.ajax({
-    url: "http://localhost:8080/categories/isActive/true",
+    url: "http://localhost:8080/api/categories/isActive/true",
     type: "GET",
     cors: true,
     success: function (categories) {
@@ -118,7 +118,7 @@ $(document).ready(function () {
     });
 
     $.ajax({
-      url: "http://localhost:8080/categories/isActive/true",
+      url: "http://localhost:8080/api/categories/isActive/true",
       type: "GET",
       cors: true,
       success: function (categories) {

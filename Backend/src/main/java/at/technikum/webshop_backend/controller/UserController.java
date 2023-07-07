@@ -28,6 +28,8 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUserDto);
     }
 
+    //TODO Alles auf Response Entity User Dto ändern!
+
     @GetMapping("/{id}")
     public User findById(@PathVariable Long id){
         return userService.findById(id);

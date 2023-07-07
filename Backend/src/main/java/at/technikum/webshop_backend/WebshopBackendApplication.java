@@ -14,12 +14,8 @@ public class WebshopBackendApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(WebshopBackendApplication.class, args);
 
-		String password = "test123"; // Das Passwort, das du hashen möchtest
 
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-		String hashedPassword = passwordEncoder.encode(password);
 
-		System.out.println("Hashed Password: " + hashedPassword);
 	}
 
 }
