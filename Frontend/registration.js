@@ -17,11 +17,24 @@ $(document).ready(function () {
     $.ajax({
       url: "http://localhost:8080/users",
       type: "POST",
-      cors: true,
+      dataType: "json",
       contentType: "application/json",
       data: JSON.stringify(user),
-      success: console.log,
-      error: console.error,
+      success: function (response) {
+        // Erfolgsmeldung im Web Storage speichern
+        sessionStorage.setItem(
+          "registrationMessage",
+          "Registrierung erfolgreich. Bitte loggen Sie sich ein."
+        );
+        // Weiterleitung zur Login-Seite
+        window.location.href = "login.html";
+      },
+      error: function (xhr, status, error) {
+        // Fehlermeldung anzeigen
+        $("#registrationMessage").text(
+          "Fehler bei der Registrierung: " + error
+        );
+      },
     });
   });
 });

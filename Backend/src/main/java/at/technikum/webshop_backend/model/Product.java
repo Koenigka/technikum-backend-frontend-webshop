@@ -1,5 +1,6 @@
 package at.technikum.webshop_backend.model;
 
+import at.technikum.webshop_backend.dto.ProductDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
@@ -16,7 +17,6 @@ public class Product {
     private Long id;
 
 
-
     private String title;
 
 
@@ -24,7 +24,6 @@ public class Product {
 
 
     private String img;
-
 
 
     private double price;
@@ -114,5 +113,19 @@ public class Product {
 
     public void setActive(Boolean active) {
         this.active = active;
+    }
+
+
+    public static ProductDTO convertToDTO(Product product) {
+        ProductDTO dto = new ProductDTO();
+        dto.setId(product.getId());
+        dto.setTitle(product.getTitle());
+        dto.setDescription(product.getDescription());
+        dto.setImg(product.getImg());
+        dto.setPrice(product.getPrice());
+        dto.setStock(product.getStock());
+        dto.setActive(product.getActive());
+        dto.setCategoryId(product.getCategory().getId());
+        return dto;
     }
 }

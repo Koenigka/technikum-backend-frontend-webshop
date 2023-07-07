@@ -126,3 +126,7 @@ input:disabled {
 
   --bs-dropdown-link-active-bg: white;
 }
+
+/*.navbar-nav .nav-item:not(.admin-link) {
+  display: none;
+}*/
