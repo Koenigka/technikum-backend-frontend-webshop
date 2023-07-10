@@ -1,32 +1,31 @@
-$(document).ready(function(){
-    
+$(document).ready(function () {
+  const params = new Proxy(new URLSearchParams(window.location.search), {
+    get: (searchParams, prop) => searchParams.get(prop),
+  });
+  // Get the value of "some_key" in eg "https://example.com/?some_key=some_value"
+  let value = params.product; // "some_value"
+  console.log(value);
 
-    
-    const params = new Proxy(new URLSearchParams(window.location.search), {
-        get: (searchParams, prop) => searchParams.get(prop),
-      });
-      // Get the value of "some_key" in eg "https://example.com/?some_key=some_value"
-      let value = params.product; // "some_value"
-    console.log(value);
+  $.ajax({
+    url: "http://localhost:8080/products/" + value,
+    type: "GET",
+    cors: true,
+    success: function (product) {
+      addProduct(product);
+    },
+    error: function (error) {
+      console.error(error);
+    },
+  });
 
+  function addProduct(product) {
+    const productd = $("#product");
+    productd.empty();
 
-    $.ajax({
-        url: "http://localhost:8080/products/" + value,
-        type: "GET",
-        cors: true,
-        success: function(product) { addProduct(product) },
-        error: function(error) { console.error(error) }
-    })
-
-    function addProduct(product){        
-        const productd = $("#product");
-        productd.empty();   
-        
-        
-        const productdetail = $(`
+    const productdetail = $(`
         <div class="row pt-3">
         <div class="col-lg-6 col-md-6 col-sm-12">
-          <img class="inner-img img-fluid rounded border border-warning" src="${product.img}" width="350px"
+          <img class="inner-img img-fluid rounded border border-warning" src="../${product.img}" width="350px"
             height="250px" />
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12">
@@ -50,15 +49,8 @@ $(document).ready(function(){
           </div>
           <a href="#" class="btn btn-warning text-white fs-4">Add to Basket</a>
         </div>
-      </div>`)
+      </div>`);
 
-
-        productd.append(productdetail);
-    }
-
-
-
-
-
-
+    productd.append(productdetail);
+  }
 });

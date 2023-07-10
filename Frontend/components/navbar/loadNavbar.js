@@ -10,7 +10,7 @@ $(document).ready(function () {
       $(".signup-link").hide();
 
       // Benutzernamen anzeigen
-      var username = sessionStorage.getItem("userName")
+      var username = sessionStorage.getItem("userName");
       $("#username").text(username);
       $(".fa-user").show();
 
@@ -18,13 +18,14 @@ $(document).ready(function () {
       var userRole = JSON.parse(sessionStorage.getItem("userRole"));
       console.log("userRole = " + userRole);
 
-
-
       // Überprüfen, ob der Benutzer ein Administrator ist
       if (userRole.includes("USER")) {
-        // Admin-Link anzeigen
+        // Admin-Link verstecken
         $(".admin-link").hide();
         console.log("admin-hide");
+      } else {
+        // Admin-Link anzeigen
+        $(".fa-user").hide();
       }
 
       // Warenkorb anzeigen
@@ -57,5 +58,5 @@ function logout() {
   sessionStorage.removeItem("accessToken");
 
   // Weiterleitung zur Login-Seite oder einer anderen gewünschten Seite
-  window.location.href = "index.html";
+  window.location.href = "../index.html";
 }

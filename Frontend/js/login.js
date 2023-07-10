@@ -1,20 +1,20 @@
 $(document).ready(function () {
-   // Erfolgsmeldung aus dem Web Storage abrufen
-   var registrationMessage = sessionStorage.getItem("registrationMessage");
-  
-   // Wenn eine Erfolgsmeldung vorhanden ist, anzeigen und aus dem Web Storage entfernen
-   if (registrationMessage) {
-     // Erfolgsmeldung anzeigen
-     $("#registrationSuccessMessage").text(registrationMessage);
-     $("#registrationSuccessMessage").show();
-     
-     // Erfolgsmeldung nach einigen Sekunden ausblenden
-     setTimeout(function() {
-       $("#registrationSuccessMessage").hide();
-     }, 15000);
-    }
-     // Erfolgsmeldung aus dem Web Storage entfernen
-     sessionStorage.removeItem("registrationMessage");
+  // Erfolgsmeldung aus dem Web Storage abrufen
+  var registrationMessage = sessionStorage.getItem("registrationMessage");
+
+  // Wenn eine Erfolgsmeldung vorhanden ist, anzeigen und aus dem Web Storage entfernen
+  if (registrationMessage) {
+    // Erfolgsmeldung anzeigen
+    $("#registrationSuccessMessage").text(registrationMessage);
+    $("#registrationSuccessMessage").show();
+
+    // Erfolgsmeldung nach einigen Sekunden ausblenden
+    setTimeout(function () {
+      $("#registrationSuccessMessage").hide();
+    }, 15000);
+  }
+  // Erfolgsmeldung aus dem Web Storage entfernen
+  sessionStorage.removeItem("registrationMessage");
   // LOGIN
   $("#loginUserButton").on("click", function () {
     var email = $("#email").val();
@@ -57,7 +57,7 @@ $(document).ready(function () {
         //Zugriff auf den Token über: var accessToken = sessionStorage.getItem("accessToken");
 
         // Weiterleitung nach dem erfolgreichen Login
-        window.location.href = "/shop.html";
+        window.location.href = "/pages/shop.html";
       },
       error: function (xhr, status, error) {
         // Fehlermeldung anzeigen
