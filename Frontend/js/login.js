@@ -55,13 +55,14 @@ $(document).ready(function () {
         console.log("UserRoleLogIn:", userRole);
 
         //Zugriff auf den Token über: var accessToken = sessionStorage.getItem("accessToken");
-
+        sessionStorage.setItem("loginMessage", "Login successfull!");
         // Weiterleitung nach dem erfolgreichen Login
         window.location.href = "/pages/shop.html";
       },
       error: function (xhr, status, error) {
         // Fehlermeldung anzeigen
-        console.error("Fehler beim Login: " + error);
+        //console.error("Fehler beim Login: " + error);
+        $("#loginMessage").text("Something went wrong. Try again.");
       },
     });
   });
