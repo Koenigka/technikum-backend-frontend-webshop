@@ -11,10 +11,11 @@ $(document).ready(function () {
     // Erfolgsmeldung nach einigen Sekunden ausblenden
     setTimeout(function () {
       $("#registrationSuccessMessage").hide();
-    }, 15000);
+    }, 7000);
   }
   // Erfolgsmeldung aus dem Web Storage entfernen
   sessionStorage.removeItem("registrationMessage");
+
   // LOGIN
   $("#loginUserButton").on("click", function () {
     var email = $("#email").val();
@@ -27,10 +28,6 @@ $(document).ready(function () {
 
     $(".emErr").text("");
     $(".passErr").text("");
-
-    // Get input values
-    var email = $("#email").val();
-    var password = $("#password").val();
 
     // Validate email
     if (!email) {

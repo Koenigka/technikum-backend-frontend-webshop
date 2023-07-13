@@ -17,6 +17,9 @@ $(document).ready(function () {
     setTimeout(function () {
       $("#loginSuccessMessage").hide();
     }, 7000);
+
+    // Erfolgsmeldung aus dem Web Storage entfernen
+    sessionStorage.removeItem("loginMessage");
   }
 
   //Buttons mit Kategorien laden
