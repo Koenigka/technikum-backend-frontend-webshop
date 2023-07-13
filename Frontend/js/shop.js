@@ -5,6 +5,22 @@ $(document).ready(function () {
   // Get the value of "some_key" in eg "https://example.com/?some_key=some_value"
   let value = params.category; // "some_value"
   //console.log(value);
+  var loginMessage = sessionStorage.getItem("loginMessage");
+
+  // Wenn eine Erfolgsmeldung vorhanden ist, anzeigen und aus dem Web Storage entfernen
+  if (loginMessage) {
+    // Erfolgsmeldung anzeigen
+    $("#loginSuccessMessage").text(loginMessage);
+    $("#loginSuccessMessage").show();
+
+    // Erfolgsmeldung nach einigen Sekunden ausblenden
+    setTimeout(function () {
+      $("#loginSuccessMessage").hide();
+    }, 7000);
+
+    // Erfolgsmeldung aus dem Web Storage entfernen
+    sessionStorage.removeItem("loginMessage");
+  }
 
   //Buttons mit Kategorien laden
   $.ajax({

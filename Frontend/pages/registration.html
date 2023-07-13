@@ -31,6 +31,8 @@
       integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
       crossorigin="anonymous"
     ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+
     <script
       src="/components/navbar/loadNavbarSignedInSignedUp.js"
       defer
@@ -67,10 +69,11 @@
           <a id="loginLink" href="/login.html" style="display: none">Login</a>
           <div class="col-6 mb-3">
             <select name="Title" class="form-select fs-5" id="title" required>
-              <option selected>Title</option>
-              <option value="">Mr</option>
-              <option value="">Ms</option>
+              <option value="">Title</option>
+              <option value="mr">Mr</option>
+              <option value="ms">Ms</option>
             </select>
+            <p class="input-error" id="titleError" style="color: red"></p>
           </div>
 
           <div class="mb-3">
@@ -84,6 +87,7 @@
               placeholder="Dolores"
               required
             />
+            <p class="input-error" id="firstNameError" style="color: red"></p>
           </div>
 
           <div class="mb-3">
@@ -97,6 +101,7 @@
               placeholder="Bauer"
               required
             />
+            <p class="input-error" id="lastNameError" style="color: red"></p>
           </div>
 
           <div class="mb-3">
@@ -108,19 +113,33 @@
               placeholder="Huttengasse 57"
               required
             />
+            <p class="input-error" id="addressError" style="color: red"></p>
           </div>
           <div class="col-md-6">
-            <label for="inputCountry" class="form-label fs-5">Country</label>
-            <input
-              type="text"
-              class="form-control"
-              id="inputCountry"
-              placeholder="Austria"
-            />
+            <label for="inputState" class="form-label fs-5">State</label>
+            <select id="inputState" class="form-select">
+              <option value="">Choose a state</option>
+              <option value="Burgenland">Burgenland</option>
+              <option value="Kärnten">Kärnten</option>
+              <option value="Niederösterreich">Niederösterreich</option>
+              <option value="Oberösterreich">Oberösterreich</option>
+              <option value="Salzburg">Salzburg</option>
+              <option value="Steiermark">Steiermark</option>
+              <option value="Tirol">Tirol</option>
+              <option value="Vorarlberg">Vorarlberg</option>
+              <option value="Wien">Wien</option>
+            </select>
+
+            <p class="input-error" id="stateError" style="color: red"></p>
           </div>
           <div class="col-md-4">
             <label for="inputCity" class="form-label fs-5">City</label>
             <input type="text" id="inputCity" class="form-control" required />
+            <p
+              class="input-error"
+              id="cityError"
+              style="color: red; font-size: small"
+            ></p>
           </div>
           <div class="col-md-2">
             <label for="inputZip" class="form-label fs-5">Zip</label>
@@ -131,6 +150,11 @@
               placeholder="1160"
               required
             />
+            <p
+              class="input-error"
+              id="zipError"
+              style="color: red; font-size: x-small"
+            ></p>
           </div>
 
           <div class="mb-3">
@@ -144,6 +168,7 @@
               placeholder="dbauer"
               required
             />
+            <p class="input-error" id="usernameError" style="color: red"></p>
           </div>
           <div class="mb-3">
             <label for="email" class="form-label fs-5">Email</label>
@@ -156,6 +181,7 @@
               placeholder="dbauer@gmail.com"
               required
             />
+            <p class="input-error" id="emailError" style="color: red"></p>
           </div>
           <div class="mb-3">
             <label for="password1" class="form-label fs-5">Password</label>
@@ -167,6 +193,7 @@
               value=""
               required
             />
+            <p class="input-error" id="password1Error" style="color: red"></p>
           </div>
           <div class="mb-3">
             <label for="password2" class="form-label fs-5"
@@ -179,6 +206,7 @@
               id="password2"
               value=""
             />
+            <p class="input-error" id="password2Error" style="color: red"></p>
           </div>
 
           <div class="col-12">
