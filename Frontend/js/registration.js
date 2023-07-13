@@ -168,12 +168,21 @@ $(document).ready(function () {
             break;
           }
         }
-        if (!isValidAddress) {
-          // Invalid city, ZIP code, or state
+        // Invalid city, ZIP code, or state
+        if (
+          user.state !== "" &&
+          user.city !== "" &&
+          user.zip !== "" &&
+          !isValidAddress
+        ) {
           $("#stateError").text("Invalid city or ZIP code");
         }
 
-        if (isValidAddress && isValid) {
+        // Proceed with registration if no validation errors
+        if (
+          isValid &&
+          (!user.state || !user.city || !user.zip || isValidAddress)
+        ) {
           // Proceed with registration if no validation errors
 
           $.ajax({
