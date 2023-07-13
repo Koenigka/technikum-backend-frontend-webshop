@@ -57,7 +57,7 @@ $(document).ready(function () {
     const title = $(`<h5 class="card-title">${category.title}</h5>`);
     const description = $(`<p class="card-text">${category.description}</p>`);
     const button = $(
-      `<a href="shop.html?category=${category.id}" class="btn btn-warning text-white mt-auto">Buy ${category.title}</a>`
+      `<a href="pages/shop.html?category=${category.id}" class="btn btn-warning text-white mt-auto">Buy ${category.title}</a>`
     );
 
     const wrapper = $(`<div class="col-12 col-md-6 col-lg-3 mb-4 ">`);
