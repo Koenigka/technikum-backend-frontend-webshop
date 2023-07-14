@@ -20,15 +20,7 @@ import java.io.IOException;
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class WebConfig implements Filter {
-        //WebMvcConfigurer {
 
-    /*@Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedMethods("*")
-                .allowedOrigins("*");
-
-    }*/
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {

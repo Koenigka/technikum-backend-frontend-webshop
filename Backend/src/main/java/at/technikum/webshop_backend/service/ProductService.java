@@ -18,14 +18,14 @@ public class ProductService {
 
     private ProductRepository productRepository;
     private CategoryRepository categoryRepository;
-
     private CategoryService categoryService;
 
 
 
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, CategoryService categoryService) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
+        this.categoryService = categoryService;
     }
 
 

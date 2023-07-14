@@ -19,14 +19,20 @@ $(document).ready(function () {
       //Check if is checked --> value = true/false
       active: isActive,
     };
+
+    console.log(product);
     $.ajax({
-      url: "http://localhost:8080/api/products",
+      url: "http://localhost:8080/api/products/create",
       type: "POST",
-      cors: true,
+      dataType: "json",      
       contentType: "application/json",
+      beforeSend: function(xhr) {
+        var accessToken = sessionStorage.getItem("accessToken");
+        xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+      },
       data: JSON.stringify(product),
       success: console.log,
-      error: console.error,
+      error: console.error
     });
   });
 

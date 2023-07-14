@@ -17,7 +17,6 @@
   <script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
     crossorigin="anonymous"></script>
   <script src="/components/navbar/loadNavbar.js" defer></script>
-  <script src="/components/navbar/loadNavbarAdmin.js" defer></script>
   <script src="/components/footer/loadStickyFooter.js" defer></script>
   <script src="/components/cart/loadCart.js" defer></script>
   <script src="/admin-product.js" defer></script>
@@ -25,7 +24,7 @@
 </head>
 
 <body>
-  <div id="navbarContainerAdmin"></div>
+  <div id="navbarContainer"></div>
   <div id="basketContainer"></div>
   <div class="container pt-5">
     <button class="btn btn-warning text-white shadow-lg fs-5 " id="showNewProduct">new product</button>
@@ -38,7 +37,7 @@
     <p class="fs-4 fw-bold pt-2">New Product</p>
     <div class="row">
       <div class="col">
-        <form>
+        <div>
           <div class="row mt-3 mb-3 ">
             <div class="col-md-6">
               <div class="form-group">
@@ -104,7 +103,7 @@
           <button class="btn btn-warning text-white float-end mt-2 mb-2" id="createProductButton"> create new
             product</button>
 
-        </form>
+        </div>
       </div>
     </div>
   </div>
