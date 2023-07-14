@@ -12,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -72,49 +73,42 @@ public class ProductService {
     }
 
 
-    //methods old
 
-    public List<Product> findAll() {
-        return productRepository.findAll();
+    public List<ProductDto> findAllProducts() {
+        List<Product> products = productRepository.findAll();
+        return convertToProductDtoList(products);
     }
 
-    public List<Product> findByActive(Boolean active){return productRepository.findByActive(active);}
-    public List<Product> findByCategoryId(Long categoryId){
-        return productRepository.findByCategoryId(categoryId);
+    public List<ProductDto> findAllProductsByActive(Boolean active) {
+        List<Product> products = productRepository.findByActive(active);
+        return convertToProductDtoList(products);
     }
-    public List<Product> findByCategoryIdAndActive(Long categoryId, Boolean active){
-        return productRepository.findByCategoryIdAndActive(categoryId, active);
 
+    public Optional<ProductDto> findProductById(Long id) {
+        Optional<Product> product = productRepository.findById(id);
+        return product.map(Product::convertToDto);
     }
+
+    public List<ProductDto> findProductsByCategoryIdAndActive(Long categoryId, Boolean active) {
+        List<Product> products = productRepository.findByCategoryIdAndActive(categoryId, active);
+        return convertToProductDtoList(products);
+    }
+
+    public List<ProductDto> findProductsByTitleContains(String title) {
+        List<Product> products = productRepository.findByTitleContains(title);
+        return convertToProductDtoList(products);
+    }
+
+    private List<ProductDto> convertToProductDtoList(List<Product> products) {
+        return products.stream()
+                .map(Product::convertToDto)
+                .collect(Collectors.toList());
+    }
+
 
     public Optional<Product> findById(Long id) {
         return productRepository.findById(id);
     }
-
-    public List<Product> findByTitleContains(String title){
-        return productRepository.findByTitleContains(title);
-    }
-
-    public Product save(Product product){
-        return productRepository.save(product);
-    }
-
-    public Product save(Product product, Long categoryId){
-        Optional<Category> category = categoryRepository.findById(categoryId);
-        if(category.isEmpty()){
-            throw new EntityNotFoundException();
-        }
-        product.setCategory(category.get());
-        return save(product);
-    }
-
-
-
-
-
-
-
-
 }
 
 

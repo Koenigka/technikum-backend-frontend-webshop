@@ -62,19 +62,16 @@ public class UserService {
         return userRepository.save(existingUser);
     }
 
-
-    public List<User> findAll(){
+    public List<User> findAll() {
         return userRepository.findAll();
     }
-
 
     public User findById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + id));
     }
 
-
-    public Optional<User> findByEmail(String email){
+    public Optional<User> findByEmail(String email) {
         Optional<User> userOptional = userRepository.findByEmail(email);
         if (userOptional.isEmpty()) {
             return Optional.empty();
@@ -82,9 +79,9 @@ public class UserService {
         return userOptional;
     }
 
-
-    public void deleteById(Long id){
-        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + id));
+    public void deleteById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + id));
         userRepository.deleteById(id);
     }
 

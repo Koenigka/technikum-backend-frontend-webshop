@@ -1,5 +1,6 @@
 $(document).ready(function () {
   //TOOGLE FOR CREATE PRODUCT FORM
+  //TOOGLE FOR CREATE PRODUCT FORM
   $("#showNewProduct").click(function () {
     $("#createNewProduct").toggle();
   });
@@ -19,20 +20,19 @@ $(document).ready(function () {
       //Check if is checked --> value = true/false
       active: isActive,
     };
-
-    console.log(product);
+    
     $.ajax({
       url: "http://localhost:8080/api/products/create",
       type: "POST",
-      dataType: "json",      
+      dataType: "json",
       contentType: "application/json",
-      beforeSend: function(xhr) {
+      beforeSend: function (xhr) {
         var accessToken = sessionStorage.getItem("accessToken");
         xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
       },
       data: JSON.stringify(product),
       success: console.log,
-      error: console.error
+      error: console.error,
     });
   });
 
@@ -90,32 +90,38 @@ $(document).ready(function () {
       allSearchedProducts.append(createProduct(product));
     }
   }
-
   function createProduct(product) {
     const searchedProduct = $(`<tr>
-    <td scope="col">${product.id}</td>
-    <td scope="col">${product.title}</td>
-    <td scope="col">${product.category.title}</td>
-    <td scope="col">${product.price}</td>
-    <td scope="col">${product.stock}</td>
-    <td scope="col"><button class="btn btn-outline-warning editProduct" value="${product.id}">edit</button></td>
-    <td scope="col">
-    <button class="btn btn-outline-danger delete" value="${product.id}">delete</button>  
- </td>
-  </tr>`);
+      <td scope="col">${product.id}</td>
+      <td scope="col">${product.title ? product.title : ""}</td>
+      <td scope="col">${
+        product.category && product.category.title ? product.category.title : ""
+      }</td>
+      <td scope="col">${product.price ? product.price : ""}</td>
+      <td scope="col">${product.stock ? product.stock : ""}</td>
+      <td scope="col"><button class="btn btn-outline-warning editProduct" value="${
+        product.id
+      }">edit</button></td>
+      <td scope="col">
+      <button class="btn btn-outline-danger delete" value="${
+        product.id
+      }">delete</button>  
+   </td>
+    </tr>`);
     return searchedProduct;
   }
 
   //LOAD PRODUCT TO EDIT FORM
   $(document).on("click", ".editProduct", function (event) {
     const id = event.target.value;
-    //console.log(id);
+    console.log(id);
 
     $.ajax({
       url: "http://localhost:8080/api/products/" + id,
       type: "GET",
       cors: true,
       success: function (product) {
+        console.log(product);
         editProducts(product);
       },
       error: function (error) {
@@ -129,12 +135,28 @@ $(document).ready(function () {
       cors: true,
       success: function (categories) {
         addCategories(categories);
+        console.log(categories);
       },
       error: function (error) {
         console.error(error);
       },
     });
 
+    function addCategories(categories) {
+      const allCategories = $("#product-category-edit");
+
+      //console.log(allCategories);
+
+      for (let category of categories) {
+        allCategories.append(createCategory(category));
+      }
+    }
+
+    function createCategory(category) {
+      //const selected = product.categoryId == category.id ? "selected" : "";${selected}
+      const option = `<option value='${category.id}' >${category.title}</option>`;
+      return option;
+    }
     const addEditProduct = $("#addEditProduct");
     addEditProduct.empty();
 
@@ -144,6 +166,9 @@ $(document).ready(function () {
       } else {
         productedit = "";
       }
+
+      
+
       const editProduct = $(`
       <div class="container rounded mt-5 border border-warning bg-light shadow-lg">
 
@@ -173,8 +198,7 @@ $(document).ready(function () {
               <label for="product-category" class="fs-5">Product Category</label>
               <!-- Load Categories -->
               <select name="product-category" class="form-select fs-5" id="product-category-edit" required>
-              <option value='${product.category.id}'>${product.category.title}</option>              
-              </select>
+            </select>
             </div>
           </div>
           </div>
@@ -238,20 +262,7 @@ $(document).ready(function () {
     // LOAD CATEGORIES FOR EDIT
     //OFFEN: die gewählte kommt zur Zeit doppelt vor
 
-    function addCategories(categories) {
-      const allCategories = $("#product-category-edit");
-
-      //console.log(allCategories);
-
-      for (let category of categories) {
-        allCategories.append(createCategory(category));
-      }
-    }
-
-    function createCategory(category) {
-      const select = `<option value='${category.id}'>${category.title}</option>`;
-      return select;
-    }
+    
 
     $(".footer").removeClass("fixed-bottom");
   });
@@ -259,11 +270,11 @@ $(document).ready(function () {
   //EDIT PRODUCT
 
   $(document).on("click", "#saveEditProduct", function (event) {
-    const id = $("#product-id-edit").val();
-    console.log(id);
+   
     isActive = $(".status").is(":checked") ? true : false;
 
     const product = {
+      id: $("#product-id-edit").val(),
       title: $("#product-name").val(),
       description: $("#product-description-edit").val(),
       price: $("#product-price-edit").val(),
@@ -277,10 +288,14 @@ $(document).ready(function () {
 
     console.log(product);
     $.ajax({
-      url: "http://localhost:8080/api/products/" + id,
+      url: "http://localhost:8080/api/products/update",
       type: "PUT",
-      cors: true,
+      dataType: "json",
       contentType: "application/json",
+      beforeSend: function (xhr) {
+        var accessToken = sessionStorage.getItem("accessToken");
+        xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+      },
       data: JSON.stringify(product),
       success: console.log,
       error: console.error,
@@ -294,11 +309,22 @@ $(document).ready(function () {
     //console.log(deleteId);
 
     $.ajax({
-      url: "http://localhost:8080/api/products/" + deleteId,
+      url: "http://localhost:8080/api/products/delete/" + deleteId,
       type: "DELETE",
-      cors: true,
-      success: console.log,
-      error: console.error,
+      dataType: "text",
+      contentType: "application/json",
+      beforeSend: function (xhr) {
+        var accessToken = sessionStorage.getItem("accessToken");
+        xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+      },
+      success: function (response) {
+        console.log("Successfully deleted:", response);
+        //showToast("Produkt erfolgreich gelöscht", "success");
+        location.reload();
+      },
+      error: function (xhr, textStatus, error) {
+        console.error("Error deleting:", error);
+      },
     });
   });
 });

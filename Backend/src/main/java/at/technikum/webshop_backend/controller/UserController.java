@@ -28,18 +28,23 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUserDto);
     }
 
-    //TODO Alles auf Response Entity User Dto ändern!
-
     @GetMapping("/{id}")
-    public User findById(@PathVariable Long id){
-        return userService.findById(id);
+    public ResponseEntity<UserDto> findById(@PathVariable Long id) {
+        User user = userService.findById(id);
+        UserDto userDto = user.convertToDto();
+        return ResponseEntity.ok(userDto);
     }
 
-    @GetMapping("/{email}")
-    public Optional<User> findByEmail(@PathVariable String email, @RequestBody @Valid User user){
-        return userService.findByEmail(email);
+    @GetMapping("/email/{email}")
+    public ResponseEntity<UserDto> findByEmail(@PathVariable String email) {
+        Optional<User> user = userService.findByEmail(email);
+        if (user.isPresent()) {
+            UserDto userDto = user.get().convertToDto();
+            return ResponseEntity.ok(userDto);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
-
     @PutMapping("/update")
     public ResponseEntity<UserDto> updateUser(@RequestBody @Valid UserDto userDto) {
         User updatedUser = userService.update(userDto);
@@ -48,9 +53,9 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Long id){
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         userService.deleteById(id);
-
+        return ResponseEntity.noContent().build();
     }
 
 }
