@@ -49,6 +49,8 @@ $(document).ready(function () {
         console.error(error);
       },
     });
+    $(".footer").removeClass("fixed-bottom");
+
   });
 
   //ADD SEARCHED CATEGORIES FROM DATABASE TO LIST
@@ -171,11 +173,12 @@ $(document).ready(function () {
   //EDIT CATEGORY
 
   $(document).on("click", "#saveEditCategory", function (event) {
-    const id = $("#category-id-edit").val();
+     
     isActive = $(".status").is(":checked") ? true : false;
 
     //console.log(id);
     const category = {
+      id: $("#category-id-edit").val(),
       title: $("#category-name").val(),
       description: $("#category-description-edit").val(),
       imgUrl: $("#category-img").val(),
@@ -215,7 +218,7 @@ $(document).ready(function () {
         xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
       },
       success: function(response) {
-        console.log("Successfully deleted:", response);
+        console.log("Successfully deleted:");
       },
       error: function(xhr, textStatus, error) {
         console.error("Error deleting:", error);

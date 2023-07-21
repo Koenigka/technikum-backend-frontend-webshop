@@ -28,9 +28,10 @@ public class CategoryService {
     }
 
 
-    public Category updateCategory(Long id, CategoryDto updatedCategoryDto) {
-        Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Category not found with ID: " + id));
+    public Category updateCategory(CategoryDto updatedCategoryDto) {
+
+        Category category = categoryRepository.findById(updatedCategoryDto.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Category not found with ID: " + updatedCategoryDto.getId()));
 
         category.setTitle(updatedCategoryDto.getTitle());
         category.setDescription(updatedCategoryDto.getDescription());

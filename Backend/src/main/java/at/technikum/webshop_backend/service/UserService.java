@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -77,6 +78,11 @@ public class UserService {
             return Optional.empty();
         }
         return userOptional;
+    }
+
+    public List<UserDto> getUsersByEmailPrefix(String emailPrefix) {
+        List<User> users = userRepository.findByEmailStartingWith(emailPrefix);
+        return users.stream().map(User::convertToDto).collect(Collectors.toList());
     }
 
     public void deleteById(Long id) {

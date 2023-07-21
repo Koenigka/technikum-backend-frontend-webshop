@@ -45,15 +45,15 @@ public class CategoryController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
-    @PutMapping("/{id}")
-    public ResponseEntity<CategoryDto> updateCategory(@PathVariable Long id, @RequestBody CategoryDto updatedCategoryDto) {
+    @PutMapping("/update")
+    public ResponseEntity<CategoryDto> updateCategory(@RequestBody CategoryDto updatedCategoryDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         boolean isAdmin = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::toString)
                 .anyMatch(val -> val.equals(authorityAdmin));
 
         if (isAdmin) {
-            Category updatedCategory = categoryService.updateCategory(id, updatedCategoryDto);
+            Category updatedCategory = categoryService.updateCategory(updatedCategoryDto);
             CategoryDto categoryDto = updatedCategory.convertToDto();
             return ResponseEntity.ok(categoryDto);
         } else {
@@ -61,7 +61,7 @@ public class CategoryController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteCategory(@PathVariable Long id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         boolean isAdmin = authentication.getAuthorities().stream()
