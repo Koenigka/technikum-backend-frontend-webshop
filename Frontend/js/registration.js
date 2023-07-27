@@ -28,7 +28,7 @@ $(document).ready(function () {
     var email_regex =
       /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     var password_regex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()])[a-zA-Z\d!@#$%^&*()]+$/;
+      /^(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()])[a-z\d!@#$%^&*()]+$/;
 
     // Validation for all the registration inputs
 
@@ -61,7 +61,7 @@ $(document).ready(function () {
       $("#lastNameError").text("The last name should have at least 2 letters");
     } else if (!user.lastname.match(name_regex)) {
       isValid = false;
-      $("#lastNameError").text("The first name should contain only letters");
+      $("#lastNameError").text("The last name should contain only letters");
     }
 
     // Validation for the address
@@ -125,11 +125,13 @@ $(document).ready(function () {
       $("#password1Error").text("Please enter a password");
     } else if (user.password.length < 6) {
       isValid = false;
-      $("#password1Error").text("Password must be at least 6 characters long");
+      $("#password1Error").text(
+        "Password must be at least 6 characters long and must contain at least one lowercase letter, one number and one special character"
+      );
     } else if (!password_regex.test(user.password)) {
       isValid = false;
       $("#password1Error").text(
-        "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+        "Password must be at least 6 characters long and must contain at least one lowercase letter, one number and one special character"
       );
     }
 
@@ -195,22 +197,26 @@ $(document).ready(function () {
               // Erfolgsmeldung im Web Storage speichern
               sessionStorage.setItem(
                 "registrationMessage",
-                "Registrierung erfolgreich. Bitte loggen Sie sich ein."
+                "Registration successfull. Please log in."
               );
               // Weiterleitung zur Login-Seite
               window.location.href = "login.html";
             },
             error: function (xhr, status, error) {
               // Fehlermeldung anzeigen
-              $("#registrationMessage").text(
-                "Fehler bei der Registrierung: " + error
-              );
+              var errorCode = xhr.status;
+              var errorStatus = xhr.statusText;
+              var errorMessage =
+                "Something went wrong: " + errorCode + " " + errorStatus;
+              $("#registrationMessage").text(errorMessage);
             },
           });
         }
       })
       .fail(function () {
-        console.error("Failed to load valid_addresses.csv");
+        $("#registrationMessage").text(
+          "Failed to load the file valid_addresses.csv"
+        );
       });
   });
 });
