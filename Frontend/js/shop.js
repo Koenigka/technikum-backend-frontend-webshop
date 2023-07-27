@@ -71,7 +71,8 @@ $(document).ready(function () {
 
   if (value != null) {
     $.ajax({
-      url: "http://localhost:8080/api/products/byCategory/" + value + "/" + true,
+      url:
+        "http://localhost:8080/api/products/byCategory/" + value + "/" + true,
       type: "GET",
       cors: true,
       success: function (products) {
@@ -112,12 +113,6 @@ $(document).ready(function () {
     card.append(cardbody);
     cardbody.append(title);
     cardbody.append(description);
-    const veganoption = $(` <div class="form-check text-warning">
-        <input class="form-check-input text-warning" type="checkbox" value="" id="flexCheckDefault">
-        <label class="form-check-label text-warning" for="flexCheckDefault">
-          Vegan Option
-        </label>`);
-    cardbody.append(veganoption);
     cardbody.append(button);
     cardbody.append(`</div>`);
     wrapper.append(`</div>`);

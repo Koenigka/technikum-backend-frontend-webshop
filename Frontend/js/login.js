@@ -1,6 +1,28 @@
 $(document).ready(function () {
+  // Function to clear login fields
+  function clearLoginFields() {
+    $("#email").val("");
+    $("#password").val("");
+  }
+
   // Erfolgsmeldung aus dem Web Storage abrufen
   var registrationMessage = sessionStorage.getItem("registrationMessage");
+
+  // Check if login data is saved in Local Storage
+  var savedEmail = localStorage.getItem("loginEmail");
+  var rememberEmail = localStorage.getItem("rememberEmail") === "true";
+
+  // Auto-complete password if "Remember Email" was checked before
+  if (rememberEmail && savedEmail) {
+    $("#email").val(savedEmail);
+    $("#remember").prop("checked", true);
+  }
+
+  // Event handler for "Remember Password" checkbox
+  $("#remember").on("change", function () {
+    rememberEmail = this.checked;
+    localStorage.setItem("rememberEmail", rememberEmail);
+  });
 
   // Wenn eine Erfolgsmeldung vorhanden ist, anzeigen und aus dem Web Storage entfernen
   if (registrationMessage) {
@@ -20,6 +42,7 @@ $(document).ready(function () {
   $("#loginUserButton").on("click", function () {
     var email = $("#email").val();
     var password = $("#password").val();
+    var rememberEmail = $("#remember").is(":checked");
 
     var loginData = {
       email: email,
@@ -49,11 +72,6 @@ $(document).ready(function () {
 
     // Proceed with login if no validation errors
     if (email && isValidEmail(email) && password && password.length >= 6) {
-      var loginData = {
-        email: email,
-        password: password,
-      };
-
       $.ajax({
         url: "http://localhost:8080/api/auth/login",
         type: "POST",
@@ -61,18 +79,12 @@ $(document).ready(function () {
         contentType: "application/json",
         data: JSON.stringify(loginData),
         success: function (response) {
-          // Erfolgsmeldung anzeigen und weitere Aktionen durchführen
-          console.log("Login erfolgreich");
-          console.log(response.accessToken);
-
           // JWT-Token im sessionStorage speichern
           sessionStorage.setItem("accessToken", response.accessToken);
 
           // Token decodieren und Benutzerrolle extrahieren
           var token = response.accessToken;
           var decodedToken = jwt_decode(token);
-
-          console.log(decodedToken);
 
           var userName = decodedToken.e;
           sessionStorage.setItem("userName", userName);
@@ -85,13 +97,25 @@ $(document).ready(function () {
 
           //Zugriff auf den Token über: var accessToken = sessionStorage.getItem("accessToken");
           sessionStorage.setItem("loginMessage", "Login successfull!");
+          if (rememberEmail) {
+            // Save login data in Local Storage if "Remember Password" is checked
+            localStorage.setItem("loginEmail", email);
+          } else {
+            // Clear login data from Local Storage if "Remember Password" is not checked
+            localStorage.removeItem("loginEmail");
+            localStorage.removeItem("loginPassword");
+          }
+
           // Weiterleitung nach dem erfolgreichen Login
           window.location.href = "/pages/shop.html";
         },
         error: function (xhr, status, error) {
           // Fehlermeldung anzeigen
           //console.error("Fehler beim Login: " + error);
-          $("#loginMessage").text("Something went wrong. Try again.");
+          $("#loginMessage").text(
+            "The combination email address and password does not exist. Please, try again."
+          ); // For this example, I'm just clearing the login fields after clicking "Login"
+          clearLoginFields();
         },
       });
     }
