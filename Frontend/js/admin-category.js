@@ -20,13 +20,17 @@ $(document).ready(function () {
     };
 
     $.ajax({
-      url: "http://localhost:8080/api/categories",
+      url: "http://localhost:8080/api/categories/create",
       type: "POST",
-      cors: true,
+      dataType: "json",      
       contentType: "application/json",
+      beforeSend: function(xhr) {
+        var accessToken = sessionStorage.getItem("accessToken");
+        xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+      },
       data: JSON.stringify(category),
       success: console.log,
-      error: console.error,
+      error: console.error
     });
   });
   //SEARCH FUNCTION (dzt nur nach Title ohne aktiv!)
@@ -45,6 +49,8 @@ $(document).ready(function () {
         console.error(error);
       },
     });
+    $(".footer").removeClass("fixed-bottom");
+
   });
 
   //ADD SEARCHED CATEGORIES FROM DATABASE TO LIST
@@ -167,11 +173,12 @@ $(document).ready(function () {
   //EDIT CATEGORY
 
   $(document).on("click", "#saveEditCategory", function (event) {
-    const id = $("#category-id-edit").val();
+     
     isActive = $(".status").is(":checked") ? true : false;
 
     //console.log(id);
     const category = {
+      id: $("#category-id-edit").val(),
       title: $("#category-name").val(),
       description: $("#category-description-edit").val(),
       imgUrl: $("#category-img").val(),
@@ -180,14 +187,19 @@ $(document).ready(function () {
 
     //console.log(category);
     $.ajax({
-      url: "http://localhost:8080/api/categories/" + id,
+      url: "http://localhost:8080/api/categories/update",
       type: "PUT",
-      cors: true,
+      dataType: "json",      
       contentType: "application/json",
+      beforeSend: function(xhr) {
+        var accessToken = sessionStorage.getItem("accessToken");
+        xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+      },
       data: JSON.stringify(category),
       success: console.log,
-      error: console.error,
+      error: console.error
     });
+   
   });
 
   //DELETE CATEGORY
@@ -197,11 +209,20 @@ $(document).ready(function () {
     //console.log(deleteId);
 
     $.ajax({
-      url: "http://localhost:8080/api/categories/" + deleteId,
+      url: "http://localhost:8080/api/categories/delete/" + deleteId,
       type: "DELETE",
-      cors: true,
-      success: console.log,
-      error: console.error,
+      dataType: "json",
+      contentType: "application/json",
+      beforeSend: function(xhr) {
+        var accessToken = sessionStorage.getItem("accessToken");
+        xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+      },
+      success: function(response) {
+        console.log("Successfully deleted:");
+      },
+      error: function(xhr, textStatus, error) {
+        console.error("Error deleting:", error);
+      }
     });
   });
 });

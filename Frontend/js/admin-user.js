@@ -1,8 +1,13 @@
-//LOAD USERS FROM DATABASE
+/* // Laden der Benutzer aus der Datenbank
 $.ajax({
   url: "http://localhost:8080/api/users/email",
   type: "GET",
-  cors: true,
+  dataType: "json",
+  contentType: "application/json",
+  beforeSend: function (xhr) {
+    var accessToken = sessionStorage.getItem("accessToken");
+    xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+  },
   success: function (users) {
     addUsers(users);
   },
@@ -10,15 +15,20 @@ $.ajax({
     console.error(error);
   },
 });
-
-//SEARCH FUNCTION (dzt nur nach title möglich)
+ */
+// Suchfunktion (derzeit nur nach E-Mail möglich)
 $(document).on("click", "#showSearchUser", function (event) {
   const search = $("#email").val();
 
   $.ajax({
-    url: "http://localhost:8080/api/users/email/" + search,
+    url: "http://localhost:8080/api/users/findByEmail/" + search,
     type: "GET",
-    cors: true,
+    dataType: "json",
+    contentType: "application/json",
+    beforeSend: function (xhr) {
+      var accessToken = sessionStorage.getItem("accessToken");
+      xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+    },
     success: function (users) {
       addUsers(users);
     },
@@ -26,9 +36,10 @@ $(document).on("click", "#showSearchUser", function (event) {
       console.error(error);
     },
   });
+  $(".footer").removeClass("fixed-bottom");
 });
 
-//ADD SEARCHED USER FROM DATABASE
+// Hinzufügen der gesuchten Benutzer aus der Datenbank
 function addUsers(users) {
   const allSearchedUsers = $("#searchResult");
   allSearchedUsers.empty();
@@ -38,6 +49,7 @@ function addUsers(users) {
   }
 }
 
+// Funktion zum Erstellen der Benutzertabelle
 function createUser(user) {
   const searchedUser = $(`<tr>
     <td scope="col">${user.username}</td>
@@ -55,17 +67,21 @@ function createUser(user) {
   return searchedUser;
 }
 
-//LOAD PRODUCT TO EDIT FORM
+// Laden des Benutzers zum Bearbeiten in das Formular
 $(document).on("click", ".editUser", function (event) {
   const id = event.target.value;
-  //console.log(id);
 
   $.ajax({
     url: "http://localhost:8080/api/users/" + id,
     type: "GET",
-    cors: true,
+    dataType: "json",
+    contentType: "application/json",
+    beforeSend: function (xhr) {
+      var accessToken = sessionStorage.getItem("accessToken");
+      xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+    },
     success: function (user) {
-      editUsers(user);
+      editUser(user);
     },
     error: function (error) {
       console.error(error);
@@ -75,196 +91,122 @@ $(document).on("click", ".editUser", function (event) {
   const addEditUser = $("#addEditUser");
   addEditUser.empty();
 
-  function editUsers(user) {
+
+  // Check if the user is an admin and set the role accordingly
+  
+  function editUser(user) {
     const editUser = $(`
-      <div
-      class="container rounded my-5 border border-warning bg-light shadow-lg"
-    >
-      <p class="fs-4 fw-bold pt-2">Edit User</p>
-      <div class="row">
-        <div class="col">
-          <form method="PUT" action="">
-            <div class="row mt-3 mb-3">
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="title" class="fs-5">Title</label>
-
-                  <select name="Title" class="form-select fs-5 user-title" id="title-edit" >
-                      <option value="">Mr</option>
-              <option value="">Ms</option>
-                    <option value="" selected>${user.title}</option>
-                  </select>
-                </div>
-              </div>
-              <input
-                    id="user-id-edit"
-                    type="hidden"
-                    class="form-control"
-                    name=""
-                    value="${user.id}"
-                    required
-                  />
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="first-name" class="fs-5">First Name</label>
-                  <input
-                    id="first-name-edit"
-                    type="text"
-                    class="form-control"
-                    name="first-name"
-                    value="${user.firstname}"
-                    required
-                  />
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="last-name" class="fs-5">Last Name</label>
-                  <input
-                    id="last-name-edit"
-                    type="text"
-                    class="form-control"
-                    name="last-name"
-                    value="${user.lastname}"
-                    required
-                  />
-                </div>
+    <div class="container rounded my-5 border border-warning bg-light shadow-lg">
+    <p class="fs-4 fw-bold pt-2">Edit User</p>
+    <div class="row">
+      <div class="col">
+        <form method="PUT" action="">
+          <div class="row mt-3 mb-3">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="title" class="fs-5">Title</label>
+  
+                <select name="Title" class="form-select fs-5 user-title" id="title-edit">
+                  <option value="Mr" ${user.title==="Mr" ? "selected" : "" }>Mr</option>
+                  <option value="Ms" ${user.title==="Ms" ? "selected" : "" }>Ms</option>
+                </select>
               </div>
             </div>
-
-            <div class="row mb-3">
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="address" class="fs-5">Address</label>
-                  <input
-                    id="address-edit"
-                    type="text"
-                    class="form-control"
-                    name="address"
-                    value="${user.address}"
-                    required
-                  />
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="zip" class="fs-5">Zip</label>
-                  <input
-                    id="zip-edit"
-                    type="text"
-                    class="form-control"
-                    name="zip"
-                    value="${user.zip}"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="city" class="fs-5">City</label>
-                  <input
-                    id="city-edit"
-                    type="text"
-                    class="form-control"
-                    name="city"
-                    value="${user.city}"
-                    required
-                  />
-                </div>
+            <input id="user-id-edit" type="hidden" class="form-control" name="" value="${user.id}" required />
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="first-name" class="fs-5">First Name</label>
+                <input id="first-name-edit" type="text" class="form-control" name="first-name" value="${user.firstname}"
+                  required />
               </div>
             </div>
-
-            <div class="row mb-3">
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="email" class="fs-5">E-mail</label>
-                  <input
-                    id="email-edit"
-                    type="email"
-                    class="form-control"
-                    name="email"
-                    value="${user.email}"
-                    required
-                  />
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="username" class="fs-5">Username</label>
-                  <input
-                    id="username-edit"
-                    type="text"
-                    class="form-control"
-                    name="username"
-                    value="${user.username}"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="password" class="fs-5">Password</label>
-                  <input
-                    id="password-edit"
-                    type="text"
-                    class="form-control"
-                    name="password"
-                    value="${user.password}"
-                    required
-                  />
-                </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="last-name" class="fs-5">Last Name</label>
+                <input id="last-name-edit" type="text" class="form-control" name="last-name" value="${user.lastname}"
+                  required />
               </div>
             </div>
-
-            <div class="row">
-              <div class="col-md-4">
-                <div class="form-check mb-2">
+          </div>
+  
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="address" class="fs-5">Address</label>
+                <input id="address-edit" type="text" class="form-control" name="address" value="${user.address}"
+                  required />
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="zip" class="fs-5">Zip</label>
+                <input id="zip-edit" type="text" class="form-control" name="zip" value="${user.zip}" required />
+              </div>
+            </div>
+  
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="city" class="fs-5">City</label>
+                <input id="city-edit" type="text" class="form-control" name="city" value="${user.city}" required />
+              </div>
+            </div>
+          </div>
+  
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="email" class="fs-5">E-mail</label>
+                <input id="email-edit" type="email" class="form-control" name="email" value="${user.email}" required />
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="username" class="fs-5">Username</label>
+                <input id="username-edit" type="text" class="form-control" name="username" value="${user.username}"
+                  required />
+              </div>
+            </div>
+  
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="password" class="fs-5">Password</label>
+                <input id="password-edit" type="text" class="form-control" name="password" value="${user.password}"
+                  required />
+              </div>
+            </div>
+          </div>
+  
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-check mb-2">
                 <div class="form-group">
-                  <input
-                    type="checkbox"
-                    class="form-check-input"
-                    name="status"
-                    id="status"
-                     checked
-                  />
+                  <input type="checkbox" class="form-check-input" name="status" id="status" checked />
                   <label class="form-check-label fs-5" for="status">
                     active
                   </label>
                 </div>
               </div>
-              </div>
-
-              <div class="col-md-4">
-                <div class="form-check mb-2">
-                <div class="form-group">
-                  <input
-                    type="checkbox"
-                    class="form-check-input"
-                    name="is-admin"
-                    id="is-admin"
-                    
-                  />
-                  <label class="form-check-label fs-5" for="is-admin">
-                    User is Admin
-                  </label>
-                </div>
-              </div>
-              </div>
             </div>
-
-            <button
-              type="button"
-              class="btn btn-warning text-white float-end mt-2 mb-2"
-              id="saveEditUser"
-            >
+  
+            <div class="col-md-4">
+            <div class="form-group">
+              <label for="role" class="fs-5">Role</label>
+              <input type="hidden" id="role-edit" name="role" value="${user.role}" />
+              <select class="form-select fs-5" id="role-select-edit">
+                <option value="USER" ${user.role === "USER" ? "selected" : ""}>User</option>
+                <option value="ADMIN" ${user.role === "ADMIN" ? "selected" : ""}>Admin</option>
+              </select>
+            </div>
+          </div>
+            <div class="col-md-4">
+            <button type="button" class="btn btn-warning text-white float-end mt-2 mb-2" id="saveEditUser">
               save
             </button>
-          </form>
-        </div>
+            </div>
+        </form>
       </div>
-    </div>`);
+    </div>
+  </div>`);
 
     addEditUser.append(editUser);
   }
@@ -273,46 +215,57 @@ $(document).on("click", ".editUser", function (event) {
   $(".footer").removeClass("fixed-bottom");
 });
 
-//EDIT USER
-
+// Bearbeiteten Benutzer speichern
 $(document).on("click", "#saveEditUser", function (event) {
-  const id = $("#user-id-edit").val();
-
   const user = {
+    id: $("#user-id-edit").val(),
     title: $("#title-edit").val(),
     firstname: $("#first-name-edit").val(),
     lastname: $("#last-name-edit").val(),
     address: $("#address-edit").val(),
     city: $("#city-edit").val(),
     zip: $("#zip-edit").val(),
-    username: $("#username-edit").val(),
     email: $("#email-edit").val(),
+    username: $("#username-edit").val(),
     password: $("#password-edit").val(),
-    active: "true",
-    admin: "false",
+    active: $("#status").is(":checked").toString(),
+    role: $("#role-select-edit").val(),
   };
 
-  console.log(user);
   $.ajax({
-    url: "http://localhost:8080/api/users/" + id,
+    url: "http://localhost:8080/api/users/update",
     type: "PUT",
-    cors: true,
+    dataType: "json",
     contentType: "application/json",
+    beforeSend: function (xhr) {
+      var accessToken = sessionStorage.getItem("accessToken");
+      xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+    },
     data: JSON.stringify(user),
     success: console.log,
     error: console.error,
   });
 });
 
-//DELETE USER
+// Benutzer löschen
 $(document).on("click", ".delete", function (event) {
   const deleteId = event.target.value;
 
   $.ajax({
-    url: "http://localhost:8080/api/users/" + deleteId,
+    url: "http://localhost:8080/api/users/delete/" + deleteId,
     type: "DELETE",
-    cors: true,
-    success: console.log,
-    error: console.error,
+    dataType: "text",
+    contentType: "application/json",
+    beforeSend: function (xhr) {
+      var accessToken = sessionStorage.getItem("accessToken");
+      xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+    },
+    success: function (response) {
+      console.log("Successfully deleted:", response);
+      location.reload();
+    },
+    error: function (xhr, textStatus, error) {
+      console.error("Error deleting:", error);
+    },
   });
 });
