@@ -52,8 +52,18 @@ public class UserController {
 
     @GetMapping("/findByEmail/{emailPrefix}")
     public ResponseEntity<List<UserDto>> getUsersByEmailPrefix(@PathVariable String emailPrefix) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::toString)
+                .anyMatch(val -> val.equals(authorityAdmin));
+
+        if (isAdmin) {
         List<UserDto> users = userService.getUsersByEmailPrefix(emailPrefix);
         return ResponseEntity.ok(users);
+        }else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
 
     @GetMapping("/email/{email}")
