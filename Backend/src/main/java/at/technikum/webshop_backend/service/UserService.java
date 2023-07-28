@@ -1,12 +1,15 @@
 package at.technikum.webshop_backend.service;
 
+import at.technikum.webshop_backend.dto.CategoryDto;
 import at.technikum.webshop_backend.dto.UserDto;
 import at.technikum.webshop_backend.model.Address;
+import at.technikum.webshop_backend.model.Category;
 import at.technikum.webshop_backend.model.User;
 import at.technikum.webshop_backend.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -46,6 +49,9 @@ public class UserService {
     public User update(UserDto userDto) {
         User existingUser = userRepository.findById(userDto.getId())
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userDto.getId()));
+
+        //TODO - proof active Frontend Backend
+        System.out.println("IsActive: " + userDto.getIsActive());
 
         existingUser.setTitle(userDto.getTitle());
         existingUser.setFirstname(userDto.getFirstname());
@@ -89,6 +95,39 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + id));
         userRepository.deleteById(id);
+    }
+
+    public List<UserDto> findUsersByFilters(Map<String, String> filters) {
+        String emailPrefix = filters.get("email");
+        String username = filters.get("username");
+        String isActive = filters.get("active");
+
+        List<User> users;
+
+        if (emailPrefix != null && username != null && isActive != null) {
+            users = userRepository.findByEmailStartingWithAndUsernameContainingAndIsActive(emailPrefix, username, Boolean.parseBoolean(isActive));
+        } else if (emailPrefix != null && username != null) {
+            users = userRepository.findByEmailStartingWithAndUsernameContaining(emailPrefix, username);
+        } else if (emailPrefix != null && isActive != null) {
+            users = userRepository.findByEmailStartingWithAndIsActive(emailPrefix, Boolean.parseBoolean(isActive));
+        } else if (username != null && isActive != null) {
+            users = userRepository.findByUsernameContainingAndIsActive(username, Boolean.parseBoolean(isActive));
+        } else if (emailPrefix != null) {
+            users = userRepository.findByEmailStartingWith(emailPrefix);
+        } else if (username != null) {
+            users = userRepository.findByUsernameContaining(username);
+        } else if (isActive != null) {
+            users = userRepository.findByIsActive(Boolean.parseBoolean(isActive));
+        } else {
+            users = userRepository.findAll();
+        }
+
+        return convertToUserDtoList(users);
+    }
+    private List<UserDto> convertToUserDtoList(List<User> users) {
+        return users.stream()
+                .map(User::convertToDto)
+                .collect(Collectors.toList());
     }
 
 }

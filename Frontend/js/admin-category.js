@@ -29,19 +29,39 @@ $(document).ready(function () {
         xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
       },
       data: JSON.stringify(category),
-      success: console.log,
+      success: console.log,     
       error: console.error
     });
   });
-  //SEARCH FUNCTION (dzt nur nach Title ohne aktiv!)
-  $(document).on("click", "#showSearchCategory", function (event) {
-    const searchId = $("#category-id").val();
-    const search = $("#category-name-search").val();
 
+  //SEARCH FUNCTION 
+  $(document).on("click", "#showSearchCategory", function (event) {
+    const searchTitle = $("#category-name-search").val();
+    const isActive = $("#category-active-search").prop("checked");
+  
+    const filters = {};
+  
+
+    if (searchTitle) {
+      filters["filter[title]"] = searchTitle;
+    }
+  
+    if (isActive) {
+      filters["filter[active]"] = "true";
+    }
+ 
+    const filterJSON = JSON.stringify(filters);
+  
     $.ajax({
-      url: "http://localhost:8080/api/categories/searchCategoryTitle/" + search,
-      type: "GET",
-      cors: true,
+      url: "http://localhost:8080/api/categories/search",
+      type: "POST",
+      dataType: "json",      
+      contentType: "application/json",
+      beforeSend: function(xhr) {
+        var accessToken = sessionStorage.getItem("accessToken");
+        xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+      },
+      data: filterJSON,
       success: function (categories) {
         addCategories(categories);
       },
@@ -49,8 +69,8 @@ $(document).ready(function () {
         console.error(error);
       },
     });
+  
     $(".footer").removeClass("fixed-bottom");
-
   });
 
   //ADD SEARCHED CATEGORIES FROM DATABASE TO LIST

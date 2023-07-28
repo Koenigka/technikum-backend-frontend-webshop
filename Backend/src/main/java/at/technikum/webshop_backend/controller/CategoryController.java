@@ -1,6 +1,7 @@
 package at.technikum.webshop_backend.controller;
 
 import at.technikum.webshop_backend.dto.CategoryDto;
+import at.technikum.webshop_backend.dto.ProductDto;
 import at.technikum.webshop_backend.model.Category;
 import at.technikum.webshop_backend.service.CategoryService;
 import jakarta.validation.Valid;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -91,14 +93,18 @@ public class CategoryController {
     public List<CategoryDto> findAllCategoriesByActive(@PathVariable Boolean active) {
         return categoryService.findAllCategoriesByActive(active);
     }
+    @PostMapping("/search")
+    public ResponseEntity<List<CategoryDto>> findByFilters(@RequestBody Map<String, String> filters) {
 
-    @GetMapping("/searchCategoryTitle/{title}")
-    public List<CategoryDto> findByTitleContains(@PathVariable String title) {
-        List<Category> categories = categoryService.findByTitleContains(title);
-        return categories.stream()
-                .map(Category::convertToDto)
-                .collect(Collectors.toList());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = authentication.getAuthorities().stream().map(GrantedAuthority::toString)
+                .anyMatch(val -> val.equals(authorityAdmin));
+
+        if (isAdmin) {
+            List<CategoryDto> filteredCategories = categoryService.findCategoriesByFilter(filters);
+            return ResponseEntity.ok(filteredCategories);
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
-
-
 }

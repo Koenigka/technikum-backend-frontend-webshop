@@ -7,6 +7,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -67,8 +68,30 @@ public class CategoryService {
                 .collect(Collectors.toList());
     }
 
-    public List<Category> findByTitleContains(String title) {
-        return categoryRepository.findByTitleContains(title);
+    public List<CategoryDto> findCategoriesByFilter(Map<String, String> filters) {
+        String categoryTitle = filters.get("filter[title]");
+        String active = filters.get("filter[active]");
+
+
+        List<Category> categories;
+
+        if (categoryTitle != null && active != null) {
+            categories = categoryRepository.findByTitleContainsAndActive(categoryTitle, Boolean.parseBoolean(active));
+        } else if (categoryTitle != null) {
+            categories = categoryRepository.findByTitleContains(categoryTitle);
+        } else if (active != null) {
+            categories = categoryRepository.findByActive(Boolean.parseBoolean(active));
+        } else {
+            categories = categoryRepository.findAll();
+        }
+
+        return convertToCategoryDtoList(categories);
+    }
+
+    private List<CategoryDto> convertToCategoryDtoList(List<Category> categories) {
+        return categories.stream()
+                .map(Category::convertToDto)
+                .collect(Collectors.toList());
     }
 
 }

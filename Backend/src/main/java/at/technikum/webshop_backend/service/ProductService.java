@@ -6,11 +6,10 @@ import at.technikum.webshop_backend.model.Product;
 import at.technikum.webshop_backend.repository.CategoryRepository;
 import at.technikum.webshop_backend.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -89,15 +88,35 @@ public class ProductService {
         return product.map(Product::convertToDto);
     }
 
-    public List<ProductDto> findProductsByCategoryIdAndActive(Long categoryId, Boolean active) {
-        List<Product> products = productRepository.findByCategoryIdAndActive(categoryId, active);
+    public List<ProductDto> findProductsByFilters(Map<String, String> filters) {
+        String productTitle = filters.get("filter[productTitle]");
+        String categoryId = filters.get("filter[categoryId]");
+        String active = filters.get("filter[active]");
+        List<Product> products;
+        if (productTitle != null && categoryId != null && active != null) {
+            Category category = categoryRepository.findById(Long.parseLong(categoryId)).orElse(null);
+            products = productRepository.findByTitleContainsAndCategoryAndActive(productTitle, category, Boolean.parseBoolean(active));
+        } else if (productTitle != null && categoryId != null) {
+            Category category = categoryRepository.findById(Long.parseLong(categoryId)).orElse(null);
+            products = productRepository.findByTitleContainsAndCategory(productTitle, category);
+        } else if (productTitle != null && active != null) {
+            products = productRepository.findByTitleContainsAndActive(productTitle, Boolean.parseBoolean(active));
+        } else if (categoryId != null && active != null) {
+            Category category = categoryRepository.findById(Long.parseLong(categoryId)).orElse(null);
+            products = productRepository.findByCategoryAndActive(category, Boolean.parseBoolean(active));
+        } else if (productTitle != null) {
+            products = productRepository.findByTitleContains(productTitle);
+        } else if (categoryId != null) {
+            Category category = categoryRepository.findById(Long.parseLong(categoryId)).orElse(null);
+            products = productRepository.findByCategory(category);
+        } else if (active != null) {
+            products = productRepository.findByActive(Boolean.parseBoolean(active));
+        } else {
+            products = productRepository.findAll();
+        }
         return convertToProductDtoList(products);
     }
 
-    public List<ProductDto> findProductsByTitleContains(String title) {
-        List<Product> products = productRepository.findByTitleContains(title);
-        return convertToProductDtoList(products);
-    }
 
     private List<ProductDto> convertToProductDtoList(List<Product> products) {
         return products.stream()

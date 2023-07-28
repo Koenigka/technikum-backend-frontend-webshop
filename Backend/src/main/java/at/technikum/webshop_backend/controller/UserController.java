@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -33,6 +34,22 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUserDto);
     }
 
+
+    @PostMapping("/search")
+    public ResponseEntity<List<UserDto>> findUsersByFilters(@RequestBody Map<String, String> filters) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::toString)
+                .anyMatch(val -> val.equals(authorityAdmin));
+
+        if (isAdmin) {
+        List<UserDto> filteredUsers = userService.findUsersByFilters(filters);
+        return ResponseEntity.ok(filteredUsers);
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> findById(@PathVariable Long id) {
 
