@@ -177,6 +177,16 @@ $(document).on("click", ".editUser", function (event) {
           </div>
   
           <div class="row">
+          <div class="col-md-4">
+              <div class="form-group">
+                <label for="role" class="fs-5">Role</label>
+                <input type="hidden" id="role-edit" name="role" value="${user.role}" />
+                <select class="form-select fs-5" id="role-select-edit">
+                  <option value="USER" ${user.role==="USER" ? "selected" : "" }>User</option>
+                  <option value="ADMIN" ${user.role==="ADMIN" ? "selected" : "" }>Admin</option>
+                </select>
+              </div>
+              </div>
             <div class="col-md-4">
               <div class="form-check mb-2">
                 <div class="form-group">
@@ -186,22 +196,12 @@ $(document).on("click", ".editUser", function (event) {
                   </label>
                 </div>
               </div>
-            </div>
-  
-            <div class="col-md-4">
-            <div class="form-group">
-              <label for="role" class="fs-5">Role</label>
-              <input type="hidden" id="role-edit" name="role" value="${user.role}" />
-              <select class="form-select fs-5" id="role-select-edit">
-                <option value="USER" ${user.role === "USER" ? "selected" : ""}>User</option>
-                <option value="ADMIN" ${user.role === "ADMIN" ? "selected" : ""}>Admin</option>
-              </select>
-            </div>
-          </div>
-            <div class="col-md-4">
-            <button type="button" class="btn btn-warning text-white float-end mt-2 mb-2" id="saveEditUser">
-              save
-            </button>
+            </div> 
+              <div class="col-md-4">
+                <button type="button" class="btn btn-warning text-white float-end mt-2 mb-2" id="saveEditUser">
+                  save
+                </button>
+              </div>
             </div>
         </form>
       </div>
@@ -213,7 +213,7 @@ $(document).on("click", ".editUser", function (event) {
 
   //WHEN EDIT USER OPENS, THE FOOTER IS NOT STICKY ANYMORE
   $(".footer").removeClass("fixed-bottom");
-});
+ });
 
 // Bearbeiteten Benutzer speichern
 $(document).on("click", "#saveEditUser", function (event) {
