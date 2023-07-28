@@ -1,30 +1,36 @@
-/* // Laden der Benutzer aus der Datenbank
-$.ajax({
-  url: "http://localhost:8080/api/users/email",
-  type: "GET",
-  dataType: "json",
-  contentType: "application/json",
-  beforeSend: function (xhr) {
-    var accessToken = sessionStorage.getItem("accessToken");
-    xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-  },
-  success: function (users) {
-    addUsers(users);
-  },
-  error: function (error) {
-    console.error(error);
-  },
-});
- */
-// Suchfunktion (derzeit nur nach E-Mail möglich)
+
 $(document).on("click", "#showSearchUser", function (event) {
-  const search = $("#email").val();
+  const email = $("#search-email").val();
+  const username = $("#search-username").val();
+  const isActive = $("#search-status").prop("checked");
+
+  const filters = {};
+
+  if (email) {
+    filters["email"] = email;
+  }
+
+  if (username) {
+    filters["username"] = username;
+  }
+
+
+  if (isActive) {
+    filters["active"] = "true";
+  } else {
+    filters["active"] = "false";
+  }
+  
+
+  const filterJSON = JSON.stringify(filters);
+  console.log(filterJSON);
 
   $.ajax({
-    url: "http://localhost:8080/api/users/findByEmail/" + search,
-    type: "GET",
+    url: "http://localhost:8080/api/users/search",
+    type: "POST",
     dataType: "json",
     contentType: "application/json",
+    data: filterJSON,
     beforeSend: function (xhr) {
       var accessToken = sessionStorage.getItem("accessToken");
       xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
@@ -38,6 +44,7 @@ $(document).on("click", "#showSearchUser", function (event) {
   });
   $(".footer").removeClass("fixed-bottom");
 });
+
 
 // Hinzufügen der gesuchten Benutzer aus der Datenbank
 function addUsers(users) {
@@ -217,6 +224,9 @@ $(document).on("click", ".editUser", function (event) {
 
 // Bearbeiteten Benutzer speichern
 $(document).on("click", "#saveEditUser", function (event) {
+
+  isActive = $(".status").is(":checked") ? true : false;
+
   const user = {
     id: $("#user-id-edit").val(),
     title: $("#title-edit").val(),
@@ -228,7 +238,7 @@ $(document).on("click", "#saveEditUser", function (event) {
     email: $("#email-edit").val(),
     username: $("#username-edit").val(),
     password: $("#password-edit").val(),
-    active: $("#status").is(":checked").toString(),
+    isActive: isActive,
     role: $("#role-select-edit").val(),
   };
 

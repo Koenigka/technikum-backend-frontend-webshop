@@ -59,7 +59,7 @@ public class User implements ConvertableToDto<UserDto>, Cloneable{
 
     @NotNull
     @Column(name = "isActive")
-    private Boolean isActive = true;
+    private Boolean isActive;
 
     private String role = "USER";
 
