@@ -13,7 +13,7 @@ $(document).ready(function () {
       email: $("#email").val(),
       password: $("#password1").val(),
       password2: $("#password2").val(),
-      active: "true",
+      isActive: "true",
       admin: "false",
     };
     // Clear error messages

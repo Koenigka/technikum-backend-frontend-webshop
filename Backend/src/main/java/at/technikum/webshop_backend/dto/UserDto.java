@@ -41,7 +41,7 @@ public class UserDto implements DataTransferObject {
 
     private String email;
 
-    private Boolean isActive = true;
+    private Boolean isActive;
     private String role = "USER";
 
 }

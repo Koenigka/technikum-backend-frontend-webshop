@@ -63,15 +63,39 @@ $(document).ready(function () {
     return select;
   }
 
-  //SEARCH FUNCTION (dzt nur nach title möglich ohne aktiv!)
+  //SEARCH FUNCTION 
   $(document).on("click", "#showSearchProduct", function (event) {
-    const searchId = $("#product-id").val();
-    const search = $("#product-title-search").val();
-
+    const searchTitle = $("#product-title-search").val();
+    const searchCategory = $("#product-category-search").val();
+    const isActive = $("#status").prop("checked");
+  
+    const filters = {};
+  
+    if (searchTitle) {
+      filters["filter[productTitle]"] = searchTitle;
+    }
+  
+    if (searchCategory) {
+      filters["filter[categoryId]"] = searchCategory;
+    }
+  
+    if (isActive) {
+      filters["filter[active]"] = "true";
+    }
+  
+    const filterJSON = JSON.stringify(filters);
+    console.log(filterJSON)
+  
     $.ajax({
-      url: "http://localhost:8080/api/products/searchproduct/" + search,
-      type: "GET",
-      cors: true,
+      url: "http://localhost:8080/api/products/search",
+      type: "POST", 
+      dataType: "json",
+      contentType: "application/json",
+      beforeSend: function (xhr) {
+        var accessToken = sessionStorage.getItem("accessToken");
+        xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+      },
+      data: filterJSON, 
       success: function (products) {
         addProducts(products);
       },
@@ -80,6 +104,7 @@ $(document).ready(function () {
       },
     });
   });
+  
 
   //ADD SEARCHED PRODUCTS FROM DATABASE TO LIST
   function addProducts(products) {

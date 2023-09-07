@@ -11,7 +11,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -61,9 +63,6 @@ public class ProductController {
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-
-
-
     }
 
     @DeleteMapping("/delete/{id}")
@@ -82,8 +81,6 @@ public class ProductController {
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-
-
     }
 
 
@@ -103,16 +100,19 @@ public class ProductController {
         return productDto.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/byCategory/{categoryId}/{active}")
-    public List<ProductDto> findByCategoryIdAndActive(@PathVariable Long categoryId, @PathVariable Boolean active) {
-        return productService.findProductsByCategoryIdAndActive(categoryId, active);
+    @PostMapping("/search")
+    public ResponseEntity<List<ProductDto>> getProducts(@RequestBody Map<String, String> filters) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = authentication.getAuthorities().stream().map(GrantedAuthority::toString)
+                .anyMatch(val -> val.equals(authorityAdmin));
+
+        if (isAdmin) {
+            List<ProductDto> filteredProducts = productService.findProductsByFilters(filters);
+            return ResponseEntity.ok(filteredProducts);
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
-
-    @GetMapping("/searchproduct/{title}")
-    public List<ProductDto> findProductsByTitle(@PathVariable String title) {
-        return productService.findProductsByTitleContains(title);
-    }
-
-
 
 }
