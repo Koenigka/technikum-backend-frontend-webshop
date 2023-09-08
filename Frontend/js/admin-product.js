@@ -67,7 +67,7 @@ $(document).ready(function () {
   $(document).on("click", "#showSearchProduct", function (event) {
     const searchTitle = $("#product-title-search").val();
     const searchCategory = $("#product-category-search").val();
-    const isActive = $("#status").prop("checked");
+    const isActive = $("input[name='status']:checked").val();
   
     const filters = {};
   
@@ -79,10 +79,10 @@ $(document).ready(function () {
       filters["filter[categoryId]"] = searchCategory;
     }
   
-    if (isActive) {
-      filters["filter[active]"] = "true";
+    if (isActive !== undefined) {
+      filters["filter[active]"] = isActive;
     }
-  
+
     const filterJSON = JSON.stringify(filters);
     console.log(filterJSON)
   

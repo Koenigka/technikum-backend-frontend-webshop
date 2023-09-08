@@ -103,6 +103,8 @@ public class ProductController {
     @PostMapping("/search")
     public ResponseEntity<List<ProductDto>> getProducts(@RequestBody Map<String, String> filters) {
 
+        System.out.println("Received filters: " + filters);
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         boolean isAdmin = authentication.getAuthorities().stream().map(GrantedAuthority::toString)
                 .anyMatch(val -> val.equals(authorityAdmin));
