@@ -37,7 +37,7 @@ $(document).ready(function () {
   //SEARCH FUNCTION 
   $(document).on("click", "#showSearchCategory", function (event) {
     const searchTitle = $("#category-name-search").val();
-    const isActive = $("#category-active-search").prop("checked");
+    const isActive = $("input[name='status']:checked").val();
   
     const filters = {};
   
@@ -46,12 +46,13 @@ $(document).ready(function () {
       filters["filter[title]"] = searchTitle;
     }
   
-    if (isActive) {
-      filters["filter[active]"] = "true";
+    if (isActive !== undefined) {
+      filters["filter[active]"] = isActive;
     }
  
     const filterJSON = JSON.stringify(filters);
-  
+    console.log(filterJSON);
+
     $.ajax({
       url: "http://localhost:8080/api/categories/search",
       type: "POST",

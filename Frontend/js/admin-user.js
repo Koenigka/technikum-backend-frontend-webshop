@@ -1,9 +1,7 @@
-
 $(document).on("click", "#showSearchUser", function (event) {
   const email = $("#search-email").val();
   const username = $("#search-username").val();
-  const isActive = $("#search-status").prop("checked");
-
+  const isActive = $("input[name='status']:checked").val();
   const filters = {};
 
   if (email) {
@@ -14,13 +12,9 @@ $(document).on("click", "#showSearchUser", function (event) {
     filters["username"] = username;
   }
 
-
-  if (isActive) {
-    filters["active"] = "true";
-  } else {
-    filters["active"] = "false";
+  if (isActive !== undefined) {
+    filters["active"] = isActive;
   }
-  
 
   const filterJSON = JSON.stringify(filters);
   console.log(filterJSON);
@@ -44,7 +38,6 @@ $(document).on("click", "#showSearchUser", function (event) {
   });
   $(".footer").removeClass("fixed-bottom");
 });
-
 
 // Hinzufügen der gesuchten Benutzer aus der Datenbank
 function addUsers(users) {
@@ -98,10 +91,10 @@ $(document).on("click", ".editUser", function (event) {
   const addEditUser = $("#addEditUser");
   addEditUser.empty();
 
-
-  // Check if the user is an admin and set the role accordingly
-  
   function editUser(user) {
+    console.log("User active: " + user.isActive);
+    console.log("User pw: " + user.password);
+
     const editUser = $(`
     <div class="container rounded my-5 border border-warning bg-light shadow-lg">
     <p class="fs-4 fw-bold pt-2">Edit User</p>
@@ -114,23 +107,33 @@ $(document).on("click", ".editUser", function (event) {
                 <label for="title" class="fs-5">Title</label>
   
                 <select name="Title" class="form-select fs-5 user-title" id="title-edit">
-                  <option value="Mr" ${user.title==="Mr" ? "selected" : "" }>Mr</option>
-                  <option value="Ms" ${user.title==="Ms" ? "selected" : "" }>Ms</option>
+                  <option value="Mr" ${
+                    user.title === "Mr" ? "selected" : ""
+                  }>Mr</option>
+                  <option value="Ms" ${
+                    user.title === "Ms" ? "selected" : ""
+                  }>Ms</option>
                 </select>
               </div>
             </div>
-            <input id="user-id-edit" type="hidden" class="form-control" name="" value="${user.id}" required />
+            <input id="user-id-edit" type="hidden" class="form-control" name="" value="${
+              user.id
+            }" required />
             <div class="col-md-4">
               <div class="form-group">
                 <label for="first-name" class="fs-5">First Name</label>
-                <input id="first-name-edit" type="text" class="form-control" name="first-name" value="${user.firstname}"
+                <input id="first-name-edit" type="text" class="form-control" name="first-name" value="${
+                  user.firstname
+                }"
                   required />
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
                 <label for="last-name" class="fs-5">Last Name</label>
-                <input id="last-name-edit" type="text" class="form-control" name="last-name" value="${user.lastname}"
+                <input id="last-name-edit" type="text" class="form-control" name="last-name" value="${
+                  user.lastname
+                }"
                   required />
               </div>
             </div>
@@ -140,21 +143,27 @@ $(document).on("click", ".editUser", function (event) {
             <div class="col-md-4">
               <div class="form-group">
                 <label for="address" class="fs-5">Address</label>
-                <input id="address-edit" type="text" class="form-control" name="address" value="${user.address}"
+                <input id="address-edit" type="text" class="form-control" name="address" value="${
+                  user.address
+                }"
                   required />
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
                 <label for="zip" class="fs-5">Zip</label>
-                <input id="zip-edit" type="text" class="form-control" name="zip" value="${user.zip}" required />
+                <input id="zip-edit" type="text" class="form-control" name="zip" value="${
+                  user.zip
+                }" required />
               </div>
             </div>
   
             <div class="col-md-4">
               <div class="form-group">
                 <label for="city" class="fs-5">City</label>
-                <input id="city-edit" type="text" class="form-control" name="city" value="${user.city}" required />
+                <input id="city-edit" type="text" class="form-control" name="city" value="${
+                  user.city
+                }" required />
               </div>
             </div>
           </div>
@@ -163,13 +172,17 @@ $(document).on("click", ".editUser", function (event) {
             <div class="col-md-4">
               <div class="form-group">
                 <label for="email" class="fs-5">E-mail</label>
-                <input id="email-edit" type="email" class="form-control" name="email" value="${user.email}" required />
+                <input id="email-edit" type="email" class="form-control" name="email" value="${
+                  user.email
+                }" required />
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
                 <label for="username" class="fs-5">Username</label>
-                <input id="username-edit" type="text" class="form-control" name="username" value="${user.username}"
+                <input id="username-edit" type="text" class="form-control" name="username" value="${
+                  user.username
+                }"
                   required />
               </div>
             </div>
@@ -177,8 +190,8 @@ $(document).on("click", ".editUser", function (event) {
             <div class="col-md-4">
               <div class="form-group">
                 <label for="password" class="fs-5">Password</label>
-                <input id="password-edit" type="text" class="form-control" name="password" value="${user.password}"
-                  required />
+                <input id="password-edit" type="text" class="form-control" name="password" value="${user.password != null ? user.password : ''}"
+                  />
               </div>
             </div>
           </div>
@@ -187,17 +200,25 @@ $(document).on("click", ".editUser", function (event) {
           <div class="col-md-4">
               <div class="form-group">
                 <label for="role" class="fs-5">Role</label>
-                <input type="hidden" id="role-edit" name="role" value="${user.role}" />
+                <input type="hidden" id="role-edit" name="role" value="${
+                  user.role
+                }" />
                 <select class="form-select fs-5" id="role-select-edit">
-                  <option value="USER" ${user.role==="USER" ? "selected" : "" }>User</option>
-                  <option value="ADMIN" ${user.role==="ADMIN" ? "selected" : "" }>Admin</option>
+                  <option value="USER" ${
+                    user.role === "USER" ? "selected" : ""
+                  }>User</option>
+                  <option value="ADMIN" ${
+                    user.role === "ADMIN" ? "selected" : ""
+                  }>Admin</option>
                 </select>
               </div>
               </div>
             <div class="col-md-4">
               <div class="form-check mb-2">
                 <div class="form-group">
-                  <input type="checkbox" class="form-check-input" name="status" id="status" checked />
+                  <input type="checkbox" class="form-check-input" name="status" id="status" 
+                  ${user.isActive ? "checked" : ""}
+                  />
                   <label class="form-check-label fs-5" for="status">
                     active
                   </label>
@@ -220,13 +241,18 @@ $(document).on("click", ".editUser", function (event) {
 
   //WHEN EDIT USER OPENS, THE FOOTER IS NOT STICKY ANYMORE
   $(".footer").removeClass("fixed-bottom");
- });
+});
 
 // Bearbeiteten Benutzer speichern
 $(document).on("click", "#saveEditUser", function (event) {
+  isActive = $("#status").is(":checked") ? true : false;
 
-  isActive = $(".status").is(":checked") ? true : false;
+  // Passwort aus dem Eingabefeld abrufen
+  const passwordInput = $("#password-edit").val();
+  // Überprüfen, ob das Passwort einen Wert hat
+  const password = passwordInput.trim() !== "" ? passwordInput : null;
 
+  console.log("passwort: " + password)
   const user = {
     id: $("#user-id-edit").val(),
     title: $("#title-edit").val(),
@@ -237,11 +263,16 @@ $(document).on("click", "#saveEditUser", function (event) {
     zip: $("#zip-edit").val(),
     email: $("#email-edit").val(),
     username: $("#username-edit").val(),
-    password: $("#password-edit").val(),
     isActive: isActive,
     role: $("#role-select-edit").val(),
   };
 
+  // Das Passwort im user-Objekt nur setzen, wenn es nicht null ist
+  if (password !== null) {
+    user.password = password;
+  }
+
+  onsole.log("user passwort: " + user.password)
   $.ajax({
     url: "http://localhost:8080/api/users/update",
     type: "PUT",
