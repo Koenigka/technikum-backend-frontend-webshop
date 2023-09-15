@@ -117,7 +117,6 @@ public class ProductController {
         }
     }
 
-    //TODO Change to Product Dto
     @GetMapping("/byCategory/{categoryId}/{active}")
     public List<ProductDto> findByCategoryIdAndActive(@PathVariable Long categoryId, @PathVariable Boolean active){
         return productService.findByCategoryIdAndActive(categoryId, active);

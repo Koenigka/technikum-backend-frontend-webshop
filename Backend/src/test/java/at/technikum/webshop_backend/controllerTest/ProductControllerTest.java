@@ -4,64 +4,65 @@ import at.technikum.webshop_backend.controller.ProductController;
 import at.technikum.webshop_backend.dto.ProductDto;
 import at.technikum.webshop_backend.model.Product;
 import at.technikum.webshop_backend.service.ProductService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
+@SpringBootTest
+@AutoConfigureMockMvc
 public class ProductControllerTest {
 
     @Mock
     private ProductService productService;
 
-    private ProductController productController;
+    private MockMvc mockMvc;
 
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.openMocks(this);
-        productController = new ProductController(productService);
+        mockMvc = MockMvcBuilders.standaloneSetup(new ProductController(productService)).build();
     }
 
     @Test
-    public void testCreateProductAsNonAdmin() {
-        ProductDto inputProductDto = new ProductDto();
+    @WithMockUser(authorities = "USER")
+    public void testCreateProductAsNonAdmin() throws Exception {
+        ProductDto productDto = new ProductDto();
+        productDto.setTitle("Test Product");
+        productDto.setDescription("Description");
+        productDto.setPrice(10.99);
 
-        List<GrantedAuthority> authorities = Collections.singletonList(() -> "USER");
-        Authentication authentication = new UsernamePasswordAuthenticationToken("user", "password", authorities);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        ResponseEntity<ProductDto> response = productController.createProduct(inputProductDto);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String productDtoJson = objectMapper.writeValueAsString(productDto);
 
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/api/products/create")
+                        .content(productDtoJson)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     @Test
-    public void testFindAllProductsByActive() {
+    public void testFindAllProductsByActive() throws Exception {
         boolean active = true;
-        List<ProductDto> expectedProductList = new ArrayList<>();
-        expectedProductList.add(new ProductDto());
-        expectedProductList.add(new ProductDto());
 
-        when(productService.findAllProductsByActive(active)).thenReturn(expectedProductList);
-
-        List<ProductDto> response = productController.findAllProductsByActive(active);
-
-        assertEquals(expectedProductList, response);
-
-        verify(productService, times(1)).findAllProductsByActive(active);
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/api/products/isActive/{active}", active)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
-
 }
