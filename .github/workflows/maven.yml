@@ -16,7 +16,6 @@ on:
 
 jobs:
   build-and-test-backend:
-
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -27,9 +26,10 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
-      run: mvn -B package --file pom.xml 
-    - run: pwd & ls -al
-    
+      run: mvn -B package --file technikum-backend-frontend-webshop/Backend/pom.xml
+    - name: Run JUnit Tests in Backend
+      run: mvn test --file technikum-backend-frontend-webshop/Backend/pom.xml
+    - run: pwd & ls -al    
     - run: mkdir download & cp backend/target/*.jar download  
     - name: Upload a Backend Build Artifact
       uses: actions/upload-artifact@v3.1.2
