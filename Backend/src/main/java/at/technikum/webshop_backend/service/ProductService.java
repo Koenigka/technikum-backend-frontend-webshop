@@ -134,6 +134,14 @@ public class ProductService {
     public Optional<Product> findById(Long id) {
         return productRepository.findById(id);
     }
+
+    public List<ProductDto> findByCategoryIdAndActive(Long categoryId, Boolean active){
+
+        List<Product> products =  productRepository.findByCategoryIdAndActive(categoryId, active);
+
+        return convertToProductDtoList(products);
+
+    }
 }
 
 

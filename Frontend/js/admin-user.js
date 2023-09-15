@@ -272,7 +272,7 @@ $(document).on("click", "#saveEditUser", function (event) {
     user.password = password;
   }
 
-  onsole.log("user passwort: " + user.password)
+  console.log("user passwort: " + user.password)
   $.ajax({
     url: "http://localhost:8080/api/users/update",
     type: "PUT",
