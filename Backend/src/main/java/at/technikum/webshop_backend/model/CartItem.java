@@ -1,41 +1,37 @@
-    package at.technikum.webshop_backend.model;
+package at.technikum.webshop_backend.model;
 
-    import at.technikum.webshop_backend.dto.ProductDto;
-    import at.technikum.webshop_backend.utils.ConvertableToDto;
-    import com.fasterxml.jackson.annotation.JsonBackReference;
-    import jakarta.persistence.*;
-    import lombok.AllArgsConstructor;
-    import lombok.Getter;
-    import lombok.NoArgsConstructor;
-    import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-    import java.util.HashSet;
-    import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
-    @Entity(name = "cart")
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public class Cart {
+@Entity(name = "cartItem")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class CartItem {
 
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        @Column(name = "id")
-        private Long Id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
 
-        @ManyToOne
-        @JoinColumn(name = "user_id", nullable = true)
-        private User user;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-        @OneToMany(mappedBy = "cart",  cascade = CascadeType.ALL)
-        private Set<Position> positions = new HashSet<>();
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 
-        @Column(name = "cart_status")
-        @Enumerated(EnumType.STRING)
-        private String status;
+    private int quantity;
 
-        public Cart(User user) {
-            this.user = user;
-        }
-    }
+    @Column(name = "creation_date")
+    private LocalDateTime creationDate;
+}

@@ -1,6 +1,7 @@
 package at.technikum.webshop_backend.model;
 
 import at.technikum.webshop_backend.enums.Status;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,18 +12,20 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity (name = "orders")
+@Entity (name = "customerOrder")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PurchaseOrder {
+public class CustomerOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
     private User user;
 
     private LocalDateTime orderDate;
@@ -30,7 +33,7 @@ public class PurchaseOrder {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "customerOrder")
     private Set<OrderItem> orderItems = new HashSet<>();
 
 

@@ -3,55 +3,90 @@ package at.technikum.webshop_backend.controller;
 import at.technikum.webshop_backend.dto.ProductDto;
 import at.technikum.webshop_backend.model.CartItem;
 import at.technikum.webshop_backend.service.CartService;
+import at.technikum.webshop_backend.service.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/carts")
-public class CartController {
+@RequestMapping("/api/cart")
+public class CartItemController {
 
     private CartService cartService;
 
-    public CartController(CartService cartService) {
+    public CartItemController(CartService cartService) {
         this.cartService = cartService;
     }
 
-    // Todo nur eingeloggte User dürfen einen cart anlegen
-    @PostMapping
-    public ResponseEntity<CartItem> create(@RequestBody CartItem cartItem) {
+    @PostMapping("/add")
+    public ResponseEntity<String> addToCart(@RequestBody CartItem cartItem) {
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return ResponseEntity.status(HttpStatus.CREATED).body(cartService.save(cartItem));
+
+        if (authentication.isAuthenticated()) {
+            try {
+                String result = cartService.addToCart(cartItem);
+                return new ResponseEntity<>(result, HttpStatus.OK);
+            } catch (EntityNotFoundException e) {
+                return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            }
+        } else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
     }
 
-    @PostMapping("/{userId}/add-product")
-    public ResponseEntity<CartItem> addToCart(
-            @PathVariable Long userId,
-            @RequestBody ProductDto productDto,
-            @RequestParam(name = "quantity", defaultValue = "1") int quantity
-    ) {
+    @GetMapping("/myCart")
+    public ResponseEntity<List<CartItem>> viewCart(@RequestParam Long userId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        CartItem updatedCartItem = cartService.addToCart(userId, productDto.getId(), quantity);
+        if (authentication.isAuthenticated()) {
+            try {
+                List<CartItem> cartItems = cartService.viewCart(userId);
+                return new ResponseEntity<>(cartItems, HttpStatus.OK);
+            } catch (EntityNotFoundException e) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
-        if (updatedCartItem == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<String> updateCart(@RequestBody CartItem cartItem) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.isAuthenticated()) {
+            try {
+                String result = cartService.updateCart(cartItem);
+                return new ResponseEntity<>(result, HttpStatus.OK);
+            } catch (EntityNotFoundException e) {
+                return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            }
+        } else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(updatedCartItem);
     }
 
-    /*
-     *GET /api/cart/{userId}: Ruft den Warenkorb eines Benutzers ab.
+    @DeleteMapping("/remove")
+    public ResponseEntity<String> removeFromCart(@RequestParam Long cartItemId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.isAuthenticated()) {
+            try {
+                String result = cartService.removeFromCart(cartItemId);
+                return new ResponseEntity<>(result, HttpStatus.OK);
+            } catch (EntityNotFoundException e) {
+                return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            }
+        } else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+    }
 
-POST /api/cart/{userId}/add: Fügt ein Produkt zum Warenkorb hinzu.
 
-PUT /api/cart/{userId}/update: Aktualisiert die Menge eines Produkts im Warenkorb.
-
-DELETE /api/cart/{userId}/remove: Entfernt ein Produkt aus dem Warenkorb.
-
-GET /api/cart/{userId}/view: Zeigt den Inhalt des Warenkorbs an.
-     *
-     */
 }
