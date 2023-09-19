@@ -180,7 +180,6 @@ $(document).ready(function () {
           $("#stateError").text("Invalid city or ZIP code");
         }
 
-        // Proceed with registration if no validation errors
         if (
           isValid &&
           (!user.state || !user.city || !user.zip || isValidAddress)

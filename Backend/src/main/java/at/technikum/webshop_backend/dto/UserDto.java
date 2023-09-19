@@ -31,7 +31,7 @@ public class UserDto implements DataTransferObject {
     private Long address_id;
     private String address;
     private String city;
-
+    private String state;
     private int zip;
 
     private String username;
