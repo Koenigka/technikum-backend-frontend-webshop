@@ -105,8 +105,7 @@ function validateUser(user, validAddresses) {
     }
 
     // Validation for the password
-    //  ****** TODO WHEN I MERGE IN DEV ********
-    if (user.password != "null") {
+    if (user.password != null) {
       if (user.password.length < 6) {
         isValid = false;
         $("#password1Error").text(
@@ -170,8 +169,7 @@ $.ajax({
 $(document).on("click", "#showSearchUser", function (event) {
   const email = $("#search-email").val();
   const username = $("#search-username").val();
-  const isActive = $("#search-status").prop("checked");
-
+  const isActive = $("input[name='status']:checked").val();
   const filters = {};
 
   if (email) {
@@ -182,10 +180,8 @@ $(document).on("click", "#showSearchUser", function (event) {
     filters["username"] = username;
   }
 
-  if (isActive) {
-    filters["active"] = "true";
-  } else {
-    filters["active"] = "false";
+  if (isActive !== undefined) {
+    filters["active"] = isActive;
   }
 
   const filterJSON = JSON.stringify(filters);
@@ -284,9 +280,10 @@ $(document).on("click", ".editUser", function (event) {
   const addEditUser = $("#addEditUser");
   addEditUser.empty();
 
-  // Check if the user is an admin and set the role accordingly
-
   function editUser(user) {
+    console.log("User active: " + user.isActive);
+    console.log("User pw: " + user.password);
+
     const editUser = $(`
     <div class="container rounded my-5 border border-warning bg-light shadow-lg">
     <p class="fs-4 fw-bold pt-2">Edit User</p>
@@ -434,9 +431,9 @@ $(document).on("click", ".editUser", function (event) {
               <div class="form-group">
                 <label for="password" class="fs-5">Password</label>
                 <input id="password-edit" type="text" class="form-control" name="password" value="${
-                  user.password
+                  user.password != null ? user.password : ""
                 }"
-                  required />
+                  />
                   <p class="input-error" id="password1Error" style="color: red"></p>
               </div>
             </div>
@@ -462,7 +459,9 @@ $(document).on("click", ".editUser", function (event) {
             <div class="col-md-4">
               <div class="form-check mb-2" style= "margin-top: 10%;">
                 <div class="form-group">
-                  <input type="checkbox" class="form-check-input" name="status" id="status" checked />
+                  <input type="checkbox" class="form-check-input" name="status" id="status" 
+                  ${user.isActive ? "checked" : ""}
+                  />
                   <label class="form-check-label fs-5" for="status">
                     active
                   </label>
@@ -491,10 +490,14 @@ let isValid; // Declare isValid in a wider scope
 let isValidAddress;
 // Bearbeiteten Benutzer speichern
 $(document).on("click", "#saveEditUser", function (event) {
-  // Prevent the form from submitting by default
-  event.preventDefault();
-  isActive = $(".status").is(":checked") ? true : false;
+  isActive = $("#status").is(":checked") ? true : false;
 
+  // Passwort aus dem Eingabefeld abrufen
+  const passwordInput = $("#password-edit").val();
+  // Überprüfen, ob das Passwort einen Wert hat
+  const password = passwordInput.trim() !== "" ? passwordInput : null;
+
+  console.log("passwort: " + password);
   const user = {
     id: $("#user-id-edit").val(),
     title: $("#title-edit").val(),
@@ -506,10 +509,16 @@ $(document).on("click", "#saveEditUser", function (event) {
     state: $("#state-select-edit").val(),
     email: $("#email-edit").val(),
     username: $("#username-edit").val(),
-    password: $("#password-edit").val(),
     isActive: isActive,
     role: $("#role-select-edit").val(),
   };
+
+  // Das Passwort im user-Objekt nur setzen, wenn es nicht null ist
+  if (password !== null) {
+    user.password = password;
+  }
+
+  console.log("user passwort: " + user.password);
 
   // Call the validation function
   validateUser(user, validAddresses)

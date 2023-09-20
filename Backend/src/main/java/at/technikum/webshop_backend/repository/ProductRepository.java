@@ -14,6 +14,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findByCategoryAndActive(Category category, Boolean active);
 
+    List<Product> findByCategoryIdAndActive(Long categoryId, Boolean active);
+
+
     List<Product> findByActive(Boolean active);
 
     List<Product> findByTitleContains(String title);

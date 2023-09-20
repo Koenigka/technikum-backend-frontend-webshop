@@ -112,6 +112,7 @@ public class UserController {
                 .anyMatch(val -> val.equals(authorityAdmin));
 
         if (isAdmin) {
+
             User updatedUser = userService.update(userDto);
             UserDto updatedUserDto = updatedUser.convertToDto();
             return ResponseEntity.ok(updatedUserDto);

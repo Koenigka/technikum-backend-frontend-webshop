@@ -133,7 +133,7 @@ $(document).ready(function () {
       $("#password1Error").text(
         "Password must be at least 6 characters long and must contain at least one lowercase letter, one number and one special character"
       );
-    }
+    } 
 
     // Validation for the repetition of the password
     if (user.password2 === "") {

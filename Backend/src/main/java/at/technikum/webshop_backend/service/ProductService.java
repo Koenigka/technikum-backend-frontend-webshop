@@ -92,23 +92,29 @@ public class ProductService {
         String productTitle = filters.get("filter[productTitle]");
         String categoryId = filters.get("filter[categoryId]");
         String active = filters.get("filter[active]");
+
         List<Product> products;
-        if (productTitle != null && categoryId != null && active != null) {
+
+        if (productTitle != null && categoryId != null) {
             Category category = categoryRepository.findById(Long.parseLong(categoryId)).orElse(null);
-            products = productRepository.findByTitleContainsAndCategoryAndActive(productTitle, category, Boolean.parseBoolean(active));
-        } else if (productTitle != null && categoryId != null) {
-            Category category = categoryRepository.findById(Long.parseLong(categoryId)).orElse(null);
-            products = productRepository.findByTitleContainsAndCategory(productTitle, category);
-        } else if (productTitle != null && active != null) {
-            products = productRepository.findByTitleContainsAndActive(productTitle, Boolean.parseBoolean(active));
-        } else if (categoryId != null && active != null) {
-            Category category = categoryRepository.findById(Long.parseLong(categoryId)).orElse(null);
-            products = productRepository.findByCategoryAndActive(category, Boolean.parseBoolean(active));
+            if (active != null) {
+                products = productRepository.findByTitleContainsAndCategoryAndActive(productTitle, category, Boolean.parseBoolean(active));
+            } else {
+                products = productRepository.findByTitleContainsAndCategory(productTitle, category);
+            }
         } else if (productTitle != null) {
-            products = productRepository.findByTitleContains(productTitle);
+            if (active != null) {
+                products = productRepository.findByTitleContainsAndActive(productTitle, Boolean.parseBoolean(active));
+            } else {
+                products = productRepository.findByTitleContains(productTitle);
+            }
         } else if (categoryId != null) {
             Category category = categoryRepository.findById(Long.parseLong(categoryId)).orElse(null);
-            products = productRepository.findByCategory(category);
+            if (active != null) {
+                products = productRepository.findByCategoryAndActive(category, Boolean.parseBoolean(active));
+            } else {
+                products = productRepository.findByCategory(category);
+            }
         } else if (active != null) {
             products = productRepository.findByActive(Boolean.parseBoolean(active));
         } else {
@@ -118,7 +124,7 @@ public class ProductService {
     }
 
 
-    private List<ProductDto> convertToProductDtoList(List<Product> products) {
+        private List<ProductDto> convertToProductDtoList(List<Product> products) {
         return products.stream()
                 .map(Product::convertToDto)
                 .collect(Collectors.toList());
@@ -127,6 +133,14 @@ public class ProductService {
 
     public Optional<Product> findById(Long id) {
         return productRepository.findById(id);
+    }
+
+    public List<ProductDto> findByCategoryIdAndActive(Long categoryId, Boolean active){
+
+        List<Product> products =  productRepository.findByCategoryIdAndActive(categoryId, active);
+
+        return convertToProductDtoList(products);
+
     }
 }
 

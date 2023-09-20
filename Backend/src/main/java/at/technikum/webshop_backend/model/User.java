@@ -85,6 +85,7 @@ public class User implements ConvertableToDto<UserDto>, Cloneable{
             userDto.setEmail(email);
             userDto.setIsActive(isActive);
             userDto.setRole(role);
+            userDto.setPassword(null);
             return userDto;
             }
 

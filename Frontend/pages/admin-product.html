@@ -113,28 +113,32 @@
       <div class="col">
         <form novalidate>
           <div class="row mb-2">
-            <div class="col-md-6">
+            <div class="col-md-5">
               <div class="form-group">
                 <label for="product-category" class="fs-5">Product Category</label>
                 <!-- Load Categories -->
                 <select name="product-category" class="form-select fs-5 product-category" id="product-category-search" required></select>
               </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-5">
               <label for="product-title" class="fs-5">Product Title</label>
               <input type="text" class="form-control" name="product-title" id="product-title-search" value="" />
             </div>
-          </div>
-          <div class="row mb-2">
+         
             <div class="col-md-2 d-flex align-items-end">
-              <div class="form-check mb-2">
-                <input type="checkbox" class="form-check-input" name="status" id="status" />
-                <label class="form-check-label fs-5" for="status">
-                  active
-                </label>
+              <div class="form-group">
+                <label class="form-check-label fs-5">Status:</label>
+                <div class="form-check form-check-inline">
+                  <input type="radio" class="form-check-input" name="status" id="active-status" value="true" />
+                  <label class="form-check-label fs-5" for="active-status">active</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input type="radio" class="form-check-input" name="status" id="inactive-status" value="false" />
+                  <label class="form-check-label fs-5" for="inactive-status">inactive</label>
+                </div>
               </div>
-            </div>
           </div>
+        </div>
           <button type="button" class="btn btn-warning text-white float-end mt-2 mb-2" id="showSearchProduct">
             search
           </button>

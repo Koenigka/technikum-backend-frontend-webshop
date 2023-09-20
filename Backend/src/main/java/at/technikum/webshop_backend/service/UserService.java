@@ -51,8 +51,6 @@ public class UserService {
         User existingUser = userRepository.findById(userDto.getId())
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userDto.getId()));
 
-        //TODO - proof active Frontend Backend
-        System.out.println("IsActive: " + userDto.getIsActive());
 
         existingUser.setTitle(userDto.getTitle());
         existingUser.setFirstname(userDto.getFirstname());
@@ -61,6 +59,12 @@ public class UserService {
         existingUser.setEmail(userDto.getEmail());
         existingUser.setIsActive(userDto.getIsActive());
         existingUser.setRole(userDto.getRole());
+
+        String password = userDto.getPassword();
+
+        if (password != null) {
+            existingUser.setPassword(password);
+        }
 
         Address address = existingUser.getAddress();
         address.setAddress(userDto.getAddress());

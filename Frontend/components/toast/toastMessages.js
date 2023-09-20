@@ -14,9 +14,10 @@ function showSuccessToast(message) {
   $(".toast").toast({ autohide: true, delay: 3000 }).toast("show");
 }
 
-let isActive;
 // Function to show an error toast
 function showErrorToast() {
+  const selectedStatus = $("input[name='status']:checked").val();
+  const statusMessage = selectedStatus === "true" ? "active" : "inactive";
   const toast = `<div
       class="toast position-absolute bottom-0 start-0 mb-5"
       id="noUsersFoundToast"
@@ -34,9 +35,7 @@ function showErrorToast() {
         ></button>
       </div>
       <div class="toast-body" style="font-size: large">
-       No ${
-         isActive ? "active" : "inactive"
-       } users found with the given email or username.
+       No ${statusMessage}  users found with the given email or username.
       </div>
       </div>`;
 

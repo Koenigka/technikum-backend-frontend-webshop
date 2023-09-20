@@ -72,17 +72,31 @@
               </div>
 
               <div class="col-md-2 d-flex align-items-end">
-                <div class="form-check mb-2">
-                  <div class="form-group">
+                <div class="form-group">
+                  <label class="form-check-label fs-5">Status:</label>
+                  <div class="form-check form-check-inline">
                     <input
-                      type="checkbox"
+                      type="radio"
                       class="form-check-input"
                       name="status"
-                      id="search-status"
+                      id="active-status"
+                      value="true"
                     />
-                    <label class="form-check-label fs-5" for="status">
-                      active
-                    </label>
+                    <label class="form-check-label fs-5" for="active-status"
+                      >active</label
+                    >
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input
+                      type="radio"
+                      class="form-check-input"
+                      name="status"
+                      id="inactive-status"
+                      value="false"
+                    />
+                    <label class="form-check-label fs-5" for="inactive-status"
+                      >inactive</label
+                    >
                   </div>
                 </div>
               </div>
