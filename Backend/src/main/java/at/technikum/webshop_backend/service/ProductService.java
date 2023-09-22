@@ -135,6 +135,7 @@ public class ProductService {
         return productRepository.findById(id);
     }
 
+
     public List<ProductDto> findByCategoryIdAndActive(Long categoryId, Boolean active){
 
         List<Product> products =  productRepository.findByCategoryIdAndActive(categoryId, active);
