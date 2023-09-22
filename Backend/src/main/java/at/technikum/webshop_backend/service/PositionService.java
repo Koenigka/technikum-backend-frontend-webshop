@@ -35,13 +35,13 @@ public class PositionService {
     }
 
     public Position save(Position position, Long userId, Long ProductId){
-        Cart cart = cartService.findByUserId(userId);
+        Cart cart = cartService.getCartByUserId(userId);
 
         if(cart == null){
             Optional<User> user = userRepository.findById(userId);
 
             if (user.isPresent()){
-                cart = cartService.save(new Cart(user.get()));
+                //cart = cartService.addProductToCart(new Cart(user.get()));
 
             }
             else {

@@ -127,6 +127,19 @@ input:disabled {
   --bs-dropdown-link-active-bg: white;
 }
 
+#cart-total{
+  font-size: 30px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  text-align: right;
+}
+
+.quantity-wrapper {
+  width: 120px;
+  margin:auto;
+}
+
+
 /*.navbar-nav .nav-item:not(.admin-link) {
   display: none;
 }*/
