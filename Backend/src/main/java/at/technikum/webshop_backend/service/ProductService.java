@@ -6,12 +6,12 @@ import at.technikum.webshop_backend.model.Product;
 import at.technikum.webshop_backend.repository.CategoryRepository;
 import at.technikum.webshop_backend.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -72,49 +72,77 @@ public class ProductService {
     }
 
 
-    //methods old
 
-    public List<Product> findAll() {
-        return productRepository.findAll();
+    public List<ProductDto> findAllProducts() {
+        List<Product> products = productRepository.findAll();
+        return convertToProductDtoList(products);
     }
 
-    public List<Product> findByActive(Boolean active){return productRepository.findByActive(active);}
-    public List<Product> findByCategoryId(Long categoryId){
-        return productRepository.findByCategoryId(categoryId);
+    public List<ProductDto> findAllProductsByActive(Boolean active) {
+        List<Product> products = productRepository.findByActive(active);
+        return convertToProductDtoList(products);
     }
-    public List<Product> findByCategoryIdAndActive(Long categoryId, Boolean active){
-        return productRepository.findByCategoryIdAndActive(categoryId, active);
 
+    public Optional<ProductDto> findProductById(Long id) {
+        Optional<Product> product = productRepository.findById(id);
+        return product.map(Product::convertToDto);
     }
+
+    public List<ProductDto> findProductsByFilters(Map<String, String> filters) {
+        String productTitle = filters.get("filter[productTitle]");
+        String categoryId = filters.get("filter[categoryId]");
+        String active = filters.get("filter[active]");
+
+        List<Product> products;
+
+        if (productTitle != null && categoryId != null) {
+            Category category = categoryRepository.findById(Long.parseLong(categoryId)).orElse(null);
+            if (active != null) {
+                products = productRepository.findByTitleContainsAndCategoryAndActive(productTitle, category, Boolean.parseBoolean(active));
+            } else {
+                products = productRepository.findByTitleContainsAndCategory(productTitle, category);
+            }
+        } else if (productTitle != null) {
+            if (active != null) {
+                products = productRepository.findByTitleContainsAndActive(productTitle, Boolean.parseBoolean(active));
+            } else {
+                products = productRepository.findByTitleContains(productTitle);
+            }
+        } else if (categoryId != null) {
+            Category category = categoryRepository.findById(Long.parseLong(categoryId)).orElse(null);
+            if (active != null) {
+                products = productRepository.findByCategoryAndActive(category, Boolean.parseBoolean(active));
+            } else {
+                products = productRepository.findByCategory(category);
+            }
+        } else if (active != null) {
+            products = productRepository.findByActive(Boolean.parseBoolean(active));
+        } else {
+            products = productRepository.findAll();
+        }
+        return convertToProductDtoList(products);
+    }
+
+
+        private List<ProductDto> convertToProductDtoList(List<Product> products) {
+        return products.stream()
+                .map(Product::convertToDto)
+                .collect(Collectors.toList());
+    }
+
 
     public Optional<Product> findById(Long id) {
         return productRepository.findById(id);
     }
 
-    public List<Product> findByTitleContains(String title){
-        return productRepository.findByTitleContains(title);
+
+    public List<ProductDto> findByCategoryIdAndActive(Long categoryId, Boolean active){
+
+        List<Product> products =  productRepository.findByCategoryIdAndActive(categoryId, active);
+
+        return convertToProductDtoList(products);
+
     }
-
-    public Product save(Product product){
-        return productRepository.save(product);
-    }
-
-    public Product save(Product product, Long categoryId){
-        Optional<Category> category = categoryRepository.findById(categoryId);
-        if(category.isEmpty()){
-            throw new EntityNotFoundException();
-        }
-        product.setCategory(category.get());
-        return save(product);
-    }
-
-
-
-
-
-
-
-
 }
 
 

@@ -16,13 +16,11 @@ $(document).ready(function () {
 
       // Benutzerrollen aus dem Session Storage lesen
       var userRole = JSON.parse(sessionStorage.getItem("userRole"));
-      console.log("userRole = " + userRole);
 
       // Überprüfen, ob der Benutzer ein Administrator ist
       if (userRole.includes("USER")) {
         // Admin-Link verstecken
         $(".admin-link").hide();
-        console.log("admin-hide");
       } else {
         // Admin-Link anzeigen
         $(".fa-user").hide();

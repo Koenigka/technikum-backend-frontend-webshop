@@ -9,6 +9,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity(name = "product")
 @Getter
 @Setter
@@ -36,7 +39,6 @@ public class Product implements ConvertableToDto<ProductDto>, Cloneable{
     @ManyToOne(optional = false)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
-
 
     @Override
     public ProductDto convertToDto () {

@@ -1,102 +1,107 @@
 package at.technikum.webshop_backend.service;
 
-import ErrorHandling.ProductNotFoundException;
-import ErrorHandling.UserNotFoundException;
-import at.technikum.webshop_backend.model.Cart;
-import at.technikum.webshop_backend.model.Position;
+import at.technikum.webshop_backend.dto.CartItemDto;
+import at.technikum.webshop_backend.model.CartItem;
 import at.technikum.webshop_backend.model.Product;
 import at.technikum.webshop_backend.model.User;
-import at.technikum.webshop_backend.repository.CartRepository;
-import at.technikum.webshop_backend.repository.ProductRepository;
-import at.technikum.webshop_backend.repository.UserRepository;
+import at.technikum.webshop_backend.repository.CartItemRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CartService {
 
-    private CartRepository cartRepository;
-    private ProductRepository productRepository;
-    private UserRepository userRepository;
+    private CartItemRepository cartItemRepository;
+    private ProductService productService;
+    private UserService userService;
 
-    public CartService(CartRepository cartRepository, ProductRepository productRepository, UserRepository userRepository) {
-        this.cartRepository = cartRepository;
-        this.productRepository = productRepository;
-        this.userRepository = userRepository;
+    @Autowired
+    public CartService(CartItemRepository cartItemRepository, UserService userService, ProductService productService) {
+        this.cartItemRepository = cartItemRepository;
+        this.userService = userService;
+        this.productService = productService;
     }
 
-    public void addProductToCart(Long userId, Long productId, Integer quantity) {
-        // Finden Sie das Produkt basierend auf der Produkt-ID
-        Product product = productRepository.findById(productId).orElse(null);
+    private CartItem convertToCartItem(CartItemDto cartItemDto) {
 
-        if (product == null) {
-            throw new ProductNotFoundException("Product with ID " + productId + " not found");
+        User user = userService.findById(cartItemDto.getUserId());
+        Optional<Product> productOptional  = productService.findById(cartItemDto.getProductId());
+
+        if (!productOptional.isPresent()) {
+            throw new EntityNotFoundException("Product not found");
         }
 
-        // Finden Sie den Benutzer basierend auf der Benutzer-ID
-        User user = userRepository.findById(userId).orElse(null);
+        CartItem cartItem = new CartItem();
+        cartItem.setUser(user);
+        cartItem.setProduct(productOptional.get());
+        cartItem.setQuantity(cartItemDto.getQuantity());
+        cartItem.setCreationDate(LocalDateTime.now());
+        return cartItem;
+    }
 
-        if (user == null) {
-            throw new UserNotFoundException("User with ID " + userId + " not found");
+    public CartItem addToCart(CartItemDto cartItemDto) {
+        User user = userService.findById(cartItemDto.getUserId());
+        Optional<Product> productOptional = productService.findById(cartItemDto.getProductId());
+
+        if (user == null || !productOptional.isPresent()) {
+            throw new EntityNotFoundException("User/Product");
         }
 
-        // Finden Sie den Warenkorb des Benutzers oder erstellen Sie einen neuen
-        Cart cart = cartRepository.findByUser(user);
-        if (cart == null) {
-            cart = new Cart();
-            cart.setUser(user);
-        }
+        CartItem cartItem = convertToCartItem(cartItemDto);
 
-        // Suchen oder erstellen Sie die Position im Warenkorb
-        Position position = cart.getPositions()
-                .stream()
-                .filter(p -> p.getProduct().getId().equals(productId))
-                .findFirst()
-                .orElse(null);
 
-        if (position == null) {
-            position = new Position();
-            position.setProduct(product);
-            position.setQuantity(quantity);
-            position.setCart(cart);
-            cart.getPositions().add(position);
+        CartItem existingCartItem = cartItemRepository.findByUserAndProduct(user, productOptional);
+
+
+
+        if (existingCartItem != null) {
+            existingCartItem.setQuantity(existingCartItem.getQuantity() + cartItem.getQuantity());
+            cartItemRepository.save(existingCartItem);
+            return existingCartItem;
         } else {
-            position.setQuantity(position.getQuantity() + quantity);
+            cartItemRepository.save(cartItem);
+            return cartItem;
         }
-
-        // Speichern Sie den aktualisierten Warenkorb
-        cartRepository.save(cart);
     }
 
-    public Cart getCartByUserId(Long userId) {
-        // Finden Sie den Benutzer basierend auf der Benutzer-ID
-        User user = userRepository.findById(userId).orElse(null);
-
+    public List<CartItem> viewCart(Long userId) {
+        User user = userService.findById(userId);
         if (user == null) {
-            throw new UserNotFoundException("User with ID " + userId + " not found");
+            throw new EntityNotFoundException("User");
+        }
+        return cartItemRepository.findByUser(user);
+    }
+
+    public CartItem updateCart(CartItemDto cartItemDto) {
+        CartItem existingCartItem = cartItemRepository.findById(cartItemDto.getId()).orElse(null);
+        if (existingCartItem == null) {
+            throw new EntityNotFoundException("CartItem");
         }
 
-        // Finden Sie den Warenkorb des Benutzers oder geben Sie null zurück, wenn kein Warenkorb gefunden wurde
-        return cartRepository.findByUser(user);
+        existingCartItem.setCreationDate(LocalDateTime.now());
+
+        existingCartItem.setQuantity(cartItemDto.getQuantity());
+        cartItemRepository.save(existingCartItem);
+
+        return existingCartItem;
     }
+
+    public String removeFromCart(Long cartItemId) {
+        CartItem cartItem = cartItemRepository.findById(cartItemId).orElse(null);
+        if (cartItem == null) {
+            throw new EntityNotFoundException("CartItem");
+        }
+        cartItemRepository.delete(cartItem);
+        return "Product removed from the cart.";
+    }
+
+    public void clearCartItems(List<CartItem> cartItems) {
+        cartItemRepository.deleteAll(cartItems);
+    }
+
 }
-
-
-    /* vorher:
-    public CartService(CartRepository cartRepository) {
-        this.cartRepository = cartRepository;
-    }
-
-
-    public Cart save(Cart cart){
-        return null;
-    }
-
-    public Cart findByUserId(Long userId){
-        return cartRepository.findByUserId(userId);
-    }
-     */
-
-
-
-
-

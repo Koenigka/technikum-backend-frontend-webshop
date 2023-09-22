@@ -12,7 +12,12 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     List<Category> findAllByActive(Boolean active);
 
+
     List<Category> findByTitleContains(String title);
+
+    List<Category> findByActive(Boolean active);
+
+    List<Category> findByTitleContainsAndActive(String title, Boolean active);
 }
 
 

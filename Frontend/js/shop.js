@@ -2,8 +2,6 @@ $(document).ready(function () {
   const params = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop),
   });
-
-  
   // Get the value of "some_key" in eg "https://example.com/?some_key=some_value"
   let value = params.category; // "some_value"
   //console.log(value);
@@ -109,20 +107,19 @@ $(document).on("click", ".btn-outline-secondary", function () {
 });
 
   function createProduct(product) {
-    const img = $(`<a href="productdetail.html?product=${product.id}"><img src="../${product.img}" class="card-img-top img-fluid" alt="..."></a>`);
-  
-    const title = $(`<a href="productdetail.html?product=${product.id}" class="text-decoration-none text-warning"><h5 class="card-title text-warning">${product.title}</h5></a>`);
-    const description = $(`<p class="card-text">${product.description}</p>`);
-    const quantityInput = $(`
-      <div class="input-group mb-3">
-        <button class="btn btn-outline-secondary" type="button" onclick="decrementQuantity()">-</button>
-        <input type="number" class="form-control" id="quantity" min="1" value="1">
-        <button class="btn btn-outline-secondary" type="button" onclick="incrementQuantity()">+</button>
-      </div>
-    `);
-    const button = $(`<button class="btn btn-warning mt-auto text-white" id="addToCart" data-product-id="${product.id}">Add to Basket</button>`);
-  
-    const wrapper = $(`<div class="col-12 col-md-6 col-lg-3 mb-4">`);
+    const img = $(
+      `<a  href="productdetail.html?product=${product.id}"><img src="../${product.img}" class="card-img-top img-fluid" alt="..."></a>`
+    );
+
+    const title = $(
+      `<a href="productdetail.html?product=${product.id}" class="text-decoration-none text-warning"><h5 class="card-title text-warning">${product.title}</h5></a>`
+    );
+    const description = $(` <p class="card-text">${product.description}</p>`);
+    const button = $(
+      `<button class="btn btn-warning mt-auto text-white">Add to Basket</button>`
+    );
+
+    const wrapper = $(`<div class="col-12 col-md-6 col-lg-3 mb-4 ">`);
     const card = $(`<div class="card h-100">`);
     wrapper.append(card);
     card.append(img);
@@ -134,10 +131,11 @@ $(document).on("click", ".btn-outline-secondary", function () {
     quantityWrapper.append(quantityInput);
     cardbody.append(quantityWrapper);
     cardbody.append(button);
+    cardbody.append(`</div>`);
     wrapper.append(`</div>`);
-  
+
     return wrapper;
-  }  
+  }
 
   //Clickfunction Button by value (id)
   $(document).on("click", ".getProductsById", function (event) {
@@ -175,7 +173,7 @@ $(document).on("click", ".btn-outline-secondary", function () {
 
     //KATHI
 
-  //Stückzahl 
+  //Stückzahl
   function incrementQuantity() {
     const input = $(this).siblings('.form-control');
     let quantity = parseInt(input.val());
@@ -213,7 +211,7 @@ $(document).on("click", "#addToCart", function(event) {
   // Beispiel: Produkt-ID und Menge in der Konsole ausgeben (dieser Teil muss durch den eigentlichen Warenkorb-Code ersetzt werden)
   console.log("Produkt-ID hinzufügen zum Warenkorb:", productId, "Menge:", quantity);
 });
-  
+
   //------------
 
 

@@ -1,25 +1,32 @@
 package at.technikum.webshop_backend.model;
 
+import at.technikum.webshop_backend.dto.CategoryDto;
+import at.technikum.webshop_backend.dto.ProductDto;
+import at.technikum.webshop_backend.utils.ConvertableToDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
 import java.util.List;
 import java.util.Set;
 
 @Entity(name = "category")
-public class Category {
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class Category implements ConvertableToDto<CategoryDto>, Cloneable {
 
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
-
-
-    //@OneToMany(mappedBy = "category")
-    //private Set<Product> products;
 
     @NotBlank
     @Length(min = 2, max = 40)
@@ -37,55 +44,8 @@ public class Category {
     @NotNull
     private Boolean active;
 
-    public Category() {
+    @Override
+    public CategoryDto convertToDto () {
+        return new CategoryDto(id, title, description, imgUrl, active);
     }
-
-    public Category(long id, String title, String description, String imgUrl, Boolean active) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.imgUrl = imgUrl;
-        this.active = active;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getImgUrl() {
-        return imgUrl;
-    }
-
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
-    }
-
 }

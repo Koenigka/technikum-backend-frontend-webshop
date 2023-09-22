@@ -13,6 +13,9 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity(name = "user")
 @Getter
 @Setter
@@ -59,10 +62,18 @@ public class User implements ConvertableToDto<UserDto>, Cloneable{
 
     @NotNull
     @Column(name = "isActive")
-    private Boolean isActive = true;
+    private Boolean isActive;
 
     private String role = "USER";
 
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private Set<CustomerOrder> orders = new HashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private Set<CartItem> cartItems = new HashSet<>();
 
     public void setPassword(String password) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -84,6 +95,7 @@ public class User implements ConvertableToDto<UserDto>, Cloneable{
             userDto.setEmail(email);
             userDto.setIsActive(isActive);
             userDto.setRole(role);
+            userDto.setPassword(null);
             return userDto;
             }
 
