@@ -41,7 +41,7 @@ public class UserService {
         user.setEmail(userDto.getEmail());
         user.setPassword(userDto.getPassword());
         user.setIsActive(userDto.getIsActive());
-        user.setRole(userDto.getRole());
+        user.setRoles(userDto.getRoles());
 
         return userRepository.save(user);
     }
@@ -57,7 +57,7 @@ public class UserService {
         existingUser.setUsername(userDto.getUsername());
         existingUser.setEmail(userDto.getEmail());
         existingUser.setIsActive(userDto.getIsActive());
-        existingUser.setRole(userDto.getRole());
+        existingUser.setRoles(userDto.getRoles());
 
         String password = userDto.getPassword();
 

@@ -52,7 +52,8 @@ public class WebSecurityConfig {
                             .anyRequest().authenticated()
 
                     );
-            return http.build();
+
+        return http.build();
 
     }
 

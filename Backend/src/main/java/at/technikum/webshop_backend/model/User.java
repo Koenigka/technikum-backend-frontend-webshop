@@ -16,7 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity(name = "user")
+@Entity(name = "users")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -64,7 +64,7 @@ public class User implements ConvertableToDto<UserDto>, Cloneable{
     @Column(name = "isActive")
     private Boolean isActive;
 
-    private String role = "USER";
+    private String roles = "USER";
 
 
     @OneToMany(mappedBy = "user")
@@ -94,7 +94,7 @@ public class User implements ConvertableToDto<UserDto>, Cloneable{
             userDto.setUsername(username);
             userDto.setEmail(email);
             userDto.setIsActive(isActive);
-            userDto.setRole(role);
+            userDto.setRoles(roles);
             userDto.setPassword(null);
             return userDto;
             }
