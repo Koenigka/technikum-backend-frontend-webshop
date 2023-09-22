@@ -1,5 +1,6 @@
 package at.technikum.webshop_backend.controller;
 
+import at.technikum.webshop_backend.dto.CartItemDto;
 import at.technikum.webshop_backend.dto.ProductDto;
 import at.technikum.webshop_backend.model.CartItem;
 import at.technikum.webshop_backend.service.CartService;
@@ -10,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -23,16 +25,16 @@ public class CartItemController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<String> addToCart(@RequestBody CartItem cartItem) {
+    public ResponseEntity<CartItemDto> addToCart(@RequestBody CartItemDto cartItemDto) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication.isAuthenticated()) {
             try {
-                String result = cartService.addToCart(cartItem);
-                return new ResponseEntity<>(result, HttpStatus.OK);
+                CartItem cartItem = cartService.addToCart(cartItemDto);
+                return new ResponseEntity<>(cartItem.convertToDto(), HttpStatus.OK);
             } catch (EntityNotFoundException e) {
-                return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
         } else {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -40,13 +42,19 @@ public class CartItemController {
     }
 
     @GetMapping("/myCart")
-    public ResponseEntity<List<CartItem>> viewCart(@RequestParam Long userId) {
+    public ResponseEntity<List<CartItemDto>> viewCart(@RequestParam Long userId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication.isAuthenticated()) {
             try {
                 List<CartItem> cartItems = cartService.viewCart(userId);
-                return new ResponseEntity<>(cartItems, HttpStatus.OK);
+                List<CartItemDto> cartItemDtoList = new ArrayList<>();
+
+                for (CartItem cartItem : cartItems) {
+                    CartItemDto cartItemDto = cartItem.convertToDto();
+                    cartItemDtoList.add(cartItemDto);
+                }
+                return new ResponseEntity<>(cartItemDtoList, HttpStatus.OK);
             } catch (EntityNotFoundException e) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
@@ -57,14 +65,14 @@ public class CartItemController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<String> updateCart(@RequestBody CartItem cartItem) {
+    public ResponseEntity<CartItemDto> updateCart(@RequestBody CartItemDto cartItemDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.isAuthenticated()) {
             try {
-                String result = cartService.updateCart(cartItem);
-                return new ResponseEntity<>(result, HttpStatus.OK);
+                CartItem updatedCartItem = cartService.updateCart(cartItemDto);
+                return new ResponseEntity<>(updatedCartItem.convertToDto(), HttpStatus.OK);
             } catch (EntityNotFoundException e) {
-                return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
         } else {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -72,6 +80,10 @@ public class CartItemController {
         }
 
     }
+
+
+    //TODO Checkout Controller for proofing quantity
+
 
     @DeleteMapping("/remove")
     public ResponseEntity<String> removeFromCart(@RequestParam Long cartItemId) {

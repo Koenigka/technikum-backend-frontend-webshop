@@ -1,5 +1,6 @@
 package at.technikum.webshop_backend.service;
 
+import at.technikum.webshop_backend.dto.CartItemDto;
 import at.technikum.webshop_backend.model.CartItem;
 import at.technikum.webshop_backend.model.Product;
 import at.technikum.webshop_backend.model.User;
@@ -26,28 +27,46 @@ public class CartService {
         this.productService = productService;
     }
 
+    private CartItem convertToCartItem(CartItemDto cartItemDto) {
 
-    public String addToCart(CartItem cartItem) {
-        User user = userService.findById(cartItem.getUser().getId());
-        Optional<Product> product = productService.findById(cartItem.getProduct().getId());
+        User user = userService.findById(cartItemDto.getUserId());
+        Optional<Product> productOptional  = productService.findById(cartItemDto.getProductId());
 
-        if (user == null || !product.isPresent()) {
+        if (!productOptional.isPresent()) {
+            throw new EntityNotFoundException("Product not found");
+        }
+
+        CartItem cartItem = new CartItem();
+        cartItem.setUser(user);
+        cartItem.setProduct(productOptional.get());
+        cartItem.setQuantity(cartItemDto.getQuantity());
+        cartItem.setCreationDate(LocalDateTime.now());
+        return cartItem;
+    }
+
+    public CartItem addToCart(CartItemDto cartItemDto) {
+        User user = userService.findById(cartItemDto.getUserId());
+        Optional<Product> productOptional = productService.findById(cartItemDto.getProductId());
+
+        if (user == null || !productOptional.isPresent()) {
             throw new EntityNotFoundException("User/Product");
         }
 
-        CartItem existingCartItem = cartItemRepository.findByUserAndProduct(user, product);
+        CartItem cartItem = convertToCartItem(cartItemDto);
 
-        cartItem.setCreationDate(LocalDateTime.now());
+
+        CartItem existingCartItem = cartItemRepository.findByUserAndProduct(user, productOptional);
+
 
 
         if (existingCartItem != null) {
             existingCartItem.setQuantity(existingCartItem.getQuantity() + cartItem.getQuantity());
             cartItemRepository.save(existingCartItem);
+            return existingCartItem;
         } else {
             cartItemRepository.save(cartItem);
+            return cartItem;
         }
-
-        return "Product has been added to the cart.";
     }
 
     public List<CartItem> viewCart(Long userId) {
@@ -58,18 +77,18 @@ public class CartService {
         return cartItemRepository.findByUser(user);
     }
 
-    public String updateCart(CartItem cartItem) {
-        CartItem existingCartItem = cartItemRepository.findById(cartItem.getId()).orElse(null);
+    public CartItem updateCart(CartItemDto cartItemDto) {
+        CartItem existingCartItem = cartItemRepository.findById(cartItemDto.getId()).orElse(null);
         if (existingCartItem == null) {
             throw new EntityNotFoundException("CartItem");
         }
 
         existingCartItem.setCreationDate(LocalDateTime.now());
 
-        existingCartItem.setQuantity(cartItem.getQuantity());
+        existingCartItem.setQuantity(cartItemDto.getQuantity());
         cartItemRepository.save(existingCartItem);
 
-        return "Cart updated.";
+        return existingCartItem;
     }
 
     public String removeFromCart(Long cartItemId) {

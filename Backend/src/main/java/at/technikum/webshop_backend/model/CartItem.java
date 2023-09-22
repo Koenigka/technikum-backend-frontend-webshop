@@ -1,5 +1,7 @@
 package at.technikum.webshop_backend.model;
 
+import at.technikum.webshop_backend.dto.CartItemDto;
+import at.technikum.webshop_backend.utils.ConvertableToDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,15 +9,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity(name = "cartItem")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CartItem {
+public class CartItem implements ConvertableToDto<CartItemDto>, Cloneable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,4 +34,17 @@ public class CartItem {
 
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
+
+    @Override
+    public CartItemDto convertToDto() {
+        CartItemDto cartItemDto = new CartItemDto();
+        cartItemDto.setId(id);
+        cartItemDto.setUserId(user.getId());
+        cartItemDto.setProductId(product.getId());
+        cartItemDto.setQuantity(quantity);
+        cartItemDto.setCreationDate(creationDate);
+        return cartItemDto;
+    }
+
+
 }

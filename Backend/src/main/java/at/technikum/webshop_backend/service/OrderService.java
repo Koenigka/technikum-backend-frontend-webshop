@@ -58,6 +58,7 @@ public class OrderService {
             OrderItem orderItem = new OrderItem();
             orderItem.setCustomerOrder(newCustomerOrder);
             orderItem.setProduct(cartItem.getProduct());
+            //TODO Check quantity:
             orderItem.setQuantity(cartItem.getQuantity());
             orderItem.setPrice(cartItem.getProduct().getPrice());
             orderItemRepository.save(orderItem);
