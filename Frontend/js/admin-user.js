@@ -217,13 +217,17 @@ $(document).on("click", "#showSearchUser", function (event) {
 
 // Hinzufügen der gesuchten Benutzer aus der Datenbank
 function addUsers(users) {
+  const selectedStatus = $("input[name='status']:checked").val();
+  const statusMessage = selectedStatus === "true" ? "active" : "inactive";
   const allSearchedUsers = $("#searchResult");
   allSearchedUsers.empty();
 
   if (users.length === 0) {
     isActive = $("#search-status").prop("checked");
     clearToasts();
-    showErrorToast();
+    showErrorToast(
+      `No ${statusMessage} users found with the given email or username.`
+    );
     // Display a message when no users are found
     const toast = new bootstrap.Toast(
       document.getElementById("toastContainer")

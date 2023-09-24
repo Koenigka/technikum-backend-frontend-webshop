@@ -1,6 +1,6 @@
 // Function to show a success toast
 function showSuccessToast(message) {
-  const toast = `<div class="toast bg-success position-absolute bottom-0 start-0 mb-5" role="alert" aria-live="assertive" aria-atomic="true">
+  const toast = `<div class="toast bg-success position-fixed bottom-0 start-0 mb-5" role="alert" aria-live="assertive" aria-atomic="true">
                   <div class="toast-header" style="font-size: large">
                     <strong class="me-auto">Success</strong>
                     <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -15,18 +15,16 @@ function showSuccessToast(message) {
 }
 
 // Function to show an error toast
-function showErrorToast() {
-  const selectedStatus = $("input[name='status']:checked").val();
-  const statusMessage = selectedStatus === "true" ? "active" : "inactive";
+function showErrorToast(message) {
   const toast = `<div
-      class="toast position-absolute bottom-0 start-0 mb-5"
+      class="toast position-fixed bottom-0 start-0 mb-5"
       id="noUsersFoundToast"
       role="alert"
       aria-live="assertive"
       aria-atomic="true"
     >
   <div class="toast-header" style="color: red; font-size: large">
-        <strong class="me-auto">No Users Found</strong>
+        <strong class="me-auto">Error</strong>
         <button
           type="button"
           class="btn-close"
@@ -34,8 +32,8 @@ function showErrorToast() {
           aria-label="Close"
         ></button>
       </div>
-      <div class="toast-body" style="font-size: large">
-       No ${statusMessage}  users found with the given email or username.
+      <div class="toast-body" style="font-size: large"> ${message}
+      
       </div>
       </div>`;
 
@@ -44,7 +42,7 @@ function showErrorToast() {
 }
 
 function showDeleteToast(message) {
-  const toast = `<div class="toast bg-success position-absolute bottom-0 start-0 mb-5" role="alert" aria-live="assertive" aria-atomic="true">
+  const toast = `<div class="toast bg-success position-fixed bottom-0 start-0 mb-5" role="alert" aria-live="assertive" aria-atomic="true">
                   <div class="toast-header" style="font-size: large">
                     <strong class="me-auto">Success</strong>
                     <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
