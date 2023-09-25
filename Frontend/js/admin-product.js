@@ -83,7 +83,7 @@ $(document).ready(function () {
   //CREATE NEW PRODUCT
   $("#createProductButton").on("click", (_e) => {
     event.preventDefault();
-    //Validation open
+
     isActive = $("#isActive").is(":checked") ? true : false;
     const product = {
       title: $("#product-title").val(),
