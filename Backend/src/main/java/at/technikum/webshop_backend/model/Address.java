@@ -36,4 +36,8 @@ public class Address {
     @Column(name = "zip")
     private int zip;
 
+    @NotBlank
+    @Length(min = 2, max = 30)
+    @Column(name ="state")
+    private String state;
 }
