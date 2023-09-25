@@ -7,13 +7,17 @@ import at.technikum.webshop_backend.repository.CategoryRepository;
 import at.technikum.webshop_backend.repository.ProductRepository;
 import at.technikum.webshop_backend.service.CategoryService;
 import at.technikum.webshop_backend.service.ProductService;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -76,4 +80,87 @@ public class ProductServiceTest {
         assertEquals(true, createdProduct.getActive());
         assertEquals(1L, createdProduct.getCategory().getId());
     }
+
+    @Test
+    public void testUpdateProduct() {
+        Long productId = 1L;
+        Product existingProduct = new Product();
+        existingProduct.setId(productId);
+
+        when(productRepository.findById(productId)).thenReturn(Optional.of(existingProduct));
+
+        Long categoryId = 1L;
+        Category existingCategory = new Category();
+        existingCategory.setId(categoryId);
+
+        when(categoryService.findById(categoryId)).thenReturn(existingCategory);
+
+        ProductDto productDto = new ProductDto();
+        productDto.setId(productId);
+        productDto.setTitle("Updated Product");
+        productDto.setDescription("Updated Description");
+        productDto.setImg("updated-img-url");
+        productDto.setPrice(20.0);
+        productDto.setStock(100);
+        productDto.setActive(true);
+        productDto.setCategoryId(categoryId);
+
+        when(productRepository.save(any(Product.class))).thenReturn(existingProduct);
+
+        Product updatedProduct = productService.updateProduct(productDto);
+
+        verify(productRepository, times(1)).findById(productId);
+        verify(categoryService, times(1)).findById(categoryId);
+        verify(productRepository, times(1)).save(any(Product.class));
+
+        assertEquals(productId, updatedProduct.getId());
+        assertEquals("Updated Product", updatedProduct.getTitle());
+        assertEquals("Updated Description", updatedProduct.getDescription());
+        assertEquals("updated-img-url", updatedProduct.getImg());
+        assertEquals(20.0, updatedProduct.getPrice());
+        assertEquals(100, updatedProduct.getStock());
+        assertEquals(true, updatedProduct.getActive());
+        assertEquals(categoryId, updatedProduct.getCategory().getId());
+    }
+
+
+    @Test
+    public void testUpdateProductNotFound() {
+        Long productId = 1L;
+        when(productRepository.findById(productId)).thenReturn(Optional.empty());
+
+        ProductDto productDto = new ProductDto();
+        productDto.setId(productId);
+        productDto.setTitle("Updated Product");
+        productDto.setDescription("Updated Description");
+        productDto.setImg("updated-img-url");
+        productDto.setPrice(20.0);
+        productDto.setStock(100);
+        productDto.setActive(true);
+        productDto.setCategoryId(1L);
+
+        Exception exception = assertThrows(EntityNotFoundException.class, () -> {
+            productService.updateProduct(productDto);
+        });
+
+        assertEquals("Product not found with ID: " + productId, exception.getMessage());
+
+        verify(productRepository, never()).save(any(Product.class));
+    }
+
+    @Test
+    public void testDeleteProductById() {
+        Long productId = 1L;
+        Product existingProduct = new Product();
+        existingProduct.setId(productId);
+
+        when(productRepository.findById(productId)).thenReturn(Optional.of(existingProduct));
+
+        productService.deleteById(productId);
+
+        verify(productRepository, times(1)).findById(productId);
+        verify(productRepository, times(1)).delete(existingProduct);
+    }
+
+
 }
