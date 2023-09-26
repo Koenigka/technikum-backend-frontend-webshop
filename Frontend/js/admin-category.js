@@ -1,15 +1,57 @@
+// Function to close the edit window
+function closeEditWindow() {
+  const addEditCategory = $("#addEditCategory");
+  addEditCategory.empty();
+  $(".footer").addClass("fixed-bottom");
+}
+
 $(document).ready(function () {
   //TOGGLE FOR CREATE CATEGORY FORM
   $("#showNewCategory").click(function () {
-    $("#createNewCategory").toggle();
+    var accessToken = sessionStorage.getItem("accessToken");
+    if (!accessToken) {
+      // User is not logged in, redirect to login page with a message
+      window.location.href =
+        "login.html?message=You are not logged in! Please first log in and then you can continue your action.";
+    } else {
+      $("#createNewCategory").toggle();
+    }
   });
+
+  function validateCategory(category, createForm) {
+    $(".input-error").text("");
+
+    //Initialize isValid as true
+    let isValid = true;
+
+    if (!category.title || category.title.trim() === "") {
+      //Validate input values
+      isValid = false;
+      $(`#titleError${createForm}`).text("Title is required.");
+      $("#titleError-edit").text("Title is required.");
+    }
+    if (!category.description || category.description.trim() === "") {
+      isValid = false;
+      $(`#descriptionError${createForm}`).text("Description is required.");
+      $("#descriptionError-edit").text("Description is required.");
+    }
+    const imageUrlPattern = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+    if (!category.imgUrl) {
+      isValid = false;
+      $(`#imgError${createForm}`).text("Image URL is required.");
+      $("#imgError-edit").text("Image URL is required.");
+    } else if (!imageUrlPattern.test(category.imgUrl)) {
+      isValid = false;
+      $(`#imgError${createForm}`).text("Invalid image URL format.");
+      $("#imgError-edit").text("Invalid image URL format.");
+    }
+    return isValid;
+  }
 
   //CREATE NEW CATEGORY
   $("#createCategoryButton").on("click", (_e) => {
+    event.preventDefault();
     isActive = $("#isActive").is(":checked") ? true : false;
-
-    //console.log(isActive);
-    //Validation open
 
     const category = {
       title: $("#category-title").val(),
@@ -19,48 +61,70 @@ $(document).ready(function () {
       active: isActive,
     };
 
-    $.ajax({
-      url: "http://localhost:8080/api/categories/create",
-      type: "POST",
-      dataType: "json",      
-      contentType: "application/json",
-      beforeSend: function(xhr) {
-        var accessToken = sessionStorage.getItem("accessToken");
-        xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-      },
-      data: JSON.stringify(category),
-      success: console.log,     
-      error: console.error
-    });
+    // Validate the product and get the result
+    const isValid = validateCategory(category, "");
+
+    if (isValid) {
+      $.ajax({
+        url: "http://localhost:8080/api/categories/create",
+        type: "POST",
+        dataType: "json",
+        contentType: "application/json",
+        beforeSend: function (xhr) {
+          var accessToken = sessionStorage.getItem("accessToken");
+          xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+        },
+        data: JSON.stringify(category),
+        success: function (response) {
+          clearToasts();
+          showSuccessToast("New category successfully created!");
+          // Display the toast message
+          const toast = new bootstrap.Toast(
+            document.getElementById("toastContainer")
+          );
+          toast.show();
+          $("#createNewCategory").hide();
+        },
+        error: console.error,
+      });
+    }
   });
 
-  //SEARCH FUNCTION 
+  //SEARCH FUNCTION
   $(document).on("click", "#showSearchCategory", function (event) {
     const searchTitle = $("#category-name-search").val();
     const isActive = $("input[name='status']:checked").val();
-  
+
     const filters = {};
-  
 
     if (searchTitle) {
       filters["filter[title]"] = searchTitle;
     }
-  
+
     if (isActive !== undefined) {
       filters["filter[active]"] = isActive;
     }
- 
+
     const filterJSON = JSON.stringify(filters);
     console.log(filterJSON);
+
+    // Close the edit window if it's open
+    closeEditWindow();
 
     $.ajax({
       url: "http://localhost:8080/api/categories/search",
       type: "POST",
-      dataType: "json",      
+      dataType: "json",
       contentType: "application/json",
-      beforeSend: function(xhr) {
+      beforeSend: function (xhr) {
         var accessToken = sessionStorage.getItem("accessToken");
-        xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+        if (!accessToken) {
+          // User is not logged in, redirect to login page with a message
+          window.location.href =
+            "login.html?message=You are not logged in! Please first log in and then you can continue your action.";
+        } else {
+          xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+        }
       },
       data: filterJSON,
       success: function (categories) {
@@ -70,14 +134,28 @@ $(document).ready(function () {
         console.error(error);
       },
     });
-  
-    $(".footer").removeClass("fixed-bottom");
+
+    //  $(".footer").removeClass("fixed-bottom");
   });
 
   //ADD SEARCHED CATEGORIES FROM DATABASE TO LIST
   function addCategories(categories) {
+    const selectedStatus = $("input[name='status']:checked").val();
+    const statusMessage = selectedStatus === "true" ? "active" : "inactive";
     const allSearchedCategories = $("#searchResult");
     allSearchedCategories.empty();
+
+    if (categories.length === 0) {
+      isActive = $("#search-status").prop("checked");
+      clearToasts();
+      showErrorToast(`No ${statusMessage} categories found.`);
+      // Display a message when no users are found
+      const toast = new bootstrap.Toast(
+        document.getElementById("toastContainer")
+      );
+      toast.show();
+      return;
+    }
 
     for (let category of categories) {
       allSearchedCategories.append(createCategory(category));
@@ -94,13 +172,22 @@ $(document).ready(function () {
      
     </td>
   </tr>`);
+    $(".footer").removeClass("fixed-bottom");
     return searchedCategory;
   }
 
   //LOAD CATEGORY TO EDIT FORM
   $(document).on("click", ".editCategory", function (event) {
     const id = event.target.value;
-    //console.log(id);
+
+    // Scroll to the top of the edit window
+    $("html, body").animate(
+      {
+        scrollTop: $("#addEditCategory").offset().top,
+      },
+      500
+    ); // You can adjust the scroll speed (500ms in this example)
+
     $.ajax({
       url: "http://localhost:8080/api/categories/" + id,
       type: "GET",
@@ -140,7 +227,8 @@ $(document).ready(function () {
                 <div class="form-group">
                   <label for="category-name" class=" fs-5">Category Name</label>
                   <input id="category-name" type="text" class="form-control " name="category-name" value="${category.title}" required>
-                </div>
+                <p class="input-error" id="titleError-edit" style="color: red"></p>
+                  </div>
               </div>
             </div>
   
@@ -150,7 +238,8 @@ $(document).ready(function () {
                 <div class="form-group">
                   <label for="product-description" class=" fs-5">Category Description</label>
                   <textarea class="form-control" id="category-description-edit" rows="3">${category.description}</textarea>
-                </div>
+                <p class="input-error" id="descriptionError-edit" style="color: red"></p>
+                  </div>
               </div>
             </div>
   
@@ -161,6 +250,7 @@ $(document).ready(function () {
                 <label for="category-img" class="fs-5">Category Image Url</label>
                 <div class="input-group mb-2">
                   <input class="form-control" type="text" id="category-img" name="category-img" value="${category.imgUrl}"required>
+                   <p class="input-error" id="imgError-edit" style="color: red"></p>
                 </div>
               </div>
             </div>
@@ -187,14 +277,11 @@ $(document).ready(function () {
 
       addEditCategory.append(editCategory);
     }
-
-    $(".footer").removeClass("fixed-bottom");
   });
 
   //EDIT CATEGORY
 
   $(document).on("click", "#saveEditCategory", function (event) {
-     
     isActive = $(".status").is(":checked") ? true : false;
 
     //console.log(id);
@@ -206,44 +293,72 @@ $(document).ready(function () {
       active: isActive,
     };
 
-    //console.log(category);
-    $.ajax({
-      url: "http://localhost:8080/api/categories/update",
-      type: "PUT",
-      dataType: "json",      
-      contentType: "application/json",
-      beforeSend: function(xhr) {
-        var accessToken = sessionStorage.getItem("accessToken");
-        xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-      },
-      data: JSON.stringify(category),
-      success: console.log,
-      error: console.error
-    });
-   
+    // Validate the product and get the result
+    const isValid = validateCategory(category, "-edit");
+
+    if (isValid) {
+      $.ajax({
+        url: "http://localhost:8080/api/categories/update",
+        type: "PUT",
+        dataType: "json",
+        contentType: "application/json",
+        beforeSend: function (xhr) {
+          var accessToken = sessionStorage.getItem("accessToken");
+          xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+        },
+        data: JSON.stringify(category),
+        success: function (response) {
+          clearToasts();
+          showSuccessToast("Updated successfully!");
+          // Display the toast message
+          const toast = new bootstrap.Toast(
+            document.getElementById("toastContainer")
+          );
+          toast.show();
+          $("#addEditCategory").empty(); // Clear the edit product form
+        },
+        error: console.error,
+      });
+    }
   });
 
   //DELETE CATEGORY
   $(document).on("click", ".delete", function (event) {
     const deleteId = event.target.value;
 
-    //console.log(deleteId);
+    // Show the delete confirmation modal
+    $("#deleteCategoryModal").modal("show");
 
-    $.ajax({
-      url: "http://localhost:8080/api/categories/delete/" + deleteId,
-      type: "DELETE",
-      dataType: "json",
-      contentType: "application/json",
-      beforeSend: function(xhr) {
-        var accessToken = sessionStorage.getItem("accessToken");
-        xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-      },
-      success: function(response) {
-        console.log("Successfully deleted:");
-      },
-      error: function(xhr, textStatus, error) {
-        console.error("Error deleting:", error);
-      }
+    // When the delete button in the modal is clicked, perform the deletion
+    $("#confirmDelete").click(function () {
+      $.ajax({
+        url: "http://localhost:8080/api/categories/delete/" + deleteId,
+        type: "DELETE",
+        dataType: "json",
+        contentType: "application/json",
+        beforeSend: function (xhr) {
+          var accessToken = sessionStorage.getItem("accessToken");
+          xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+        },
+        success: function (response) {
+          console.log("Successfully deleted:", response);
+          // Show a toast message
+          showDeleteToast("Category deleted successfully.");
+          const toast = new bootstrap.Toast(
+            document.getElementById("toastContainer")
+          );
+          toast.show();
+          // Hide the modal after deletion
+          $("#deleteCategoryModal").modal("hide");
+          // Reload the page after a delay (e.g., 2 seconds)
+          setTimeout(function () {
+            location.reload();
+          }, 2000);
+        },
+        error: function (xhr, textStatus, error) {
+          console.error("Error deleting:", error);
+        },
+      });
     });
   });
 });

@@ -34,6 +34,7 @@ public class UserService {
         address.setAddress(userDto.getAddress());
         address.setCity(userDto.getCity());
         address.setZip(userDto.getZip());
+        address.setState(userDto.getState());
 
         user.setAddress(address);
 
@@ -69,6 +70,7 @@ public class UserService {
         address.setAddress(userDto.getAddress());
         address.setCity(userDto.getCity());
         address.setZip(userDto.getZip());
+        address.setState(userDto.getState());
 
         return userRepository.save(existingUser);
     }

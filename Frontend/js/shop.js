@@ -117,6 +117,19 @@ $(document).ready(function () {
     cardbody.append(`</div>`);
     wrapper.append(`</div>`);
 
+    // Add a click event to the button that checks if the user is logged in before redirecting
+    button.on("click", function () {
+      var accessToken = sessionStorage.getItem("accessToken");
+      if (!accessToken) {
+        // User is not logged in, redirect to login page with a message
+        window.location.href =
+          "login.html?message=If you are not logged in, you can not proceed Please first log in and then you can continue your action.";
+      } else {
+        //***** Implement the logic to add the product to the cart here ********
+        alert(`"${product.title}" added to cart!`);
+      }
+    });
+
     return wrapper;
   }
 
@@ -130,6 +143,10 @@ $(document).ready(function () {
       cors: true,
       success: function (products) {
         addProducts(products);
+        // Check if there are no products for this category
+        if (products.length === 0) {
+          $(".footer").addClass("fixed-bottom");
+        }
       },
       error: function (error) {
         console.error(error);

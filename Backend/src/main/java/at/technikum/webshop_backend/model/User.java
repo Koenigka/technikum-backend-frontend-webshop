@@ -91,6 +91,7 @@ public class User implements ConvertableToDto<UserDto>, Cloneable{
             userDto.setAddress(address.getAddress());
             userDto.setCity(address.getCity());
             userDto.setZip(address.getZip());
+            userDto.setState(address.getState());
             userDto.setUsername(username);
             userDto.setEmail(email);
             userDto.setIsActive(isActive);

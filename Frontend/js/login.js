@@ -5,6 +5,24 @@ $(document).ready(function () {
     $("#password").val("");
   }
 
+  // Get the message from the query parameter
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const message = urlParams.get("message");
+  // Check if a message is present and display it
+  if (message) {
+    const messageElement = document.getElementById("message");
+    if (messageElement) {
+      messageElement.textContent = message;
+      $("#message").text(message);
+      $("#message").show();
+      // Erfolgsmeldung nach einigen Sekunden ausblenden
+      setTimeout(function () {
+        $("#message").hide();
+      }, 7000);
+    }
+  }
+
   // Erfolgsmeldung aus dem Web Storage abrufen
   var registrationMessage = sessionStorage.getItem("registrationMessage");
 
