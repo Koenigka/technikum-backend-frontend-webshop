@@ -38,5 +38,5 @@ public class OrderController {
         }
     }
 
-    //other routes for order go here
+    //other routes for order handling go here
 }
