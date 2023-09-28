@@ -21,7 +21,7 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven        
-    - name: Build and Package
+    - name: Build Test Package
       run: mvn -B package --file ./Backend/pom.xml  
     - run: mkdir download & cp ./Backend/target/*.jar download  
     - name: Upload a Backend Build Artifact
