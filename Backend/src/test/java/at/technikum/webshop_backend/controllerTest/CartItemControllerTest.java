@@ -1,12 +1,13 @@
 
 package at.technikum.webshop_backend.controllerTest;
-/*
+
 import at.technikum.webshop_backend.dto.CartItemDto;
 import at.technikum.webshop_backend.model.CartItem;
 import at.technikum.webshop_backend.model.Product;
 import at.technikum.webshop_backend.model.User;
 import at.technikum.webshop_backend.service.CartService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ public class CartItemControllerTest {
     @MockBean
     private CartService cartService;
 
+    @Disabled
     @Test
     public void testAddToCartAuthenticated() throws Exception {
         // Mock the authentication context to simulate an authenticated user
@@ -68,4 +70,4 @@ public class CartItemControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
-}*/
+}
