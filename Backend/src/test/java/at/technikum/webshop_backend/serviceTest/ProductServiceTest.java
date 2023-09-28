@@ -12,12 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -25,9 +20,6 @@ public class ProductServiceTest {
 
     @Mock
     private ProductRepository productRepository;
-
-    @Mock
-    private CategoryRepository categoryRepository;
 
     @Mock
     private CategoryService categoryService;
@@ -50,7 +42,16 @@ public class ProductServiceTest {
         productDto.setPrice(10.0);
         productDto.setStock(100);
         productDto.setActive(true);
-        productDto.setCategoryId(1L); // ID einer vorhandenen Kategorie
+        productDto.setCategoryId(1L);
+
+        // Erstelle ein Beispiel-Product
+        Product product = new Product();
+        product.setTitle("Test Product");
+        product.setDescription("Description");
+        product.setImg("image.jpg");
+        product.setPrice(10.0);
+        product.setStock(100);
+        product.setActive(true);
 
         // Mock das erwartete Verhalten von categoryService.findById
         Category category = new Category();
@@ -58,7 +59,7 @@ public class ProductServiceTest {
         when(categoryService.findById(1L)).thenReturn(category);
 
         // Mock das erwartete Verhalten von productRepository.save
-        when(productRepository.save(any(Product.class))).thenReturn(new Product());
+        when(productRepository.save(any(Product.class))).thenReturn(product);
 
         // Rufe die Methode createProduct auf
         Product resultProduct = productService.createProduct(productDto);

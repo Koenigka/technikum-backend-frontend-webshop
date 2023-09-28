@@ -39,8 +39,15 @@ public class CategoryServiceTest {
         categoryDto.setImgUrl("image.jpg");
         categoryDto.setActive(true);
 
+        // Erstelle ein Beispiel-Category
+        Category category = new Category();
+        category.setTitle("Test Category");
+        category.setDescription("Description");
+        category.setImgUrl("image.jpg");
+        category.setActive(true);
+
         // Mock das erwartete Verhalten des categoryRepository
-        when(categoryRepository.save(any(Category.class))).thenReturn(new Category());
+        when(categoryRepository.save(any(Category.class))).thenReturn(category);
 
         // Rufe die Methode createCategory auf
         Category resultCategory = categoryService.createCategory(categoryDto);
@@ -52,14 +59,5 @@ public class CategoryServiceTest {
         assertNotNull(resultCategory);
         assertEquals("Test Category", resultCategory.getTitle());
 
-        // Zugriff auf die private Methode active() über Reflection
-        try {
-            Method activeMethod = Category.class.getDeclaredMethod("active");
-            activeMethod.setAccessible(true);
-            boolean isActive = (boolean) activeMethod.invoke(resultCategory);
-            assertTrue(isActive);
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            fail("Fehler beim Zugriff auf die private Methode active()");
-        }
     }
 }

@@ -1,10 +1,7 @@
 package at.technikum.webshop_backend.serviceTest;
 
 import at.technikum.webshop_backend.enums.Status;
-import at.technikum.webshop_backend.model.CartItem;
-import at.technikum.webshop_backend.model.CustomerOrder;
-import at.technikum.webshop_backend.model.OrderItem;
-import at.technikum.webshop_backend.model.User;
+import at.technikum.webshop_backend.model.*;
 import at.technikum.webshop_backend.repository.OrderItemRepository;
 import at.technikum.webshop_backend.repository.OrderRepository;
 import at.technikum.webshop_backend.service.CartService;
@@ -54,7 +51,7 @@ public class OrderServiceTest {
         // Erstelle eine Liste von Beispiel-CartItems
         List<CartItem> cartItems = new ArrayList<>();
         CartItem cartItem1 = new CartItem();
-        cartItem1.setProduct(cartItem1.getProduct());
+        cartItem1.setProduct(new Product());
         cartItem1.setQuantity(2);
         cartItems.add(cartItem1);
 

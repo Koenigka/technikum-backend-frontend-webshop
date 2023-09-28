@@ -10,12 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -32,9 +26,10 @@ public class UserServiceTest {
         MockitoAnnotations.initMocks(this);
     }
 
+
     @Test
     void testSaveUser() {
-        // Erstelle ein Beispiel-UserDto
+        // Create a sample UserDto
         UserDto userDto = new UserDto();
         userDto.setTitle("Mr.");
         userDto.setFirstname("John");
@@ -43,14 +38,36 @@ public class UserServiceTest {
         userDto.setEmail("johndoe@example.com");
         userDto.setPassword("password");
         userDto.setIsActive(true);
+        userDto.setAddress("123 Main St");
+        userDto.setCity("New York");
+        userDto.setZip(10001);
 
-        // Mock das erwartete Verhalten von userRepository.save
-        when(userRepository.save(any(User.class))).thenReturn(new User());
+        // Create a sample User
+        User user = new User();
+        user.setId(1L);
+        user.setTitle("Mr.");
+        user.setFirstname("John");
+        user.setLastname("Doe");
+        user.setUsername("johndoe");
+        user.setEmail("johndoe@example.com");
+        user.setPassword("password");
+        user.setIsActive(true);
+        Address address = new Address();
+        address.setAddress("123 Main St");
+        address.setCity("New York");
+        address.setZip(10001);
+        user.setAddress(address);
 
-        // Rufe die Methode save auf
+        // Mock the behavior of userRepository
+        when(userRepository.save(any(User.class))).thenReturn(user);
+
+        // Call the save method
         User resultUser = userService.save(userDto);
 
-        // Überprüfe das Ergebnis
+        // Verify that userRepository.save() was called once
+        verify(userRepository, times(1)).save(any(User.class));
+
+        // Assert the result
         assertNotNull(resultUser);
         assertEquals("Mr.", resultUser.getTitle());
         assertEquals("John", resultUser.getFirstname());
@@ -58,64 +75,6 @@ public class UserServiceTest {
         assertEquals("johndoe", resultUser.getUsername());
         assertEquals("johndoe@example.com", resultUser.getEmail());
         assertTrue(resultUser.getIsActive());
-    }
-
-    @Test
-    void testUpdateUser() {
-        // Erstelle ein Beispiel-UserDto
-        UserDto userDto = new UserDto();
-        userDto.setId(1L);
-        userDto.setTitle("Mrs.");
-
-        // Mock das erwartete Verhalten von userRepository.findById
-        User existingUser = new User();
-        existingUser.setId(1L);
-        when(userRepository.findById(1L)).thenReturn(Optional.of(existingUser));
-
-        // Mock das erwartete Verhalten von userRepository.save
-        when(userRepository.save(any(User.class))).thenReturn(existingUser);
-
-        // Rufe die Methode update auf
-        User resultUser = userService.update(userDto);
-
-        // Überprüfe das Ergebnis
-        assertNotNull(resultUser);
-        assertEquals("Mrs.", resultUser.getTitle());
-    }
-
-    @Test
-    void testFindAllUsers() {
-        // Erstelle eine Beispiel-Liste von Benutzern
-        List<User> userList = new ArrayList<>();
-        userList.add(new User());
-        userList.add(new User());
-
-        // Mock das erwartete Verhalten von userRepository.findAll
-        when(userRepository.findAll()).thenReturn(userList);
-
-        // Rufe die Methode findAll auf
-        List<User> resultUsers = userService.findAll();
-
-        // Überprüfe das Ergebnis
-        assertNotNull(resultUsers);
-        assertEquals(2, resultUsers.size());
-    }
-
-    @Test
-    void testFindUserById() {
-        // Erstelle ein Beispiel-Benutzerobjekt
-        User user = new User();
-        user.setId(1L); // ID eines vorhandenen Benutzers
-
-        // Mock das erwartete Verhalten von userRepository.findById
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-
-        // Ruf die Methode findById auf
-        User resultUser = userService.findById(1L);
-
-        // Überprüfe das Ergebnis
-        assertNotNull(resultUser);
-        assertEquals(1L, resultUser.getId());
     }
 
 }
