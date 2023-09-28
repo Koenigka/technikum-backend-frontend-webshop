@@ -28,7 +28,6 @@ public class CategoryService {
         return categoryRepository.save(category);
     }
 
-
     public Category updateCategory(CategoryDto updatedCategoryDto) {
 
         Category category = categoryRepository.findById(updatedCategoryDto.getId())

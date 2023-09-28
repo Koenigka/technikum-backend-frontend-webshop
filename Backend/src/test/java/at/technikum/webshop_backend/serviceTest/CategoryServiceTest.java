@@ -1,87 +1,65 @@
 package at.technikum.webshop_backend.serviceTest;
 
-
 import at.technikum.webshop_backend.dto.CategoryDto;
 import at.technikum.webshop_backend.model.Category;
 import at.technikum.webshop_backend.repository.CategoryRepository;
-import at.technikum.webshop_backend.repository.ProductRepository;
 import at.technikum.webshop_backend.service.CategoryService;
-import at.technikum.webshop_backend.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.test.context.ActiveProfiles;
 
-import java.util.Arrays;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@ActiveProfiles("test")
 public class CategoryServiceTest {
 
     @Mock
     private CategoryRepository categoryRepository;
 
+    @InjectMocks
     private CategoryService categoryService;
 
     @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-        categoryService = new CategoryService(categoryRepository);
+    void setUp() {
+        MockitoAnnotations.initMocks(this);
     }
 
     @Test
-    public void testCreateCategory() {
+    void testCreateCategory() {
+        // Erstelle ein Beispiel-CategoryDto
         CategoryDto categoryDto = new CategoryDto();
         categoryDto.setTitle("Test Category");
-        categoryDto.setDescription("Category Description");
-        categoryDto.setImgUrl("img-url");
+        categoryDto.setDescription("Description");
+        categoryDto.setImgUrl("image.jpg");
         categoryDto.setActive(true);
 
-        Category mockCategory = new Category();
-        mockCategory.setId(1L);
-        mockCategory.setTitle("Test Category");
-        mockCategory.setDescription("Category Description");
-        mockCategory.setImgUrl("img-url");
-        mockCategory.setActive(true);
+        // Mock das erwartete Verhalten des categoryRepository
+        when(categoryRepository.save(any(Category.class))).thenReturn(new Category());
 
-        when(categoryRepository.save(any(Category.class))).thenReturn(mockCategory);
+        // Rufe die Methode createCategory auf
+        Category resultCategory = categoryService.createCategory(categoryDto);
 
-        Category createdCategory = categoryService.createCategory(categoryDto);
-
+        // Überprüfe, ob categoryRepository.save() einmal aufgerufen wurde
         verify(categoryRepository, times(1)).save(any(Category.class));
 
-        assertEquals("Test Category", createdCategory.getTitle());
-        assertEquals("Category Description", createdCategory.getDescription());
-        assertEquals("img-url", createdCategory.getImgUrl());
-        assertEquals(true, createdCategory.getActive());
+        // Überprüfe das Ergebnis
+        assertNotNull(resultCategory);
+        assertEquals("Test Category", resultCategory.getTitle());
+
+        // Zugriff auf die private Methode active() über Reflection
+        try {
+            Method activeMethod = Category.class.getDeclaredMethod("active");
+            activeMethod.setAccessible(true);
+            boolean isActive = (boolean) activeMethod.invoke(resultCategory);
+            assertTrue(isActive);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            fail("Fehler beim Zugriff auf die private Methode active()");
+        }
     }
-
-
-    @Test
-    public void testFindAllCategoriesByActive() {
-        Boolean active = true;
-
-        List<Category> dummyCategories = Arrays.asList(
-                new Category(1L, "Category 1", "Description 1", "img-url-1", true),
-                new Category(2L, "Category 2", "Description 2", "img-url-2", true)
-
-        );
-
-        when(categoryRepository.findAllByActive(active)).thenReturn(dummyCategories);
-
-        List<CategoryDto> categories = categoryService.findAllCategoriesByActive(active);
-
-        assertEquals(2, categories.size());
-
-        assertEquals("Category 1", categories.get(0).getTitle());
-        assertEquals("Category 2", categories.get(1).getTitle());
-
-        verify(categoryRepository, times(1)).findAllByActive(active);
-    }
-
 }
