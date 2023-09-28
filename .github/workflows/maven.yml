@@ -6,7 +6,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Build and test Artifact
+name: Z_Build and test Artifact
 
 on:
   pull_request:
