@@ -8,7 +8,9 @@ on:
 
 jobs:
   build:
+  
     runs-on: ubuntu-latest
+    
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 17
@@ -17,5 +19,6 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
+        
     - name: Compile
       run: mvn -B compile --file ./Backend/pom.xml   
