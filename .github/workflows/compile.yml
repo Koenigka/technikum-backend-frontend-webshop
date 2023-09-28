@@ -21,4 +21,4 @@ jobs:
         cache: maven
         
     - name: Compile
-      run: mvn -B compile --file ./Backend/pom.xml   
+      run: mvn -B clean compile --file ./Backend/pom.xml   
