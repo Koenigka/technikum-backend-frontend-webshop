@@ -78,6 +78,8 @@ public class User implements ConvertableToDto<UserDto>, Cloneable{
     public void setPassword(String password) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         this.password = passwordEncoder.encode(password);
+
+        System.out.println("Password: " + this.password);
     }
 
     @Override
