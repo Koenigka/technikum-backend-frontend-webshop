@@ -71,6 +71,7 @@ public class UserController {
     public ResponseEntity<List<UserDto>> getUsersByEmailPrefix(@PathVariable String emailPrefix) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         boolean isAdmin = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::toString)
                 .anyMatch(val -> val.equals(authorityAdmin));
@@ -87,19 +88,19 @@ public class UserController {
     public ResponseEntity<UserDto> findByEmail(@PathVariable String email) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        boolean isAdmin = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::toString)
-                .anyMatch(val -> val.equals(authorityAdmin));
+        String authenticatedUserEmail = authentication.getName(); // Assuming the email is stored as the username
 
-        if (isAdmin) {
-        Optional<User> user = userService.findByEmail(email);
-        if (user.isPresent()) {
-           UserDto userDto = user.get().convertToDto();
-            return ResponseEntity.ok(userDto);
-        } else {
-            return ResponseEntity.notFound().build();
+        // Check if the requested email matches the authenticated user's email
+        if (email.equalsIgnoreCase(authenticatedUserEmail)) {
+            Optional<User> user = userService.findByEmail(email);
+            if (user.isPresent()) {
+                UserDto userDto = user.get().convertToDto();
+                return ResponseEntity.ok(userDto);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
         }
-        }else {
+        else {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
     }
