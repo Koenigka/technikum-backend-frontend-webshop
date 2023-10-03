@@ -6,6 +6,7 @@ import at.technikum.webshop_backend.service.FileService;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -49,8 +50,22 @@ public class FileController {
         Resource fileResource = fileService.get(reference);
 
         if (fileResource != null) {
+            String filename = fileResource.getFilename();
+            String fileExtension = filename.substring(filename.lastIndexOf(".") + 1);
+
+            MediaType mediaType = MediaType.APPLICATION_OCTET_STREAM;
+            if (fileExtension.equalsIgnoreCase("png")) {
+                mediaType = MediaType.IMAGE_PNG;
+            } else if (fileExtension.equalsIgnoreCase("jpg") || fileExtension.equalsIgnoreCase("jpeg")) {
+                mediaType = MediaType.IMAGE_JPEG;
+            }
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(mediaType);
+            headers.setContentDispositionFormData("attachment", filename);
+
             return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileResource.getFilename() + "\"")
+                    .headers(headers)
                     .body(fileResource);
         } else {
             return ResponseEntity.notFound().build();

@@ -1,3 +1,5 @@
+import config from "./config.js";
+
 // Function to close the edit window
 function closeEditWindow() {
   const addEditProduct = $("#addEditProduct");
@@ -84,7 +86,7 @@ $(document).ready(function () {
   $("#createProductButton").on("click", (_e) => {
     event.preventDefault();
 
-    isActive = $("#isActive").is(":checked") ? true : false;
+    const isActive = $("#isActive").is(":checked") ? true : false;
     const product = {
       title: $("#product-title").val(),
       description: $("#product-description").val(),
@@ -96,42 +98,69 @@ $(document).ready(function () {
       active: isActive,
     };
 
-    // Validate the product and get the result
-    const isValid = validateProduct(product, "");
+    const fileInput = document.getElementById("product-image");
+    const selectedFile = fileInput.files[0];
 
-    if (isValid) {
+    if (selectedFile) {
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+
       $.ajax({
-        url: "http://localhost:8080/api/products/create",
+        url: config.baseUrl + config.file.files,
         type: "POST",
-        dataType: "json",
-        contentType: "application/json",
+        data: formData,
+        contentType: false,
+        processData: false,
         beforeSend: function (xhr) {
           var accessToken = sessionStorage.getItem("accessToken");
           xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
         },
-        data: JSON.stringify(product),
         success: function (response) {
-          clearToasts();
-          showSuccessToast("New product successfully created!");
-          // Display the toast message
-          const toast = new bootstrap.Toast(
-            document.getElementById("toastContainer")
-          );
-          toast.show();
-          $("#createNewProduct").hide();
-          // Reload the page after a delay (e.g., 2 seconds)
-          setTimeout(function () {
-            location.reload();
-          }, 2000);
+          const imageReference = response.reference;
+          product.img = imageReference;
+          const isValid = validateProduct(product, "");
+
+          if (isValid) {
+            $.ajax({
+              url: config.baseUrl + config.product.create,
+              type: "POST",
+              dataType: "json",
+              contentType: "application/json",
+              beforeSend: function (xhr) {
+                var accessToken = sessionStorage.getItem("accessToken");
+                xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+              },
+              data: JSON.stringify(product),
+              success: function (response) {
+                clearToasts();
+                showSuccessToast("New product successfully created!");
+                // Display the toast message
+                const toast = new bootstrap.Toast(
+                  document.getElementById("toastContainer")
+                );
+                toast.show();
+                $("#createNewProduct").hide();
+                // Reload the page after a delay (e.g., 2 seconds)
+                setTimeout(function () {
+                  location.reload();
+                }, 2000);
+              },
+              error: console.error,
+            });
+          } else {
+            console.log("Please select an image.");
+          }
         },
         error: console.error,
       });
+    } else {
+      console.log("Please select an image.");
     }
   });
 
   //LOAD CATEGORIES FROM DATABASE  & generate Dropdown values in new product form
   $.ajax({
-    url: "http://localhost:8080/api/categories/isActive/true",
+    url: config.baseUrl + config.category.findByActive,
     type: "GET",
     cors: true,
     success: function (categories) {
@@ -184,7 +213,7 @@ $(document).ready(function () {
     closeEditWindow();
 
     $.ajax({
-      url: "http://localhost:8080/api/products/search",
+      url: config.baseUrl + config.product.search,
       type: "POST",
       dataType: "json",
       contentType: "application/json",
@@ -216,7 +245,7 @@ $(document).ready(function () {
     allSearchedProducts.empty();
 
     if (products.length === 0) {
-      isActive = $("#search-status").prop("checked");
+      const isActive = $("#search-status").prop("checked");
       clearToasts();
       showErrorToast(`No ${statusMessage} products found.`);
       // Display a message when no users are found
@@ -277,13 +306,14 @@ $(document).ready(function () {
 
       // Zuerst die Kategorien laden
       $.ajax({
-        url: "http://localhost:8080/api/categories/isActive/true",
+        url: config.baseUrl + config.category.findByActive,
         type: "GET",
         cors: true,
         success: function (categories) {
+          console.log("load categories");
           // Dann die Produktinformationen laden und bearbeiten
           $.ajax({
-            url: "http://localhost:8080/api/products/" + id,
+            url: config.baseUrl + config.product.findById + id,
             type: "GET",
             cors: true,
             success: function (product) {
@@ -306,10 +336,35 @@ $(document).ready(function () {
   function editProducts(product, categories) {
     // Weitere Code-Logik für die Bearbeitung der Kategorien und Produkte
     if (product.active == true) {
-      productedit = "checked";
+      var productedit = "checked";
     } else {
-      productedit = "";
+      var productedit = "";
     }
+
+    const imageReference = product.img;
+
+    $.ajax({
+      url: config.baseUrl + config.file.files + "/" + imageReference,
+      type: "GET",
+      contentType: "blob",
+      beforeSend: function (xhr) {
+        var accessToken = sessionStorage.getItem("accessToken");
+        xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+      },
+      success: function (data) {
+        console.log(typeof data);
+        console.log(data);
+        console.log("Before createObjectURL");
+
+        const blobUrl = window.URL.createObjectURL(data);
+        $("#product-image-preview").attr("src", blobUrl);
+        console.log("Blob URL:", blobUrl);
+
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.error("error: ", errorThrown);
+      },
+    });
 
     const editProduct = $(`
       <div class="container rounded mt-5 border border-warning bg-light shadow-lg">
@@ -403,7 +458,14 @@ $(document).ready(function () {
               <p class="input-error" id="imgError-edit" style="color: red"></p>
               </div>
               </div>
-            </div>              <button type="button" class="btn btn-warning text-white float-end mt-2 mb-2" id="saveEditProduct"> save</button>
+            </div> 
+            <div class="row mb-3">
+              <div class="col-md-12">
+                <label class="fs-5">Product Image Preview</label>
+                <img id="product-image-preview" src="" alt="Product Image" width="200" height="200">
+              </div>
+            </div>
+            <button type="button" class="btn btn-warning text-white float-end mt-2 mb-2" id="saveEditProduct"> save</button>
             </form>
           </div>
         </div>
@@ -424,7 +486,7 @@ $(document).ready(function () {
   //EDIT PRODUCT
 
   $(document).on("click", "#saveEditProduct", function (event) {
-    isActive = $(".status").is(":checked") ? true : false;
+    const isActive = $(".status").is(":checked") ? true : false;
 
     const product = {
       id: $("#product-id-edit").val(),
@@ -444,7 +506,7 @@ $(document).ready(function () {
 
     if (isValid) {
       $.ajax({
-        url: "http://localhost:8080/api/products/update",
+        url: config.baseUrl + config.product.update,
         type: "PUT",
         dataType: "json",
         contentType: "application/json",
@@ -478,7 +540,7 @@ $(document).ready(function () {
     // When the delete button in the modal is clicked, perform the deletion
     $("#confirmDelete").click(function () {
       $.ajax({
-        url: "http://localhost:8080/api/products/delete/" + deleteId,
+        url: config.baseUrl + config.product.delete + deleteId,
         type: "DELETE",
         dataType: "text",
         contentType: "application/json",
