@@ -2,6 +2,7 @@ package at.technikum.webshop_backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 
 //The most straightforward way to get started
@@ -12,6 +13,9 @@ public class WebshopBackendApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(WebshopBackendApplication.class, args);
+
+
+
 	}
 
 }

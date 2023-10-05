@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="/css/main.min.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/style_bootstrap.css" />
+    <title>Shop</title>
+    <script
+      src="https://kit.fontawesome.com/e85167c40f.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://code.jquery.com/jquery-3.6.3.js"
+      integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
+      crossorigin="anonymous"
+    ></script>
+    <script src="/components/navbar/loadNavbar.js" defer></script>
+    <script src="/components/footer/loadFooter.js" defer></script>
+    <script src="/components/cart/loadCart.js" defer></script>
+    <script src="../js/shop.js" defer></script>
+  </head>
+
+  <body>
+    <div id="navbarContainer"></div>
+    <div id="basketContainer"></div>
+
+    <div
+      id="loginSuccessMessage"
+      class="alert alert-success mt-3 mx-5"
+      style="display: none; font-weight: bold; font-size: large; color: green"
+    ></div>
+    <div class="container">
+      <div class="dropdown row mt-4">
+        <button
+          class="col-md-12 mb-2 btn btn-warning text-white fs-4 dropdown-toggle"
+          type="button"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          Check our Categories
+        </button>
+        <ul class="dropdown-menu dropdown-menu-shop" id="categories"></ul>
+      </div>
+    </div>
+
+    <div class="container my-3">
+      <div class="row" id="products"></div>
+    </div>
+
+    <div id="footerContainer"></div>
+  </body>
+</html>

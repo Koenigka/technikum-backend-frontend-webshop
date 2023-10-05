@@ -1,60 +1,139 @@
 package at.technikum.webshop_backend.service;
 
+import at.technikum.webshop_backend.dto.CategoryDto;
+import at.technikum.webshop_backend.dto.UserDto;
+import at.technikum.webshop_backend.model.Address;
+import at.technikum.webshop_backend.model.Category;
 import at.technikum.webshop_backend.model.User;
 import at.technikum.webshop_backend.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
     private UserRepository userRepository;
 
 
-    //Constructor
+
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    //METHODS
+
+    public User save(UserDto userDto) {
+        User user = new User();
+        user.setTitle(userDto.getTitle());
+        user.setFirstname(userDto.getFirstname());
+        user.setLastname(userDto.getLastname());
+
+        Address address = new Address();
+        address.setAddress(userDto.getAddress());
+        address.setCity(userDto.getCity());
+        address.setZip(userDto.getZip());
+        address.setState(userDto.getState());
+
+        user.setAddress(address);
+
+        user.setUsername(userDto.getUsername());
+        user.setEmail(userDto.getEmail());
+        user.setPassword(userDto.getPassword());
+        user.setIsActive(userDto.getIsActive());
+        user.setRoles(userDto.getRoles());
+
+        return userRepository.save(user);
+    }
+
+    public User update(UserDto userDto) {
+        User existingUser = userRepository.findById(userDto.getId())
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userDto.getId()));
 
 
-    public List<User> findAll(){
+        existingUser.setTitle(userDto.getTitle());
+        existingUser.setFirstname(userDto.getFirstname());
+        existingUser.setLastname(userDto.getLastname());
+        existingUser.setUsername(userDto.getUsername());
+        existingUser.setEmail(userDto.getEmail());
+        existingUser.setIsActive(userDto.getIsActive());
+        existingUser.setRoles(userDto.getRoles());
+
+        String password = userDto.getPassword();
+
+        if (password != null) {
+            existingUser.setPassword(password);
+        }
+
+        Address address = existingUser.getAddress();
+        address.setAddress(userDto.getAddress());
+        address.setCity(userDto.getCity());
+        address.setZip(userDto.getZip());
+        address.setState(userDto.getState());
+
+        return userRepository.save(existingUser);
+    }
+
+    public List<User> findAll() {
         return userRepository.findAll();
     }
 
-    public User findById(Long id){
-        return userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+    public User findById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + id));
     }
 
-    public List<User> findByEmail(String email){
-        return userRepository.findByEmail(email);
+    public Optional<User> findByEmail(String email) {
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        if (userOptional.isEmpty()) {
+            return Optional.empty();
+        }
+        return userOptional;
     }
 
-    public User save(User user){
-        return userRepository.save(user);
+    public List<UserDto> getUsersByEmailPrefix(String emailPrefix) {
+        List<User> users = userRepository.findByEmailStartingWith(emailPrefix);
+        return users.stream().map(User::convertToDto).collect(Collectors.toList());
     }
 
-    public User update(Long id, User updatedUser){
-        User user = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        user.setTitle(updatedUser.getTitle());
-        user.setFirstname(updatedUser.getFirstname());
-        user.setLastname(updatedUser.getLastname());
-        user.setAddress(updatedUser.getAddress());
-        user.setCity(updatedUser.getCity());
-        user.setZip(updatedUser.getZip());
-        user.setUsername(updatedUser.getUsername());
-        user.setEmail(updatedUser.getEmail());
-        user.setPassword(updatedUser.getPassword());
-        user.setActive(updatedUser.getActive());
-        user.setAdmin(updatedUser.getAdmin());
-
-        return userRepository.save(user);
-    }
-
-    public void deleteById(Long id){
-        User user = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+    public void deleteById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + id));
         userRepository.deleteById(id);
+    }
+
+    public List<UserDto> findUsersByFilters(Map<String, String> filters) {
+        String emailPrefix = filters.get("email");
+        String username = filters.get("username");
+        String isActive = filters.get("active");
+
+        List<User> users;
+
+        if (emailPrefix != null && username != null && isActive != null) {
+            users = userRepository.findByEmailStartingWithAndUsernameContainingAndIsActive(emailPrefix, username, Boolean.parseBoolean(isActive));
+        } else if (emailPrefix != null && username != null) {
+            users = userRepository.findByEmailStartingWithAndUsernameContaining(emailPrefix, username);
+        } else if (emailPrefix != null && isActive != null) {
+            users = userRepository.findByEmailStartingWithAndIsActive(emailPrefix, Boolean.parseBoolean(isActive));
+        } else if (username != null && isActive != null) {
+            users = userRepository.findByUsernameContainingAndIsActive(username, Boolean.parseBoolean(isActive));
+        } else if (emailPrefix != null) {
+            users = userRepository.findByEmailStartingWith(emailPrefix);
+        } else if (username != null) {
+            users = userRepository.findByUsernameContaining(username);
+        } else if (isActive != null) {
+            users = userRepository.findByIsActive(Boolean.parseBoolean(isActive));
+        } else {
+            users = userRepository.findAll();
+        }
+
+        return convertToUserDtoList(users);
+    }
+    private List<UserDto> convertToUserDtoList(List<User> users) {
+        return users.stream()
+                .map(User::convertToDto)
+                .collect(Collectors.toList());
     }
 
 }
