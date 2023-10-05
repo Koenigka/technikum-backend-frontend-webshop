@@ -95,10 +95,14 @@
             </div>
           </div>
           <div class="row mb-3">
-            <div class="col-md-12">
+            <div class="col-md-6">
               <label for="product-img" class="fs-5">Product Image Upload</label>
               <input id="product-image" type="file" class="form-control" name="product-image" />
               <p class="input-error" id="imgError" style="color: red"></p>
+            </div>
+            <div class="col-md-6">
+              <label for="product-img-preview" class="fs-5">Product Image Preview</label>
+              <img id="product-image-preview-create" src="" alt="Product Image">           
             </div>
           </div>
           <button class="btn btn-warning text-white float-end mt-2 mb-2" id="createProductButton">
@@ -164,7 +168,6 @@
           <tr>
             <th scope="col">Product Id</th>
             <th scope="col">Product Name</th>
-            <th scope="col">Product Category</th>
             <th scope="col">Product Price</th>
             <th scope="col">Product Stock</th>
             <th scope="col"></th>

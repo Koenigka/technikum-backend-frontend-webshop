@@ -1,3 +1,5 @@
+import config from './config.js';
+
 // Function to close the edit window
 function closeEditWindow() {
   const addEditCategory = $("#addEditCategory");
@@ -15,6 +17,19 @@ $(document).ready(function () {
         "login.html?message=You are not logged in! Please first log in and then you can continue your action.";
     } else {
       $("#createNewCategory").toggle();
+
+      const fileInput = document.getElementById("category-image");
+
+      fileInput.addEventListener("change", function () {
+        const selectedFile = fileInput.files[0];
+
+        if (selectedFile) {
+          const blobUrl = URL.createObjectURL(selectedFile);
+          $("#category-image-preview-create").attr("src", blobUrl);
+        } else {
+          $("#category-image-preview-create").attr("src", "");
+        }
+      });
     }
   });
 
@@ -35,7 +50,7 @@ $(document).ready(function () {
       $(`#descriptionError${createForm}`).text("Description is required.");
       $("#descriptionError-edit").text("Description is required.");
     }
-    const imageUrlPattern = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+    /*    const imageUrlPattern = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
     if (!category.imgUrl) {
       isValid = false;
       $(`#imgError${createForm}`).text("Image URL is required.");
@@ -44,49 +59,81 @@ $(document).ready(function () {
       isValid = false;
       $(`#imgError${createForm}`).text("Invalid image URL format.");
       $("#imgError-edit").text("Invalid image URL format.");
-    }
+    } */
     return isValid;
   }
 
   //CREATE NEW CATEGORY
   $("#createCategoryButton").on("click", (_e) => {
     event.preventDefault();
-    isActive = $("#isActive").is(":checked") ? true : false;
+    const isActive = $("#isActive").is(":checked") ? true : false;
 
     const category = {
       title: $("#category-title").val(),
       description: $("#category-description").val(),
-      imgUrl: $("#category-img-url").val(),
+      imgUrl: $("#category-img").val(),
       //Check if is checked --> value = true/false
       active: isActive,
     };
 
-    // Validate the product and get the result
-    const isValid = validateCategory(category, "");
+    const fileInput = document.getElementById("category-image");
+    const selectedFile = fileInput.files[0];
 
-    if (isValid) {
+    if (selectedFile) {
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+
       $.ajax({
-        url: "http://localhost:8080/api/categories/create",
+        url: config.baseUrl + config.file.files,
         type: "POST",
-        dataType: "json",
-        contentType: "application/json",
+        data: formData,
+        contentType: false,
+        processData: false,
         beforeSend: function (xhr) {
           var accessToken = sessionStorage.getItem("accessToken");
           xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
         },
-        data: JSON.stringify(category),
         success: function (response) {
-          clearToasts();
-          showSuccessToast("New category successfully created!");
-          // Display the toast message
-          const toast = new bootstrap.Toast(
-            document.getElementById("toastContainer")
-          );
-          toast.show();
-          $("#createNewCategory").hide();
+          const imageReference = response.reference;
+          category.imgUrl = imageReference;
+
+          // Validate the product and get the result
+          const isValid = validateCategory(category, "");
+
+          if (isValid) {
+            $.ajax({
+              url: config.baseUrl + config.category.create,
+              type: "POST",
+              dataType: "json",
+              contentType: "application/json",
+              beforeSend: function (xhr) {
+                var accessToken = sessionStorage.getItem("accessToken");
+                xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+              },
+              data: JSON.stringify(category),
+              success: function (response) {
+                clearToasts();
+                showSuccessToast("New category successfully created!");
+                // Display the toast message
+                const toast = new bootstrap.Toast(
+                  document.getElementById("toastContainer")
+                );
+                toast.show();
+                $("#createNewCategory").hide();
+                setTimeout(function () {
+                  location.reload();
+                }, 2000);
+              },
+              error: console.error,
+            });
+          } else {
+            console.log("Please select an image.");
+          }
         },
         error: console.error,
       });
+    } else {
+      console.log("Please select an image.");
     }
   });
 
@@ -112,7 +159,7 @@ $(document).ready(function () {
     closeEditWindow();
 
     $.ajax({
-      url: "http://localhost:8080/api/categories/search",
+      url: config.baseUrl + config.category.search,
       type: "POST",
       dataType: "json",
       contentType: "application/json",
@@ -146,7 +193,7 @@ $(document).ready(function () {
     allSearchedCategories.empty();
 
     if (categories.length === 0) {
-      isActive = $("#search-status").prop("checked");
+      var isActive = $("#search-status").prop("checked");
       clearToasts();
       showErrorToast(`No ${statusMessage} categories found.`);
       // Display a message when no users are found
@@ -189,7 +236,7 @@ $(document).ready(function () {
     ); // You can adjust the scroll speed (500ms in this example)
 
     $.ajax({
-      url: "http://localhost:8080/api/categories/" + id,
+      url: config.baseUrl + config.category.findById + id,
       type: "GET",
       cors: true,
       success: function (category) {
@@ -204,11 +251,41 @@ $(document).ready(function () {
     addEditCategory.empty();
 
     function editCategories(category) {
+      var categoryedit = "";
       if (category.active == true) {
         categoryedit = "checked";
       } else {
         categoryedit = "";
       }
+
+      // Load Img from FileServer
+      const imageReference = category.imgUrl;
+      const baseUrl = config.baseUrl;
+      const filesEndpoint = config.file.files;
+      const apiUrl = `${baseUrl}${filesEndpoint}/${imageReference}`;
+
+      const accessToken = sessionStorage.getItem("accessToken");
+
+      fetch(apiUrl, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          return response.blob();
+        })
+        .then((blob) => {
+          const blobUrl = window.URL.createObjectURL(blob);
+          $("#category-image-preview").attr("src", blobUrl);
+          $("#original-category-img").val(imageReference);
+        })
+        .catch((error) => {
+          console.error("Fetch error:", error);
+        });
 
       const editCategory =
         $(`  <div class="container rounded mt-5 border border-warning bg-light shadow-lg">
@@ -245,15 +322,16 @@ $(document).ready(function () {
   
   
             <div class="row mb-3">
-              <div class="col-md-9">
-              <div class="form-group">
-                <label for="category-img" class="fs-5">Category Image Url</label>
-                <div class="input-group mb-2">
-                  <input class="form-control" type="text" id="category-img" name="category-img" value="${category.imgUrl}"required>
-                   <p class="input-error" id="imgError-edit" style="color: red"></p>
-                </div>
-              </div>
-            </div>
+            <input type="hidden" id="original-category-img" value="">           
+
+            <div class="col-md-6">
+            <label class="fs-5">Category Image Upload</label>
+            <input type="file" class="form-control" id="category-image-file-edit">
+          </div>
+          <div class="col-md-6">
+          <label class="fs-5">Category Image Preview</label>
+          <img class="mt-3" id="category-image-preview" src="" alt="Category Image" width="200" height="200">
+        </div>
             
             <div class="col-md-3 d-flex align-items-end">
               <div class="form-check mb-2">
@@ -276,51 +354,93 @@ $(document).ready(function () {
     </div>`);
 
       addEditCategory.append(editCategory);
+
+      // Change Preview of img if new file is uploaded
+
+      const fileInputEdit = document.getElementById("category-image-file-edit");
+      const imagePreviewEdit = document.getElementById("category-image-preview");
+
+      fileInputEdit.addEventListener("change", function () {
+        const newFile = fileInputEdit.files[0];
+
+        if (newFile) {
+          const blobUrl = URL.createObjectURL(newFile);
+          console.log(blobUrl);
+          imagePreviewEdit.src = blobUrl;
+        }
+      });
     }
   });
 
   //EDIT CATEGORY
 
   $(document).on("click", "#saveEditCategory", function (event) {
-    isActive = $(".status").is(":checked") ? true : false;
+    var isActive = $(".status").is(":checked") ? true : false;
 
     //console.log(id);
     const category = {
       id: $("#category-id-edit").val(),
       title: $("#category-name").val(),
       description: $("#category-description-edit").val(),
-      imgUrl: $("#category-img").val(),
       active: isActive,
     };
 
-    // Validate the product and get the result
-    const isValid = validateCategory(category, "-edit");
+    const fileInputEdit = document.getElementById("category-image-file-edit");
+    const newFile = fileInputEdit.files[0];
 
-    if (isValid) {
+    if (newFile) {
+      const formDataEdit = new FormData();
+      formDataEdit.append("file", newFile);
+
       $.ajax({
-        url: "http://localhost:8080/api/categories/update",
-        type: "PUT",
-        dataType: "json",
-        contentType: "application/json",
+        url: config.baseUrl + config.file.files,
+        type: "POST",
+        data: formDataEdit,
+        contentType: false,
+        processData: false,
         beforeSend: function (xhr) {
           var accessToken = sessionStorage.getItem("accessToken");
           xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
         },
-        data: JSON.stringify(category),
         success: function (response) {
-          clearToasts();
-          showSuccessToast("Updated successfully!");
-          // Display the toast message
-          const toast = new bootstrap.Toast(
-            document.getElementById("toastContainer")
-          );
-          toast.show();
-          $("#addEditCategory").empty(); // Clear the edit product form
+          const imageReferenceEdit = response.reference;
+          category.imgUrl = imageReferenceEdit;
+          saveEditedCategory(category);
         },
         error: console.error,
       });
+
+      // Todo - delete old File from server
+    } else {
+      category.imgUrl = $("#original-category-img").val();
+      saveEditedCategory(category);
     }
   });
+
+  function saveEditedCategory(category) {
+    $.ajax({
+      url: config.baseUrl + config.category.update,
+      type: "PUT",
+      dataType: "json",
+      contentType: "application/json",
+      beforeSend: function (xhr) {
+        var accessToken = sessionStorage.getItem("accessToken");
+        xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+      },
+      data: JSON.stringify(category),
+      success: function (response) {
+        clearToasts();
+        showSuccessToast("Updated successfully!");
+        // Display the toast message
+        const toast = new bootstrap.Toast(
+          document.getElementById("toastContainer")
+        );
+        toast.show();
+        $("#addEditCategory").empty(); // Clear the edit product form
+      },
+      error: console.error,
+    });
+  }
 
   //DELETE CATEGORY
   $(document).on("click", ".delete", function (event) {
@@ -332,7 +452,7 @@ $(document).ready(function () {
     // When the delete button in the modal is clicked, perform the deletion
     $("#confirmDelete").click(function () {
       $.ajax({
-        url: "http://localhost:8080/api/categories/delete/" + deleteId,
+        url: config.baseUrl + config.category.delete + deleteId,
         type: "DELETE",
         dataType: "json",
         contentType: "application/json",

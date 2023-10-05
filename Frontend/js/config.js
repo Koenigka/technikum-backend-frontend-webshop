@@ -8,14 +8,20 @@ const config = {
     update: "/products/update",
     delete: "/products/delete/",
     findAll: "/products/findAll", 
-    // findByActive: (active) => `/products/isActive/${active}`,
     findById: "/products/", 
     search: "/products/search",
-    // findByCategory: (categoryId, active) =>
-    //  `/products/byCategory/${categoryId}/${active}`, 
+    findByActive: "/products/isActive/true",
+    findByCategory: (categoryId, active) =>
+     `/products/byCategory/${categoryId}/${active}`, 
   },
 category: {
     findByActive: "/categories/isActive/true",
+    create: "/categories/create",
+    search: "/categories/search",
+    findById: "/categories/", 
+    update: "/categories/update",
+    delete: "/categories/delete/",
+
 },
 user: {
 

@@ -17,6 +17,20 @@ $(document).ready(function () {
         "login.html?message=You are not logged in! Please first log in and then you can continue your action.";
     } else {
       $("#createNewProduct").toggle();
+
+      const fileInput = document.getElementById("product-image");
+
+      fileInput.addEventListener("change", function () {
+        const selectedFile = fileInput.files[0];
+
+        if (selectedFile) {
+          const blobUrl = URL.createObjectURL(selectedFile);
+          $("#product-image-preview-create").attr("src", blobUrl);
+        } else {
+          $("#product-image-preview-create").attr("src", "");
+        }
+      });
+      
     }
   });
 
@@ -82,6 +96,8 @@ $(document).ready(function () {
     return isValid;
   }
 
+ 
+
   //CREATE NEW PRODUCT
   $("#createProductButton").on("click", (_e) => {
     event.preventDefault();
@@ -101,7 +117,8 @@ $(document).ready(function () {
     const fileInput = document.getElementById("product-image");
     const selectedFile = fileInput.files[0];
 
-    if (selectedFile) {
+    if (selectedFile) {     
+
       const formData = new FormData();
       formData.append("file", selectedFile);
 
@@ -118,6 +135,7 @@ $(document).ready(function () {
         success: function (response) {
           const imageReference = response.reference;
           product.img = imageReference;
+
           const isValid = validateProduct(product, "");
 
           if (isValid) {
@@ -262,12 +280,10 @@ $(document).ready(function () {
   }
 
   function createProduct(product) {
+    console.log("In createProduct-Funktion. Product:", product);
     const searchedProduct = $(`<tr>
       <td scope="col">${product.id}</td>
-      <td scope="col">${product.title ? product.title : ""}</td>
-      <td scope="col">${
-        product.category && product.category.title ? product.category.title : ""
-      }</td>
+      <td scope="col">${product.title ? product.title : ""}</td>     
       <td scope="col">${product.price ? product.price : ""}</td>
       <td scope="col">${product.stock ? product.stock : ""}</td>
       <td scope="col"><button class="btn btn-outline-warning editProduct" value="${
@@ -341,30 +357,35 @@ $(document).ready(function () {
       var productedit = "";
     }
 
+    // Load Img from FileServer
     const imageReference = product.img;
+    const baseUrl = config.baseUrl;
+    const filesEndpoint = config.file.files;
+    const apiUrl = `${baseUrl}${filesEndpoint}/${imageReference}`;
 
-    $.ajax({
-      url: config.baseUrl + config.file.files + "/" + imageReference,
-      type: "GET",
-      contentType: "blob",
-      beforeSend: function (xhr) {
-        var accessToken = sessionStorage.getItem("accessToken");
-        xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+    const accessToken = sessionStorage.getItem("accessToken");
+
+    fetch(apiUrl, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
       },
-      success: function (data) {
-        console.log(typeof data);
-        console.log(data);
-        console.log("Before createObjectURL");
-
-        const blobUrl = window.URL.createObjectURL(data);
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.blob();
+      })
+      .then((blob) => {
+        const blobUrl = window.URL.createObjectURL(blob);
         $("#product-image-preview").attr("src", blobUrl);
-        console.log("Blob URL:", blobUrl);
+        $("#original-product-img").val(imageReference);
 
-      },
-      error: function (jqXHR, textStatus, errorThrown) {
-        console.error("error: ", errorThrown);
-      },
-    });
+      })
+      .catch((error) => {
+        console.error("Fetch error:", error);
+      });
 
     const editProduct = $(`
       <div class="container rounded mt-5 border border-warning bg-light shadow-lg">
@@ -447,23 +468,17 @@ $(document).ready(function () {
                 </div>
               </div>
   
+            </div>          
+            <div class="row mb-3">  
+            <input type="hidden" id="original-product-img" value="">           
+              <div class="col-md-6">
+                <label class="fs-5">Product Image Upload</label>
+                <input type="file" class="form-control" id="product-image-file-edit">
+              </div>
+              <div class="col-md-6">
+              <label class="fs-5">Product Image Preview</label>
+              <img class="mt-3" id="product-image-preview" src="" alt="Product Image" width="200" height="200">
             </div>
-            <div class="row mb-3">
-              <div class="col-md-12">
-              <div class="form-group">
-              <label for="product-img" class="fs-5">Product Image Url</label>
-              <input id="product-img-edit" type="text" class="form-control " name="product-img-edit" value="${
-                product.img
-              }" required>
-              <p class="input-error" id="imgError-edit" style="color: red"></p>
-              </div>
-              </div>
-            </div> 
-            <div class="row mb-3">
-              <div class="col-md-12">
-                <label class="fs-5">Product Image Preview</label>
-                <img id="product-image-preview" src="" alt="Product Image" width="200" height="200">
-              </div>
             </div>
             <button type="button" class="btn btn-warning text-white float-end mt-2 mb-2" id="saveEditProduct"> save</button>
             </form>
@@ -472,6 +487,21 @@ $(document).ready(function () {
       </div>`);
 
     addEditProduct.append(editProduct);
+
+    // Change Preview of img if new file is uploaded
+
+    const fileInputEdit = document.getElementById("product-image-file-edit");
+    const imagePreviewEdit = document.getElementById("product-image-preview");
+
+    fileInputEdit.addEventListener("change", function () {
+      const newFile = fileInputEdit.files[0];
+
+      if (newFile) {
+        const blobUrl = URL.createObjectURL(newFile);
+        console.log(blobUrl);
+        imagePreviewEdit.src = blobUrl;
+      }
+    });
   }
 
   function createCategoryOptions(categories, selectedCategoryId) {
@@ -494,79 +524,110 @@ $(document).ready(function () {
       description: $("#product-description-edit").val(),
       price: $("#product-price-edit").val(),
       stock: $("#product-stock-edit").val(),
-      img: $("#product-img-edit").val(),
       categoryId: $("#product-category-edit").val(),
-      //categoryObject[0],
-      //Check if is checked --> value = 1 /0
       active: isActive,
     };
 
-    // Validate the product and get the result
-    const isValid = validateProduct(product, "-edit");
+    const fileInputEdit = document.getElementById("product-image-file-edit");
+    const newFile = fileInputEdit.files[0];
 
-    if (isValid) {
+    if (newFile) {
+      const formDataEdit = new FormData();
+      formDataEdit.append("file", newFile);
+
       $.ajax({
-        url: config.baseUrl + config.product.update,
-        type: "PUT",
-        dataType: "json",
-        contentType: "application/json",
+        url: config.baseUrl + config.file.files,
+        type: "POST",
+        data: formDataEdit,
+        contentType: false,
+        processData: false,
         beforeSend: function (xhr) {
           var accessToken = sessionStorage.getItem("accessToken");
           xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
         },
-        data: JSON.stringify(product),
         success: function (response) {
-          clearToasts();
-          showSuccessToast("Updated successfully!");
-          // Display the toast message
-          const toast = new bootstrap.Toast(
-            document.getElementById("toastContainer")
-          );
-          toast.show();
-          $("#addEditProduct").empty(); // Clear the edit product form
+          const imageReferenceEdit = response.reference;
+          product.img = imageReferenceEdit;
+          saveEditedProduct(product);
         },
         error: console.error,
       });
+
+      // Todo - delete old File from server 
+    }
+    else {
+      product.img = $("#original-product-img").val();
+      saveEditedProduct(product); 
     }
   });
+  
 
-  //DELETE PRODUCT
-  $(document).on("click", ".delete", function (event) {
-    const deleteId = event.target.value;
+  // Validate the product and get the result
+  //const isValid = validateProduct(product, "-edit");
 
-    // Show the delete confirmation modal
-    $("#deleteProductModal").modal("show");
+  function saveEditedProduct(product) {
+    $.ajax({
+      url: config.baseUrl + config.product.update,
+      type: "PUT",
+      dataType: "json",
+      contentType: "application/json",
+      beforeSend: function (xhr) {
+        var accessToken = sessionStorage.getItem("accessToken");
+        xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+      },
+      data: JSON.stringify(product),
+      success: function (response) {
+        clearToasts();
+        showSuccessToast("Updated successfully!");
+        // Display the toast message
+        const toast = new bootstrap.Toast(
+          document.getElementById("toastContainer")
+        );
+        toast.show();
+        $("#addEditProduct").empty(); // Clear the edit product form
+      },
+      error: console.error,
+    });
+  }
+});
 
-    // When the delete button in the modal is clicked, perform the deletion
-    $("#confirmDelete").click(function () {
-      $.ajax({
-        url: config.baseUrl + config.product.delete + deleteId,
-        type: "DELETE",
-        dataType: "text",
-        contentType: "application/json",
-        beforeSend: function (xhr) {
-          var accessToken = sessionStorage.getItem("accessToken");
-          xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-        },
-        success: function (response) {
-          console.log("Successfully deleted:", response);
-          // Show a toast message
-          showDeleteToast("Product deleted successfully.");
-          const toast = new bootstrap.Toast(
-            document.getElementById("toastContainer")
-          );
-          toast.show();
-          // Hide the modal after deletion
-          $("#deleteProductModal").modal("hide");
-          // Reload the page after a delay (e.g., 2 seconds)
-          setTimeout(function () {
-            location.reload();
-          }, 2000);
-        },
-        error: function (xhr, textStatus, error) {
-          console.error("Error deleting:", error);
-        },
-      });
+//DELETE PRODUCT
+$(document).on("click", ".delete", function (event) {
+  const deleteId = event.target.value;
+
+  // Show the delete confirmation modal
+  $("#deleteProductModal").modal("show");
+
+  // When the delete button in the modal is clicked, perform the deletion
+  // Todo - delete old file from Server
+  $("#confirmDelete").click(function () {
+    $.ajax({
+      url: config.baseUrl + config.product.delete + deleteId,
+      type: "DELETE",
+      dataType: "text",
+      contentType: "application/json",
+      beforeSend: function (xhr) {
+        var accessToken = sessionStorage.getItem("accessToken");
+        xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+      },
+      success: function (response) {
+        console.log("Successfully deleted:", response);
+        // Show a toast message
+        showDeleteToast("Product deleted successfully.");
+        const toast = new bootstrap.Toast(
+          document.getElementById("toastContainer")
+        );
+        toast.show();
+        // Hide the modal after deletion
+        $("#deleteProductModal").modal("hide");
+        // Reload the page after a delay (e.g., 2 seconds)
+        setTimeout(function () {
+          location.reload();
+        }, 2000);
+      },
+      error: function (xhr, textStatus, error) {
+        console.error("Error deleting:", error);
+      },
     });
   });
 });

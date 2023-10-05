@@ -1,3 +1,5 @@
+import config from './config.js';
+
 $(document).ready(function () {
   const params = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop),
@@ -7,7 +9,7 @@ $(document).ready(function () {
   console.log(value);
 
   $.ajax({
-    url: "http://localhost:8080/api/products/" + value,
+    url: config.baseUrl + config.product.findById + value,
     type: "GET",
     cors: true,
     success: function (product) {
@@ -25,7 +27,7 @@ $(document).ready(function () {
     const productdetail = $(`
         <div class="row pt-3">
         <div class="col-lg-6 col-md-6 col-sm-12">
-          <img class="inner-img img-fluid rounded border border-warning" src="../${product.img}" width="350px"
+          <img class="inner-img img-fluid rounded border border-warning"  width="350px"
             height="250px" />
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12">
@@ -52,5 +54,26 @@ $(document).ready(function () {
       </div>`);
 
     productd.append(productdetail);
+
+    const img = productdetail.find('img');
+  const baseUrl = config.baseUrl;
+  const filesEndpoint = config.file.files;
+  const imageReference = product.img;
+  const apiUrl = `${baseUrl}${filesEndpoint}/${imageReference}`;
+
+  fetch(apiUrl)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.blob();
+    })
+    .then((blob) => {
+      const blobUrl = window.URL.createObjectURL(blob);
+      img.attr("src", blobUrl);
+    })
+    .catch((error) => {
+      console.error("Fetch error:", error);
+    });
   }
 });
