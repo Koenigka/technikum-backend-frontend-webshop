@@ -32,7 +32,7 @@ public class ProductController {
         this.productService = productService;
     }
 
-    private static final String authorityAdmin = "ADMIN";
+    private static final String authorityAdmin = "ROLE_ADMIN";
 
     @PostMapping("/create")
     public ResponseEntity<?> createProduct (@Valid @RequestBody ProductDto productDto, BindingResult bindingResult) {
@@ -62,17 +62,18 @@ public class ProductController {
 
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/update")
     public ResponseEntity<?> updateProduct (@Valid @RequestBody ProductDto productDto, BindingResult bindingResult) {
 
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        /*Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         boolean isAdmin = authentication.getAuthorities().stream().map(GrantedAuthority::toString)
                 .anyMatch(val -> val.equals(authorityAdmin));
 
         if (!isAdmin) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+        }*/
 
         if (bindingResult.hasErrors()) {
             List<FieldError> fieldErrors = bindingResult.getFieldErrors();

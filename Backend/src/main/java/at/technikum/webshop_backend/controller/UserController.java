@@ -21,7 +21,7 @@ import java.util.Optional;
 public class UserController {
 
     private final UserService userService;
-    private static final String authorityAdmin = "ADMIN";
+    private static final String authorityAdmin = "ROLE_ADMIN";
 
     public UserController(UserService userService) {
         this.userService = userService;

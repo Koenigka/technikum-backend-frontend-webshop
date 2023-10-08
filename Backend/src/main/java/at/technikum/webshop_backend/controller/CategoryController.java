@@ -26,7 +26,7 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
-    private static final String authorityAdmin = "ADMIN";
+    private static final String authorityAdmin = "ROLE_ADMIN";
 
     public CategoryController(CategoryService categoryService){
         this.categoryService = categoryService;

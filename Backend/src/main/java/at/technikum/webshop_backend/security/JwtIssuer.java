@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * The JwtIssuer class is responsible for issuing JWT tokens.
- * JWT tokens are commonly used for user authentication and authorization.
+ *
  */
 @Component
 @RequiredArgsConstructor
