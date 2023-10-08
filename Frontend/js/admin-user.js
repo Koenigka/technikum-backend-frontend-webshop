@@ -514,7 +514,7 @@ $(document).on("click", "#saveEditUser", function (event) {
     email: $("#email-edit").val(),
     username: $("#username-edit").val(),
     isActive: isActive,
-    role: $("#role-select-edit").val(),
+    roles: $("#role-select-edit").val(),
   };
 
   // Das Passwort im user-Objekt nur setzen, wenn es nicht null ist

@@ -5,10 +5,12 @@ import at.technikum.webshop_backend.dto.ProductDto;
 import at.technikum.webshop_backend.model.CartItem;
 import at.technikum.webshop_backend.service.CartService;
 import at.technikum.webshop_backend.service.EntityNotFoundException;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -25,11 +27,14 @@ public class CartItemController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<CartItemDto> addToCart(@RequestBody CartItemDto cartItemDto) {
+    public ResponseEntity<?> addToCart(@RequestBody @Valid CartItemDto cartItemDto, BindingResult bindingResult) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication.isAuthenticated()) {
+            if (bindingResult.hasErrors()){
+                return ResponseEntity.badRequest().body("Validation error");
+            }
             try {
                 CartItem cartItem = cartService.addToCart(cartItemDto);
                 return new ResponseEntity<>(cartItem.convertToDto(), HttpStatus.OK);
@@ -65,9 +70,12 @@ public class CartItemController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<CartItemDto> updateCart(@RequestBody CartItemDto cartItemDto) {
+    public ResponseEntity<?> updateCart(@RequestBody @Valid CartItemDto cartItemDto, BindingResult bindingResult) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.isAuthenticated()) {
+            if (bindingResult.hasErrors()){
+                return ResponseEntity.badRequest().body("Validation error");
+            }
             try {
                 CartItem updatedCartItem = cartService.updateCart(cartItemDto);
                 return new ResponseEntity<>(updatedCartItem.convertToDto(), HttpStatus.OK);

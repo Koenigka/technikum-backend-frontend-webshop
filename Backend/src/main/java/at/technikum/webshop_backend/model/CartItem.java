@@ -3,6 +3,7 @@ package at.technikum.webshop_backend.model;
 import at.technikum.webshop_backend.dto.CartItemDto;
 import at.technikum.webshop_backend.utils.ConvertableToDto;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,14 +23,17 @@ public class CartItem implements ConvertableToDto<CartItemDto>, Cloneable {
     @Column(name = "id")
     private Long id;
 
+    @NotNull
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @NotNull
     @ManyToOne(optional = false)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
+    @NotNull
     private int quantity;
 
     @Column(name = "creation_date")

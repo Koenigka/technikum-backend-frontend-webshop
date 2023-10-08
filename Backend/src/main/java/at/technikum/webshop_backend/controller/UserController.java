@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,7 +29,10 @@ public class UserController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<UserDto> createUser(@RequestBody @Valid UserDto userDto) {
+    public ResponseEntity<?> createUser(@RequestBody @Valid UserDto userDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()){
+            return ResponseEntity.badRequest().body("Validation error: Please check your input.");
+        }
         User createdUser = userService.save(userDto);
         UserDto createdUserDto = createdUser.convertToDto();
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUserDto);
@@ -107,21 +111,24 @@ public class UserController {
             }
     }
     @PutMapping("/update")
-    public ResponseEntity<UserDto> updateUser(@RequestBody @Valid UserDto userDto) {
+    public ResponseEntity<?> updateUser(@RequestBody @Valid UserDto userDto, BindingResult bindingResult) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         boolean isAdmin = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::toString)
                 .anyMatch(val -> val.equals(authorityAdmin));
 
-        if (isAdmin) {
-
-            User updatedUser = userService.update(userDto);
-            UserDto updatedUserDto = updatedUser.convertToDto();
-            return ResponseEntity.ok(updatedUserDto);
-        }else {
+        if (!isAdmin) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+
         }
+        if (bindingResult.hasErrors()){
+            return ResponseEntity.badRequest().body("Validation error: Please check your input.");
+        }
+
+        User updatedUser = userService.update(userDto);
+        UserDto updatedUserDto = updatedUser.convertToDto();
+        return ResponseEntity.ok(updatedUserDto);
     }
 
     @DeleteMapping("/delete/{id}")
