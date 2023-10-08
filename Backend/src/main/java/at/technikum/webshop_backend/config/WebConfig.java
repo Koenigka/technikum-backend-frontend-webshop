@@ -15,8 +15,18 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
-//@Configuration
-//@EnableWebMvc
+/**
+ * This filter class configures CORS (Cross-Origin Resource Sharing) to allow cross-origin requests.
+ * It sets the necessary HTTP response headers to enable CORS for a Spring Boot web application.
+ * CORS is used to control requests made to a different origin (e.g., domain or port) from the one
+ * serving the web application.
+ *
+ * Note: In a production environment, it is important to configure CORS headers carefully to avoid
+ * security vulnerabilities. Allowing unrestricted access using "*" ("Access-Control-Allow-Origin")
+ * may expose your application to potential security risks. It is recommended to specify trusted
+ * origins explicitly instead of using "*" (e.g. response.setHeader("Access-Control-Allow-Origin",
+ * "https://trusted-domain1.com, https://trusted-domain2.com, https://trusted-domain3.com");.
+ */
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class WebConfig implements Filter {
@@ -32,6 +42,7 @@ public class WebConfig implements Filter {
             throws ServletException, IOException {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         HttpServletRequest request = (HttpServletRequest) servletRequest;
+        // Prod ....
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Methods", "*");
         response.setHeader("Access-Control-Max-Age", "3600");

@@ -50,7 +50,7 @@ public class UserControllerTest {
         user.setLastname("Doe");
         user.setPassword("password");
         user.setIsActive(true);
-        user.setRoles("ADMIN");
+        user.setRoles("ROLE_ADMIN");
 
         // Create an Address object and set its properties
         Address address = new Address();
@@ -70,7 +70,7 @@ public class UserControllerTest {
 
 
     @Test
-    @WithMockUser(authorities = "ADMIN")
+    @WithMockUser(authorities = "ROLE_ADMIN")
     public void testFindByEmailAsAdmin() throws Exception {
         // Mock a user object and its associated UserDto for testing
         User testUser = createTestUser(); // Implement this method to create a test user
@@ -89,7 +89,7 @@ public class UserControllerTest {
         mockMvc.perform(get("/api/users/email/{email}", "test@example.com"))
                 .andExpect(status().isForbidden());
     }@Test
-    @WithMockUser(authorities = "ADMIN")
+    @WithMockUser(authorities = "ROLE_ADMIN")
     public void testUpdateUserAsAdmin() throws Exception {
         UserDto userDto = new UserDto();
         userDto.setId(1L); // Set the ID of the user you want to update
@@ -100,7 +100,7 @@ public class UserControllerTest {
         userDto.setLastname("Doe"); // Set the last name if needed
         userDto.setPassword("password"); // Set the password
         userDto.setIsActive(true); // Set user's active status
-        userDto.setRoles("ADMIN"); // Set user's roles, e.g., "ADMIN", "USER"
+        userDto.setRoles("ROLE_ADMIN"); // Set user's roles, e.g., "ADMIN", "USER"
 
         User updatedUser =  new User();
         updatedUser.setId(1L); // Set the ID
@@ -111,7 +111,7 @@ public class UserControllerTest {
         updatedUser.setLastname("Doe");
         updatedUser.setPassword("password");
         updatedUser.setIsActive(true);
-        updatedUser.setRoles("ADMIN");
+        updatedUser.setRoles("ROLE_ADMIN");
 
         // Create an Address object and set its properties
         Address address = new Address();
@@ -143,7 +143,7 @@ public class UserControllerTest {
 
 
     @Test
-    @WithMockUser(authorities = "USER") // Test for a non-admin user
+    @WithMockUser(authorities = "ROLE_USER") // Test for a non-admin user
     public void testDeleteUserAsNonAdmin() throws Exception {
         Long userIdToDelete = 1L;
 
@@ -155,7 +155,7 @@ public class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(authorities = "ADMIN")
+    @WithMockUser(authorities = "ROLE_ADMIN")
     public void testFindUserByIdAsAdmin() throws Exception {
         Long userIdToFind = 1L; // Replace with the actual ID of the user you want to find
 

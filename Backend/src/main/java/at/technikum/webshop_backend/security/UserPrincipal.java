@@ -9,6 +9,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
+/**
+ * Custom user details class representing the principal information of an authenticated user.
+ */
 @Getter
 @Builder
 public class UserPrincipal implements UserDetails {

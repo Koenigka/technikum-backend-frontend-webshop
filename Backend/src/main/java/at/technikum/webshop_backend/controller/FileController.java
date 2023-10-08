@@ -24,7 +24,7 @@ public class FileController {
         this.fileService = fileService;
     }
 
-    private static final String authorityAdmin = "ADMIN";
+    private static final String authorityAdmin = "ROLE_ADMIN";
 
 
     @PostMapping

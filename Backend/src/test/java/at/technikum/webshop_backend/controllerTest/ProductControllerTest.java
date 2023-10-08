@@ -49,7 +49,7 @@ public class ProductControllerTest {
     }
 
     @Test
-    @WithMockUser(authorities = "USER")
+    @WithMockUser(authorities = "ROLE_USER")
     public void testCreateProductAsNonAdmin() throws Exception {
         ProductDto productDto = new ProductDto();
         productDto.setTitle("Test Product");
@@ -79,7 +79,7 @@ public class ProductControllerTest {
 
     @Disabled
     @Test
-    @WithMockUser(authorities = "ADMIN")
+    @WithMockUser(authorities = "ROLE_ADMIN")
     public void testUpdateProductAsAdmin() throws Exception {
         ProductDto productDto = new ProductDto();
         productDto.setId(1L);
@@ -104,7 +104,7 @@ public class ProductControllerTest {
     }
 
     @Test
-    @WithMockUser(authorities = "USER")
+    @WithMockUser(authorities = "ROLE_USER")
     public void testGetProductsAsNonAdmin() throws Exception {
         mockMvc.perform(post("/api/products/search")
                         .content("{}")
@@ -117,7 +117,7 @@ public class ProductControllerTest {
 
 
     @Test
-    @WithMockUser(authorities = "ADMIN")
+    @WithMockUser(authorities = "ROLE_ADMIN")
     public void testGetProductsAsAdmin() throws Exception {
         List<ProductDto> dummyProducts = new ArrayList<>();
         when(productService.findProductsByFilters(any(Map.class))).thenReturn(dummyProducts);
