@@ -19,6 +19,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * The {@code AuthController} class handles authentication-related operations, such as user login.
+ * It exposes an endpoint for user login and returns an access token upon successful authentication.
+ */
 @RestController
 @RequiredArgsConstructor
 public class AuthController {
@@ -29,6 +33,12 @@ public class AuthController {
 
     private final UserService userService;
 
+    /**
+     * Handles user login requests. It authenticates the user and generates an access token upon successful login.
+     *
+     * @param request The login request containing user credentials (email and password).
+     * @return A {@link LoginResponse} object containing the generated access token.
+     */
     @PostMapping("/api/auth/login")
     public LoginResponse login(@RequestBody @Validated LoginRequest request) {
 

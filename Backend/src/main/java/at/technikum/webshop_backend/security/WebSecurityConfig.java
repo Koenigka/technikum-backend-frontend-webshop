@@ -15,6 +15,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/**
+ * Configuration class that defines the security settings for the application.
+ * It enables global method security annotations and configures authentication and authorization rules.
+ */
 @Configuration
 @EnableGlobalMethodSecurity(
 prePostEnabled = true,
@@ -27,8 +31,15 @@ public class WebSecurityConfig {
 
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-
     private final CustomUserDetailService customUserDetailService;
+
+    /**
+     * Configures the security filter chain for the application.
+     *
+     * @param http The HTTP security configuration.
+     * @return The configured security filter chain.
+     * @throws Exception If an error occurs while configuring security.
+     */
     @Bean
     public SecurityFilterChain applicationSecurity(HttpSecurity http) throws Exception{
 
@@ -58,11 +69,23 @@ public class WebSecurityConfig {
 
     }
 
+    /**
+     * Creates a password encoder bean for encoding and verifying passwords.
+     *
+     * @return The configured password encoder.
+     */
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Configures the authentication manager for the application.
+     *
+     * @param http The HTTP security configuration.
+     * @return The configured authentication manager.
+     * @throws Exception If an error occurs while configuring authentication.
+     */
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception{
         return http.getSharedObject(AuthenticationManagerBuilder.class)

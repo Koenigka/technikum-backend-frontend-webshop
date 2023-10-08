@@ -64,6 +64,7 @@ public class User implements ConvertableToDto<UserDto>, Cloneable{
     @Column(name = "isActive")
     private Boolean isActive;
 
+    // TODO - Implement a List of Roles instead of a single role
     private String roles = "USER";
 
 
