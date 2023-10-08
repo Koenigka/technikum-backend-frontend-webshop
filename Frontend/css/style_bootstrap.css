@@ -130,3 +130,11 @@ input:disabled {
 /*.navbar-nav .nav-item:not(.admin-link) {
   display: none;
 }*/
+
+#product-image-preview {
+  border-radius: 10px; 
+}
+
+#category-image-preview {
+  border-radius: 10px; 
+}

@@ -87,6 +87,9 @@ public class UserController {
     public ResponseEntity<UserDto> findByEmail(@PathVariable String email) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+
+
         boolean isAdmin = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::toString)
                 .anyMatch(val -> val.equals(authorityAdmin));
