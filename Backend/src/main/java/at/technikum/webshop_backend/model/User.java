@@ -82,6 +82,11 @@ public class User implements ConvertableToDto<UserDto>, Cloneable{
         System.out.println("Password: " + this.password);
     }
 
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+
     @Override
     public UserDto convertToDto() {
             UserDto userDto = new UserDto();

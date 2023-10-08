@@ -30,7 +30,6 @@ $(document).ready(function () {
           $("#product-image-preview-create").attr("src", "");
         }
       });
-      
     }
   });
 
@@ -82,8 +81,9 @@ $(document).ready(function () {
       $(`#categoryIdError${createForm}`).text("Category is required.");
       $("#categoryIdError-edit").text("Category is required.");
     }
+    // Todo - validation for files!
     // Validate the image URL
-    const imageUrlPattern = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+   /*  const imageUrlPattern = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
     if (!product.img) {
       isValid = false;
       $(`#imgError${createForm}`).text("Image URL is required.");
@@ -92,11 +92,9 @@ $(document).ready(function () {
       isValid = false;
       $(`#imgError${createForm}`).text("Invalid image URL format.");
       $("#imgError-edit").text("Invalid image URL format.");
-    }
+    } */
     return isValid;
   }
-
- 
 
   //CREATE NEW PRODUCT
   $("#createProductButton").on("click", (_e) => {
@@ -117,8 +115,7 @@ $(document).ready(function () {
     const fileInput = document.getElementById("product-image");
     const selectedFile = fileInput.files[0];
 
-    if (selectedFile) {     
-
+    if (selectedFile) {
       const formData = new FormData();
       formData.append("file", selectedFile);
 
@@ -290,9 +287,7 @@ $(document).ready(function () {
         product.id
       }">edit</button></td>
       <td scope="col">
-      <button class="btn btn-outline-danger delete" value="${
-        product.id
-      }">delete</button>  
+      <button class="btn btn-outline-danger delete"  value="${product.id}|${product.img}">delete</button>  
    </td>
     </tr>`);
     $(".footer").removeClass("fixed-bottom");
@@ -381,7 +376,6 @@ $(document).ready(function () {
         const blobUrl = window.URL.createObjectURL(blob);
         $("#product-image-preview").attr("src", blobUrl);
         $("#original-product-img").val(imageReference);
-
       })
       .catch((error) => {
         console.error("Fetch error:", error);
@@ -528,44 +522,45 @@ $(document).ready(function () {
       active: isActive,
     };
 
-    const fileInputEdit = document.getElementById("product-image-file-edit");
-    const newFile = fileInputEdit.files[0];
+    const isValid = validateProduct(product, "-edit");
+    if (isValid) {
+      const fileInputEdit = document.getElementById("product-image-file-edit");
+      const newFile = fileInputEdit.files[0];
 
-    if (newFile) {
-      const formDataEdit = new FormData();
-      formDataEdit.append("file", newFile);
+      if (newFile) {
+        const formDataEdit = new FormData();
+        formDataEdit.append("file", newFile);
 
-      $.ajax({
-        url: config.baseUrl + config.file.files,
-        type: "POST",
-        data: formDataEdit,
-        contentType: false,
-        processData: false,
-        beforeSend: function (xhr) {
-          var accessToken = sessionStorage.getItem("accessToken");
-          xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-        },
-        success: function (response) {
-          const imageReferenceEdit = response.reference;
-          product.img = imageReferenceEdit;
-          saveEditedProduct(product);
-        },
-        error: console.error,
-      });
+        $.ajax({
+          url: config.baseUrl + config.file.files,
+          type: "POST",
+          data: formDataEdit,
+          contentType: false,
+          processData: false,
+          beforeSend: function (xhr) {
+            var accessToken = sessionStorage.getItem("accessToken");
+            xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+          },
+          success: function (response) {
+            const imageReferenceEdit = response.reference;
+            const oldImageReference = $("#original-product-img").val();
+            //console.log("old" + oldImageReference);
+            product.img = imageReferenceEdit;
+            saveEditedProduct(product, oldImageReference);
+          },
+          error: console.error,
+        });
 
-      // Todo - delete old File from server 
-    }
-    else {
-      product.img = $("#original-product-img").val();
-      saveEditedProduct(product); 
+      } else {
+        product.img = $("#original-product-img").val();
+        saveEditedProduct(product);
+      }
+    } else {
+      console.error("Product is not valid.");
     }
   });
-  
 
-  // Validate the product and get the result
-  //const isValid = validateProduct(product, "-edit");
-
-  function saveEditedProduct(product) {
+  function saveEditedProduct(product, oldImageReference) {
     $.ajax({
       url: config.baseUrl + config.product.update,
       type: "PUT",
@@ -579,55 +574,112 @@ $(document).ready(function () {
       success: function (response) {
         clearToasts();
         showSuccessToast("Updated successfully!");
+
+       
+  
+        if (oldImageReference) {
+          deleteOldFile(oldImageReference);
+        }
+  
         // Display the toast message
         const toast = new bootstrap.Toast(
           document.getElementById("toastContainer")
         );
         toast.show();
         $("#addEditProduct").empty(); // Clear the edit product form
+        $("#searchResult").empty(); 
+        $(".footer").addClass("fixed-bottom");
+
       },
       error: console.error,
     });
   }
-});
 
-//DELETE PRODUCT
-$(document).on("click", ".delete", function (event) {
-  const deleteId = event.target.value;
-
-  // Show the delete confirmation modal
-  $("#deleteProductModal").modal("show");
-
-  // When the delete button in the modal is clicked, perform the deletion
-  // Todo - delete old file from Server
-  $("#confirmDelete").click(function () {
+  function deleteOldFile(oldImageReference) {
     $.ajax({
-      url: config.baseUrl + config.product.delete + deleteId,
+      url: config.baseUrl + config.file.delete + oldImageReference, 
       type: "DELETE",
-      dataType: "text",
-      contentType: "application/json",
       beforeSend: function (xhr) {
         var accessToken = sessionStorage.getItem("accessToken");
         xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
       },
       success: function (response) {
-        console.log("Successfully deleted:", response);
-        // Show a toast message
-        showDeleteToast("Product deleted successfully.");
-        const toast = new bootstrap.Toast(
-          document.getElementById("toastContainer")
-        );
-        toast.show();
-        // Hide the modal after deletion
-        $("#deleteProductModal").modal("hide");
-        // Reload the page after a delay (e.g., 2 seconds)
-        setTimeout(function () {
-          location.reload();
-        }, 2000);
+        // Das alte Bild wurde erfolgreich gelöscht
+        console.log("Old file deleted successfully:", response);
       },
       error: function (xhr, textStatus, error) {
-        console.error("Error deleting:", error);
+        console.error("Error deleting old file:", error);
       },
     });
-  });
+  }
+
+
+
+
+//DELETE PRODUCT
+$(document).on("click", ".delete", function (event) {
+  const deleteId = event.target.value;
+
+  // Split the deleteId value into an array using the delimiter '|'
+  const deleteIdParts = deleteId.split("|");
+
+  // Check if there are at least two parts (product ID and image reference)
+  if (deleteIdParts.length >= 2) {
+    const productId = deleteIdParts[0];
+    const imageReference = deleteIdParts[1];
+
+    // Show the delete confirmation modal
+    $("#deleteProductModal").modal("show");
+
+    // When the delete button in the modal is clicked, perform the deletion
+    $("#confirmDelete").click(function () {
+      $.ajax({
+        url: config.baseUrl + config.product.delete + productId,
+        type: "DELETE",
+        dataType: "text",
+        contentType: "application/json",
+        beforeSend: function (xhr) {
+          var accessToken = sessionStorage.getItem("accessToken");
+          xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+        },
+        success: function (response) {
+          console.log("Successfully deleted:", response);
+
+          // After successfully deleting the product, delete the old file
+          if (imageReference) {
+            deleteOldFile(imageReference);
+          }
+
+          // Show a toast message
+          showDeleteToast("Product deleted successfully.");
+          const toast = new bootstrap.Toast(
+            document.getElementById("toastContainer")
+          );
+          toast.show();
+          // Hide the modal after deletion
+          $("#deleteProductModal").modal("hide");
+          // Reload the page after a delay (e.g., 2 seconds)
+          setTimeout(function () {
+            location.reload();
+            location.reload();
+          }, 2000);
+        },
+        error: function (xhr, textStatus, error) {
+          console.error("Error deleting:", error);
+        },
+      });
+    });
+  }
+
+ 
 });
+
+});
+
+
+
+  
+  
+  
+
+

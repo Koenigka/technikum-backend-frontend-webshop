@@ -2,6 +2,7 @@ const config = {
   baseUrl: "http://localhost:8080/api",
   file: {
     files: "/files",
+    delete: "/files/"
   },
   product: {
     create: "/products/create",

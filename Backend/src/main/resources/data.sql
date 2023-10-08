@@ -42,7 +42,9 @@ INSERT INTO address (address, city, zip)
 INSERT INTO users (title, firstname, lastname, address_id, username, email, password, is_active, roles)
 VALUES
     ('Ms', 'Test', 'Admin', 1, 'Admin', 'admin@test.at', '$2a$10$hfqhVFPc8CbVGbtCjp909udpt1Ckm3SD81qvAPNcA.x2KXxD07tJ.', true, 'ADMIN'),
-    ('Ms', 'Test', 'User', 1, 'User', 'user@test.at', '$2a$10$jYAKNTvogtsVgZCGqzA0Q.2MmotJP.aNa/mMzdH1cTk1FVTa8Ixaq', true, 'USER');
+    ('Ms', 'Test', 'User', 1, 'User', 'user@test.at', '$2a$10$jYAKNTvogtsVgZCGqzA0Q.2MmotJP.aNa/mMzdH1cTk1FVTa8Ixaq', true, 'USER'),
+    ('Ms', 'Inactive', 'User', 1, 'User', 'inactive@test.at', '$2a$10$jYAKNTvogtsVgZCGqzA0Q.2MmotJP.aNa/mMzdH1cTk1FVTa8Ixaq', false, 'USER');
+
 
 
 SET REFERENTIAL_INTEGRITY TRUE;

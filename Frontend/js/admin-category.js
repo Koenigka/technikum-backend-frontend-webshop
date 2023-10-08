@@ -1,4 +1,4 @@
-import config from './config.js';
+import config from "./config.js";
 
 // Function to close the edit window
 function closeEditWindow() {
@@ -50,6 +50,8 @@ $(document).ready(function () {
       $(`#descriptionError${createForm}`).text("Description is required.");
       $("#descriptionError-edit").text("Description is required.");
     }
+        // Todo - validation for files!
+
     /*    const imageUrlPattern = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
     if (!category.imgUrl) {
       isValid = false;
@@ -215,7 +217,7 @@ $(document).ready(function () {
     <td scope="col">${category.title}</td>    
     <td scope="col"><button class="btn btn-outline-warning editCategory" value="${category.id}">edit</button></td>
     <td scope="col">
-       <button class="btn btn-outline-danger delete" value="${category.id}">delete</button>
+       <button class="btn btn-outline-danger delete" value="${category.id}|${category.imgUrl}">delete</button>
      
     </td>
   </tr>`);
@@ -358,7 +360,9 @@ $(document).ready(function () {
       // Change Preview of img if new file is uploaded
 
       const fileInputEdit = document.getElementById("category-image-file-edit");
-      const imagePreviewEdit = document.getElementById("category-image-preview");
+      const imagePreviewEdit = document.getElementById(
+        "category-image-preview"
+      );
 
       fileInputEdit.addEventListener("change", function () {
         const newFile = fileInputEdit.files[0];
@@ -385,39 +389,43 @@ $(document).ready(function () {
       active: isActive,
     };
 
-    const fileInputEdit = document.getElementById("category-image-file-edit");
-    const newFile = fileInputEdit.files[0];
+    const isValid = validateCategory(category, "-edit");
+    if (isValid) {
+      const fileInputEdit = document.getElementById("category-image-file-edit");
+      const newFile = fileInputEdit.files[0];
 
-    if (newFile) {
-      const formDataEdit = new FormData();
-      formDataEdit.append("file", newFile);
+      if (newFile) {
+        const formDataEdit = new FormData();
+        formDataEdit.append("file", newFile);
 
-      $.ajax({
-        url: config.baseUrl + config.file.files,
-        type: "POST",
-        data: formDataEdit,
-        contentType: false,
-        processData: false,
-        beforeSend: function (xhr) {
-          var accessToken = sessionStorage.getItem("accessToken");
-          xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-        },
-        success: function (response) {
-          const imageReferenceEdit = response.reference;
-          category.imgUrl = imageReferenceEdit;
-          saveEditedCategory(category);
-        },
-        error: console.error,
-      });
-
-      // Todo - delete old File from server
+        $.ajax({
+          url: config.baseUrl + config.file.files,
+          type: "POST",
+          data: formDataEdit,
+          contentType: false,
+          processData: false,
+          beforeSend: function (xhr) {
+            var accessToken = sessionStorage.getItem("accessToken");
+            xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+          },
+          success: function (response) {
+            const imageReferenceEdit = response.reference;
+            const oldImageReference = $("#original-category-img").val();
+            category.imgUrl = imageReferenceEdit;
+            saveEditedCategory(category, oldImageReference);
+          },
+          error: console.error,
+        });
+      } else {
+        category.imgUrl = $("#original-category-img").val();
+        saveEditedCategory(category);
+      }
     } else {
-      category.imgUrl = $("#original-category-img").val();
-      saveEditedCategory(category);
+      console.error("Category is not valid.");
     }
   });
 
-  function saveEditedCategory(category) {
+  function saveEditedCategory(category, oldImageReference) {
     $.ajax({
       url: config.baseUrl + config.category.update,
       type: "PUT",
@@ -431,12 +439,18 @@ $(document).ready(function () {
       success: function (response) {
         clearToasts();
         showSuccessToast("Updated successfully!");
-        // Display the toast message
+
+        if (oldImageReference) {
+          deleteOldFile(oldImageReference);
+        }
+
         const toast = new bootstrap.Toast(
           document.getElementById("toastContainer")
         );
         toast.show();
         $("#addEditCategory").empty(); // Clear the edit product form
+        $("#searchResult").empty();
+        $(".footer").addClass("fixed-bottom");
       },
       error: console.error,
     });
@@ -446,39 +460,71 @@ $(document).ready(function () {
   $(document).on("click", ".delete", function (event) {
     const deleteId = event.target.value;
 
-    // Show the delete confirmation modal
-    $("#deleteCategoryModal").modal("show");
+    // Split the deleteId value into an array using the delimiter '|'
+    const deleteIdParts = deleteId.split("|");
 
-    // When the delete button in the modal is clicked, perform the deletion
-    $("#confirmDelete").click(function () {
-      $.ajax({
-        url: config.baseUrl + config.category.delete + deleteId,
-        type: "DELETE",
-        dataType: "json",
-        contentType: "application/json",
-        beforeSend: function (xhr) {
-          var accessToken = sessionStorage.getItem("accessToken");
-          xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-        },
-        success: function (response) {
-          console.log("Successfully deleted:", response);
-          // Show a toast message
-          showDeleteToast("Category deleted successfully.");
-          const toast = new bootstrap.Toast(
-            document.getElementById("toastContainer")
-          );
-          toast.show();
-          // Hide the modal after deletion
-          $("#deleteCategoryModal").modal("hide");
-          // Reload the page after a delay (e.g., 2 seconds)
-          setTimeout(function () {
-            location.reload();
-          }, 2000);
-        },
-        error: function (xhr, textStatus, error) {
-          console.error("Error deleting:", error);
-        },
+    // Check if there are at least two parts (product ID and image reference)
+    if (deleteIdParts.length >= 2) {
+      const productId = deleteIdParts[0];
+      const imageReference = deleteIdParts[1];
+
+      // Show the delete confirmation modal
+      $("#deleteCategoryModal").modal("show");
+
+      // When the delete button in the modal is clicked, perform the deletion
+      $("#confirmDelete").click(function () {
+        $.ajax({
+          url: config.baseUrl + config.category.delete + productId,
+          type: "DELETE",
+          dataType: "json",
+          contentType: "application/json",
+          beforeSend: function (xhr) {
+            var accessToken = sessionStorage.getItem("accessToken");
+            xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+          },
+          success: function (response) {
+            console.log("Successfully deleted:", response);
+
+            // After successfully deleting the product, delete the old file
+            if (imageReference) {
+              deleteOldFile(imageReference);
+            }
+            // Show a toast message
+            showDeleteToast("Category deleted successfully.");
+            const toast = new bootstrap.Toast(
+              document.getElementById("toastContainer")
+            );
+            toast.show();
+            // Hide the modal after deletion
+            $("#deleteCategoryModal").modal("hide");
+            // Reload the page after a delay (e.g., 2 seconds)
+            setTimeout(function () {
+              location.reload();
+            }, 2000);
+          },
+          error: function (xhr, textStatus, error) {
+            console.error("Error deleting:", error);
+          },
+        });
       });
-    });
+    }
   });
+
+  function deleteOldFile(oldImageReference) {
+    $.ajax({
+      url: config.baseUrl + config.file.delete + oldImageReference,
+      type: "DELETE",
+      beforeSend: function (xhr) {
+        var accessToken = sessionStorage.getItem("accessToken");
+        xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+      },
+      success: function (response) {
+        // Das alte Bild wurde erfolgreich gelöscht
+        console.log("Old file deleted successfully:", response);
+      },
+      error: function (xhr, textStatus, error) {
+        console.error("Error deleting old file:", error);
+      },
+    });
+  }
 });
