@@ -62,12 +62,11 @@ public class ProductController {
 
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/update")
     public ResponseEntity<?> updateProduct (@Valid @RequestBody ProductDto productDto, BindingResult bindingResult) {
 
 
-        /*Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         boolean isAdmin = authentication.getAuthorities().stream().map(GrantedAuthority::toString)
                 .anyMatch(val -> val.equals(authorityAdmin));
 
@@ -82,7 +81,7 @@ public class ProductController {
                 errorMap.put(error.getField(), error.getDefaultMessage());
             }
             return ResponseEntity.badRequest().body(errorMap);
-        }*/
+        }
 
 
         Product updatedProduct = productService.updateProduct(productDto);
