@@ -2,10 +2,13 @@ package at.technikum.webshop_backend.controller;
 
 import at.technikum.webshop_backend.model.LoginRequest;
 import at.technikum.webshop_backend.model.LoginResponse;
+import at.technikum.webshop_backend.model.User;
 import at.technikum.webshop_backend.security.JwtIssuer;
 import at.technikum.webshop_backend.security.UserPrincipal;
+import at.technikum.webshop_backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,6 +27,8 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
 
+    private final UserService userService;
+
     @PostMapping("/api/auth/login")
     public LoginResponse login(@RequestBody @Validated LoginRequest request) {
 
@@ -38,12 +43,18 @@ public class AuthController {
 
             var principal = (UserPrincipal) authentication.getPrincipal();
             var roles = principal.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
-            var token = jwtIssuer.issue(principal.getUserId(), principal.getEmail(), roles);
+            User user = userService.findById(principal.getUserId());
 
+           if (user != null && user.getIsActive()) {
+                var token = jwtIssuer.issue(principal.getUserId(), principal.getEmail(), roles);
 
-            return LoginResponse.builder()
-                    .accessToken(token)
-                    .build();
+                return LoginResponse.builder()
+                        .accessToken(token)
+                        .build();
+           } else {
+                throw new DisabledException("User inactive");
+            }
+
 
         } catch( AuthenticationException e) {
             e.printStackTrace();

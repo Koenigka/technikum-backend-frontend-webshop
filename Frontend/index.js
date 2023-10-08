@@ -1,3 +1,5 @@
+import config from './js/config.js';
+
 $(document).ready(function(){
 
     if (sessionStorage.getItem("accessToken")) {
@@ -27,7 +29,7 @@ $(document).ready(function(){
       }
     
 $.ajax({
-    url: "http://localhost:8080/api/categories/isActive/" + true,
+    url: config.baseUrl + config.category.findByActive,
     type: "GET",
     cors: true, 
     auth: window.sessionStorage.getItem('token') !== null ? window.sessionStorage.getItem("token") : "",
@@ -47,9 +49,40 @@ $.ajax({
   }
 
   function createCategory(category) {
-    const img = $(
-      `<a href="pages/shop.html?category=${category.id}"><img src="${category.imgUrl}" class="card-img-top" alt="..."></a>`
-    );
+
+
+    const baseUrl = config.baseUrl;
+    const filesEndpoint = config.file.files;
+    const imageReference = category.imgUrl; 
+  
+    const apiUrl = `${baseUrl}${filesEndpoint}/${imageReference}`;   
+
+    const img = $('<img class="card-img-top" alt="category-img">');
+
+    fetch(apiUrl)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.blob();
+    })
+    .then((blob) => {
+      const blobUrl = window.URL.createObjectURL(blob);
+      img.on('load', function() {
+        card.prepend(img);
+      });
+
+      img.on('error', function() {
+        console.error("Error loading image.");
+      });
+
+      img.attr("src", blobUrl);
+    })
+    .catch((error) => {
+      console.error("Fetch error:", error);
+    });
+
+
     const title = $(`<h5 class="card-title">${category.title}</h5>`);
     const description = $(`<p class="card-text">${category.description}</p>`);
     const button = $(
@@ -59,7 +92,6 @@ $.ajax({
     const wrapper = $(`<div class="col-12 col-md-6 col-lg-3 mb-4 ">`);
     const card = $(`<div class="card h-100" style="width: 100%;">`);
     wrapper.append(card);
-    card.append(img);
     const cardbody = $(`<div class="card-body d-flex flex-column">`);
     card.append(cardbody);
     cardbody.append(title);
