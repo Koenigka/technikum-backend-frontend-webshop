@@ -32,16 +32,12 @@ public class CartItemDto implements DataTransferObject {
     private int quantity;
     private LocalDateTime creationDate;
 
-    @Size(max = 255)
     private String title;
 
-    @Length(max = 1000)
     private String description;
 
-    @Length(max = 1000)
     private String img;
 
-    @DecimalMin(value = "0.01")
     private double price;
 
 }
