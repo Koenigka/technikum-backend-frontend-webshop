@@ -33,7 +33,7 @@ VALUES
     (true, 'Some quick example text to build on the card title and make up the bulk of the card''s content.', 'macaronshero-7716584_1920.jpg', 5.99, 30, '12 Macarons Mix', 4),
     (true, 'Some quick example text to build on the card title and make up the bulk of the card''s content.', 'matchaMacarons.jpg', 5.99, 30, 'Matcha Macarons', 4);
 
---Address
+-- Address
 INSERT INTO address (address, city, zip)
     VALUES
     ('Teststr. 1', 'Vienna', 1100);
