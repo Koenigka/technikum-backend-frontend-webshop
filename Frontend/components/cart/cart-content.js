@@ -34,17 +34,10 @@ $(document).ready(function () {
                           cartItem.title
                         }" class="cart-item-image" />
                         </div>
-                        <div class="col p-2 cart-item-info">
-                            <p>${cartItem.title}</p>
-                            <p>€  ${cartItem.price * cartItem.quantity}</p>
-                            <div class="col p-2 qty mt-5 mb-3 counter">
-                            <span class="minus bg-light fs-3">-</span>
-                            <input type="number" class="count" name="qty" value="${
-                              cartItem.quantity
-                            }" />
-                            <span class="plus bg-light fs-3">+</span>
-                        </div>
-                        <p><button class="btn btn-outline-danger btn-sm">delete</button></p>
+                        <div class="col p-4 cart-item-info">
+                            <p>${cartItem.quantity} x ${cartItem.title}</p>
+                            <p>€ ${(cartItem.price * cartItem.quantity).toFixed(2)}</p> 
+                            </div>
                         </div>
                     </div>
                     
@@ -54,17 +47,28 @@ $(document).ready(function () {
         cartContentHtml += `
             <div class="row">
                 <div class="col p-2">
-                    <p class="fs-3">Sum: </p>
+                    <p class="fs-3">Subtotal: </p>
                 </div>
                 <div class="col p-2">
-                    <p class="fs-3">$${totalPrice.toFixed(2)}</p>
+                    <p class="fs-3">€ ${totalPrice.toFixed(2)}</p>
                 </div>
             </div>
         `;
 
+        cartContentHtml += `
+        <div class="row">
+            <div class="col">
+              <button class="btn btn-warning text-white shadow"><a href="shop.html" class="text-white text-decoration-none">back to shop</a>
+               </button>
+            </div>
+            <div class="col">
+              <button class="btn btn-warning text-white shadow"><a href="#" class="text-white text-decoration-none">show basket</button>
+            </div>
+          </div>
+          `;
         $(".offcanvas-body").html(cartContentHtml);
 
-        fetchAndDisplayCartItemImages(data); 
+        fetchAndDisplayCartItemImages(data);
       },
       error: function (error) {
         console.error("Error loading cart content: " + error);

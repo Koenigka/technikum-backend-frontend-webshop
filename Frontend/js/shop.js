@@ -181,8 +181,7 @@ $(document).ready(function () {
           data: JSON.stringify(cartItemDto), 
           success: function (response) {
             
-            alert(`"${product.title}" wurde zum Warenkorb hinzugefügt!`);
-            $("#cartModal").modal("show");
+            alert(`"${product.title}" added to basket!`);
           },
           error: function (error) {
             console.error(error);
