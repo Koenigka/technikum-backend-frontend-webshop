@@ -25,9 +25,16 @@ category: {
 
 },
 user: {
+  search: "/users/search",
+  findById: "/users/", 
+  update: "/users/update",
+  delete: "/users/delete/",
 
 },
-cartitem: {
+
+cartItem: {
+  addToCart: "/cart/add",
+  myCart: "/cart/myCart",
 
 },
 order: {

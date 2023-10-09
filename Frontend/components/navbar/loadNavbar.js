@@ -18,7 +18,7 @@ $(document).ready(function () {
       var userRole = JSON.parse(sessionStorage.getItem("userRole"));
 
       // Überprüfen, ob der Benutzer ein Administrator ist
-      if (userRole.includes("USER")) {
+      if (userRole.includes("ROLE_USER")) {
         // Admin-Link verstecken
         $(".admin-link").hide();
       } else {
@@ -49,6 +49,7 @@ $(document).ready(function () {
     }
   });
 });
+
 
 // Logout-Funktion
 function logout() {
