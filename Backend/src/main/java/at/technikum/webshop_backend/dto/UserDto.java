@@ -51,6 +51,6 @@ public class UserDto implements DataTransferObject {
 
     @NotNull
     private Boolean isActive;
-    private String roles = "USER";
+    private String roles = "ROLE_USER";
 
 }

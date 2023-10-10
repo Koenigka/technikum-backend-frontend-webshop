@@ -80,7 +80,7 @@ public class User implements ConvertableToDto<UserDto>, Cloneable{
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         this.password = passwordEncoder.encode(password);
 
-        System.out.println("Password: " + this.password);
+        //System.out.println("Password: " + this.password);
     }
 
     public Boolean getIsActive() {
