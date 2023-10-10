@@ -14,7 +14,6 @@ $(document).ready(function () {
       password: $("#password1").val(),
       password2: $("#password2").val(),
       isActive: "true",
-      admin: "false",
     };
     // Clear error messages
     $(".input-error").text("");

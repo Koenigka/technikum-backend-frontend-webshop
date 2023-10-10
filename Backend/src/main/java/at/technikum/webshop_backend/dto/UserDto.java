@@ -24,23 +24,32 @@ public class UserDto implements DataTransferObject {
 
     private String title;
 
+    @NotBlank
+    @Length(min = 2, max = 80)
     private String firstname;
 
+    @NotBlank
+    @Length(min = 2, max = 80)
     private String lastname;
 
     private Long address_id;
+
     private String address;
     private String city;
     private String state;
     private int zip;
 
+    @NotBlank
+    @Length(min = 3, max = 40)
     private String username;
+
 
     private String password;
 
-
+    @Email
     private String email;
 
+    @NotNull
     private Boolean isActive;
     private String roles = "USER";
 

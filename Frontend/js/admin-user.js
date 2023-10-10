@@ -288,6 +288,8 @@ $(document).on("click", ".editUser", function (event) {
     console.log("User active: " + user.isActive);
     console.log("User pw: " + user.password);
 
+    console.log(user.roles)
+
     const editUser = $(`
     <div class="container rounded my-5 border border-warning bg-light shadow-lg">
     <p class="fs-4 fw-bold pt-2">Edit User</p>
@@ -448,14 +450,14 @@ $(document).on("click", ".editUser", function (event) {
               <div class="form-group">
                 <label for="role" class="fs-5">Role</label>
                 <input type="hidden" id="role-edit" name="role" value="${
-                  user.role
+                  user.roles
                 }" />
                 <select class="form-select fs-5" id="role-select-edit">
-                  <option value="USER" ${
-                    user.role === "USER" ? "selected" : ""
+                  <option value="ROLE_USER" ${
+                    user.roles === "ROLE_USER" ? "selected" : ""
                   }>User</option>
-                  <option value="ADMIN" ${
-                    user.role === "ADMIN" ? "selected" : ""
+                  <option value="ROLE_ADMIN" ${
+                    user.roles === "ROLE_ADMIN" ? "selected" : ""
                   }>Admin</option>
                 </select>
               </div>
@@ -514,7 +516,7 @@ $(document).on("click", "#saveEditUser", function (event) {
     email: $("#email-edit").val(),
     username: $("#username-edit").val(),
     isActive: isActive,
-    role: $("#role-select-edit").val(),
+    roles: $("#role-select-edit").val(),
   };
 
   // Das Passwort im user-Objekt nur setzen, wenn es nicht null ist

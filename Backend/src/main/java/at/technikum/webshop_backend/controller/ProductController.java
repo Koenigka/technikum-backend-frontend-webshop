@@ -4,17 +4,22 @@ package at.technikum.webshop_backend.controller;
 import at.technikum.webshop_backend.dto.ProductDto;
 import at.technikum.webshop_backend.model.Product;
 import at.technikum.webshop_backend.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/products")
@@ -27,42 +32,63 @@ public class ProductController {
         this.productService = productService;
     }
 
-    private static final String authorityAdmin = "ADMIN";
+    private static final String authorityAdmin = "ROLE_ADMIN";
 
     @PostMapping("/create")
-    public ResponseEntity<ProductDto> createProduct (@RequestBody ProductDto productDto) {
+    public ResponseEntity<?> createProduct (@Valid @RequestBody ProductDto productDto, BindingResult bindingResult) {
 
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         boolean isAdmin = authentication.getAuthorities().stream().map(GrantedAuthority::toString)
                 .anyMatch(val -> val.equals(authorityAdmin));
 
-        if(isAdmin) {
-
-            Product createdProduct = productService.createProduct(productDto);
-            ProductDto newProduct = createdProduct.convertToDto();
-            return ResponseEntity.status(HttpStatus.CREATED).body(newProduct);
-
-        } else {
+        if (!isAdmin) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
+
+        if (bindingResult.hasErrors()) {
+            List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+            Map<String, String> errorMap = new HashMap<>();
+            for (FieldError error : fieldErrors) {
+                errorMap.put(error.getField(), error.getDefaultMessage());
+            }
+            return ResponseEntity.badRequest().body(errorMap);
+        }
+
+        Product createdProduct = productService.createProduct(productDto);
+        ProductDto newProduct = createdProduct.convertToDto();
+        return ResponseEntity.status(HttpStatus.CREATED).body(newProduct);
+
 
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/update")
-    public ResponseEntity<ProductDto> updateProduct (@RequestBody ProductDto productDto) {
+    public ResponseEntity<?> updateProduct (@Valid @RequestBody ProductDto productDto, BindingResult bindingResult) {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        /*Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         boolean isAdmin = authentication.getAuthorities().stream().map(GrantedAuthority::toString)
                 .anyMatch(val -> val.equals(authorityAdmin));
 
-        if(isAdmin) {
-            Product updatedProduct = productService.updateProduct(productDto);
+        if (!isAdmin) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }*/
+
+        if (bindingResult.hasErrors()) {
+            List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+            Map<String, String> errorMap = new HashMap<>();
+            for (FieldError error : fieldErrors) {
+                errorMap.put(error.getField(), error.getDefaultMessage());
+            }
+            return ResponseEntity.badRequest().body(errorMap);
+        }
+
+
+        Product updatedProduct = productService.updateProduct(productDto);
         ProductDto updatedProductDto = updatedProduct.convertToDto();
         return ResponseEntity.ok(updatedProductDto);
-        } else {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+
     }
 
     @DeleteMapping("/delete/{id}")

@@ -2,8 +2,10 @@ package at.technikum.webshop_backend.controllerTest;
 
 import at.technikum.webshop_backend.controller.AuthController;
 import at.technikum.webshop_backend.model.LoginRequest;
+import at.technikum.webshop_backend.model.User;
 import at.technikum.webshop_backend.security.JwtIssuer;
 import at.technikum.webshop_backend.security.UserPrincipal;
+import at.technikum.webshop_backend.service.UserService;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,9 +44,12 @@ public class AuthControllerTest {
     @Mock
     private JwtIssuer jwtIssuer;
 
+    @Mock
+    private UserService userService;
+
     @BeforeEach
     public void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(new AuthController(jwtIssuer, authenticationManager)).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(new AuthController(jwtIssuer, authenticationManager, userService)).build();
     }
 
     @Test
@@ -66,6 +71,12 @@ public class AuthControllerTest {
         // Mock the JwtIssuer behavior
         String token = generateTestToken();
         when(jwtIssuer.issue(any(), any(), any())).thenReturn(token);
+
+        // Mock the UserService behavior
+        User user = new User();
+        user.setIsActive(true);
+        when(userService.findById(any())).thenReturn(user);
+
 
         LoginRequest request = new LoginRequest();
         request.setEmail("test@example.com");

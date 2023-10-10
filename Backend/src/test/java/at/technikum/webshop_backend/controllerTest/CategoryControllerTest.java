@@ -73,7 +73,7 @@ public class CategoryControllerTest {
 
 
     @Test
-    @WithMockUser(authorities = "ADMIN")
+    @WithMockUser(authorities = "ROLE_ADMIN")
     public void testFindByFiltersAsAdmin() throws Exception {
         Map<String, String> filters = new HashMap<>();
         filters.put("filterKey", "filterValue");

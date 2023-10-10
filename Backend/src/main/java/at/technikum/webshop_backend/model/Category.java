@@ -6,6 +6,7 @@ import at.technikum.webshop_backend.utils.ConvertableToDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,16 +30,16 @@ public class Category implements ConvertableToDto<CategoryDto>, Cloneable {
     private long id;
 
     @NotBlank
-    @Length(min = 2, max = 40)
+    @Size(max = 255)
     private String title;
 
     @NotBlank
-    @Length(min = 2, max = 200)
+    @Length(max = 1000)
     private String description;
 
 
     @NotBlank
-    @Length(min = 2, max = 100)
+    @Length(max = 1000)
     private String imgUrl;
 
     @NotNull
