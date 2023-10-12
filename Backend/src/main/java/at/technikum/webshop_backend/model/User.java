@@ -64,6 +64,7 @@ public class User implements ConvertableToDto<UserDto>, Cloneable{
     @Column(name = "isActive")
     private Boolean isActive;
 
+    // TODO - Implement a List of Roles instead of a single role
     private String roles = "USER";
 
 
@@ -78,7 +79,14 @@ public class User implements ConvertableToDto<UserDto>, Cloneable{
     public void setPassword(String password) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         this.password = passwordEncoder.encode(password);
+
+        System.out.println("Password: " + this.password);
     }
+
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
 
     @Override
     public UserDto convertToDto() {

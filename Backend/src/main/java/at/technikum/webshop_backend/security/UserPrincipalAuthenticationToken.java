@@ -5,6 +5,10 @@ import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 
+/**
+ * Custom authentication token used to represent a user after successful authentication.
+ * It contains the user's principal details and authorities.
+ */
 public class UserPrincipalAuthenticationToken extends AbstractAuthenticationToken {
 
 

@@ -1,3 +1,5 @@
+import config from "./config.js";
+
 $(document).ready(function () {
   const params = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop),
@@ -24,7 +26,7 @@ $(document).ready(function () {
 
   //Buttons mit Kategorien laden
   $.ajax({
-    url: "http://localhost:8080/api/categories/isActive/" + true,
+    url: config.baseUrl + config.category.findByActive,
     type: "GET",
     cors: true,
     success: function (categories) {
@@ -55,9 +57,8 @@ $(document).ready(function () {
   }
 
   if (value == null) {
-    //Alle Produkte laden
     $.ajax({
-      url: "http://localhost:8080/api/products/isActive/" + true,
+      url: config.baseUrl + config.product.findByActive,
       type: "GET",
       cors: true,
       success: function (products) {
@@ -70,9 +71,13 @@ $(document).ready(function () {
   }
 
   if (value != null) {
+    const apiUrl = `${config.baseUrl}${config.product.findByCategory(
+      value,
+      true
+    )}`;
+
     $.ajax({
-      url:
-        "http://localhost:8080/api/products/byCategory/" + value + "/" + true,
+      url: apiUrl,
       type: "GET",
       cors: true,
       success: function (products) {
@@ -85,6 +90,7 @@ $(document).ready(function () {
   }
 
   function addProducts(products) {
+
     const allProducts = $("#products");
     allProducts.empty();
     for (let product of products) {
@@ -93,9 +99,6 @@ $(document).ready(function () {
   }
 
   function createProduct(product) {
-    const img = $(
-      `<a  href="productdetail.html?product=${product.id}"><img src="../${product.img}" class="card-img-top img-fluid" alt="..."></a>`
-    );
 
     const title = $(
       `<a href="productdetail.html?product=${product.id}" class="text-decoration-none text-warning"><h5 class="card-title text-warning">${product.title}</h5></a>`
@@ -108,7 +111,38 @@ $(document).ready(function () {
     const wrapper = $(`<div class="col-12 col-md-6 col-lg-3 mb-4 ">`);
     const card = $(`<div class="card h-100">`);
     wrapper.append(card);
-    card.append(img);
+
+    const anchor = $(
+      `<a href="productdetail.html?product=${product.id}" class="text-decoration-none"></a>`
+    );
+
+    const img = $('<img class="card-img-top img-fluid" alt="product-img">');
+
+    card.append(anchor);
+    anchor.append(img);
+    const baseUrl = config.baseUrl;
+    const filesEndpoint = config.file.files;
+    const imageReference = product.img;
+    const apiUrl = `${baseUrl}${filesEndpoint}/${imageReference}`;
+
+    fetch(apiUrl)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.blob();
+      })
+      .then((blob) => {
+        //console.log('Bild erfolgreich geladen'); 
+
+        const blobUrl = window.URL.createObjectURL(blob);       
+        
+        img.attr("src", blobUrl);
+      })
+      .catch((error) => {
+        console.error("Fetch error:", error);
+      });
+
     const cardbody = $(`<div class="card-body d-flex flex-column">`);
     card.append(cardbody);
     cardbody.append(title);
@@ -117,18 +151,45 @@ $(document).ready(function () {
     cardbody.append(`</div>`);
     wrapper.append(`</div>`);
 
-    // Add a click event to the button that checks if the user is logged in before redirecting
+
     button.on("click", function () {
       var accessToken = sessionStorage.getItem("accessToken");
       if (!accessToken) {
-        // User is not logged in, redirect to login page with a message
-        window.location.href =
-          "login.html?message=If you are not logged in, you can not proceed Please first log in and then you can continue your action.";
+       // User is not logged in, redirect to login page with a message
+       window.location.href =
+       "login.html?message=If you are not logged in, you can not proceed Please first log in and then you can continue your action.";
       } else {
-        //***** Implement the logic to add the product to the cart here ********
-        alert(`"${product.title}" added to cart!`);
+        const productId = product.id;
+        const quantity = 1; 
+    
+        const cartItemDto = {
+          userId: sessionStorage.getItem("userId"),
+          productId: productId,
+          quantity: quantity,
+        };
+    
+        
+        $.ajax({
+          url: config.baseUrl + config.cartItem.addToCart, 
+          type: "POST",
+          dataType: "json",
+          contentType: "application/json",
+          beforeSend: function (xhr) {
+            var accessToken = sessionStorage.getItem("accessToken");
+            xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+          }, 
+          data: JSON.stringify(cartItemDto), 
+          success: function (response) {
+            
+            alert(`"${product.title}" added to basket!`);
+          },
+          error: function (error) {
+            console.error(error);
+          },
+        });
       }
     });
+    
 
     return wrapper;
   }
@@ -136,9 +197,15 @@ $(document).ready(function () {
   //Clickfunction Button by value (id)
   $(document).on("click", ".getProductsById", function (event) {
     console.log("value clicked");
-    id = $(this).attr("value");
+    var id = $(this).attr("value");
+
+    const apiUrl = `${config.baseUrl}${config.product.findByCategory(
+      id,
+      true
+    )}`;
+
     $.ajax({
-      url: "http://localhost:8080/api/products/byCategory/" + id + "/" + true,
+      url: apiUrl,
       type: "GET",
       cors: true,
       success: function (products) {
@@ -159,7 +226,7 @@ $(document).ready(function () {
   $(document).on("click", "#allCategories", function (event) {
     console.log("allCategories clicked");
     $.ajax({
-      url: "http://localhost:8080/api/products/isActive/" + true,
+      url: config.baseUrl + config.product.findByActive,
       type: "GET",
       cors: true,
       success: function (products) {
