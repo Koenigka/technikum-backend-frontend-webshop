@@ -5,6 +5,7 @@ import at.technikum.webshop_backend.dto.CustomerOrderDto;
 import at.technikum.webshop_backend.enums.Status;
 import at.technikum.webshop_backend.model.CustomerOrder;
 import at.technikum.webshop_backend.model.Product;
+
 import at.technikum.webshop_backend.security.UserPrincipal;
 import at.technikum.webshop_backend.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,6 +92,7 @@ public class OrderController {
 
         return ResponseEntity.ok(userOrder.convertToDto());
     }
+  
     @GetMapping("/search")
     public ResponseEntity<List<CustomerOrderDto>> searchOrders(@RequestBody Map<String, String> filters) {
 

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en"> 
 <head>
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -20,29 +19,42 @@
   <script src="/components/footer/loadFooter.js" defer></script>
   <script type="module" src="../js/shop.js" defer></script>
 </head>
-
-<body>
-  <div id="navbarContainer"></div>
+  <body>
+    <div id="navbarContainer"></div>
   <div id="basketContainer"></div>
 
-  <div id="loginSuccessMessage" class="alert alert-success mt-3 mx-5"
-    style="display: none; font-weight: bold; font-size: large; color: green"></div>
-  <div class="container">
-    <div class="dropdown row mt-4">
-      <button class="col-md-12 mb-2 btn btn-warning text-white fs-4 dropdown-toggle" type="button"
-        data-bs-toggle="dropdown" aria-expanded="false">
-        Check our Categories
-      </button>
-      <ul class="dropdown-menu dropdown-menu-shop" id="categories"></ul>
+
+    <div
+      id="loginSuccessMessage"
+      class="alert alert-success mt-3 mx-5"
+      style="display: none; font-weight: bold; font-size: large; color: green"
+    ></div>
+    <div class="container">
+      <div class="dropdown row mt-4">
+        <button
+          class="col-md-12 mb-2 btn btn-warning text-white fs-4 dropdown-toggle"
+          type="button"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          Check our Categories
+        </button>
+        <ul class="dropdown-menu dropdown-menu-shop" id="categories"></ul>
+      </div>
     </div>
-  </div>
 
-  <div class="container my-3">
-    <div class="row" id="products"></div>
-  </div>
 
-  <div id="footerContainer"></div>
+    <div class="container my-3">
+      <div class="row" id="products"></div>
+    </div>
 
-</body>
+    <!-- Toast Notification -->
+    <div
+      id="toastContainer"
+      class="toast-container position-absolute p-3 top-0 end-0"
+    ></div>
 
+    <div id="footerContainer"></div>
+    <script src="/js/cart-content.js" defer></script>
+  </body>
 </html>

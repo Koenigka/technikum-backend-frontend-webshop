@@ -107,6 +107,14 @@ $(document).ready(function () {
           var userName = decodedToken.e;
           sessionStorage.setItem("userName", userName);
 
+          // Extract and store additional user information
+          var firstName = decodedToken.firstName; // Replace with the actual field name in your token
+          var lastName = decodedToken.lastName; // Replace with the actual field name in your token
+          var address = decodedToken.address; // Replace with the actual field name in your token
+
+          sessionStorage.setItem("firstName", firstName);
+          sessionStorage.setItem("lastName", lastName);
+          sessionStorage.setItem("address", address);
           var userRole = decodedToken.a; // Das gesamte Array der Benutzerrollen
 
           // Benutzerrolle im Session Storage speichern
