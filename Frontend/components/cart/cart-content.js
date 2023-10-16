@@ -12,7 +12,7 @@ $(document).ready(function () {
     var totalPrice = 0;
 
     $.ajax({
-      url: "http://localhost:8080/api/cart/myCart" + "?userId=" + userId,
+      url: "http://localhost:8080/api/cart/myCart",
       type: "GET",
       beforeSend: function (xhr) {
         xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
