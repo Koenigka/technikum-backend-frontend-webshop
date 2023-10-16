@@ -5,6 +5,7 @@ import at.technikum.webshop_backend.model.LoginResponse;
 import at.technikum.webshop_backend.model.User;
 import at.technikum.webshop_backend.security.JwtIssuer;
 import at.technikum.webshop_backend.security.UserPrincipal;
+import at.technikum.webshop_backend.service.AuthService;
 import at.technikum.webshop_backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,6 +34,9 @@ public class AuthController {
 
     private final UserService userService;
 
+    private final AuthService authService;
+
+
     /**
      * Handles user login requests. It authenticates the user and generates an access token upon successful login.
      *
@@ -41,35 +45,7 @@ public class AuthController {
      */
     @PostMapping("/api/auth/login")
     public LoginResponse login(@RequestBody @Validated LoginRequest request) {
-
-        try {
-            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            var authentication = authenticationManager.authenticate(
-
-                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-            );
-
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            var principal = (UserPrincipal) authentication.getPrincipal();
-            var roles = principal.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
-            User user = userService.findById(principal.getUserId());
-
-           if (user != null && user.getIsActive()) {
-                var token = jwtIssuer.issue(principal.getUserId(), principal.getEmail(), roles);
-
-                return LoginResponse.builder()
-                        .accessToken(token)
-                        .build();
-           } else {
-                throw new DisabledException("User inactive");
-            }
-
-
-        } catch( AuthenticationException e) {
-            e.printStackTrace();
-        }
-
-        return null;
+        return authService.login(request.getEmail(), request.getPassword());
     }
+
 }
