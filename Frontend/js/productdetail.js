@@ -114,6 +114,10 @@ $(document).ready(function () {
         success: function (response) {
           
           alert(`"${product.title}" added to basket!`);
+
+          var userId = sessionStorage.getItem("userId");
+            var accessToken = sessionStorage.getItem("accessToken");
+            loadCartContent(userId, accessToken);
         },
         error: function (error) {
           console.error(error);
