@@ -4,15 +4,8 @@
       <i class="fa-solid fa-cookie-bite logo"></i> CrazyCookie
     </a>
 
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarNav"
-      aria-controls="navbarNav"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -25,78 +18,65 @@
 
       <ul class="navbar-nav ms-auto">
         <li class="nav-item mx-5 login-link">
-          <a class="nav-link text-white fs-2" href="../pages/login.html"
-            >Login</a
-          >
+          <a class="nav-link text-white fs-2" href="../pages/login.html">Login</a>
         </li>
         <li class="nav-item mx-5 signup-link">
-          <a class="nav-link text-white fs-2" href="../pages/registration.html"
-            >Sign Up</a
-          >
+          <a class="nav-link text-white fs-2" href="../pages/registration.html">Sign Up</a>
         </li>
         <li class="nav-item dropdown">
-          <a
-            class="nav-link text-white fs-2 dropdown-toggle"
-            href="#"
-            data-bs-toggle="dropdown"
-            ><i class="fa-solid fa-user fs-2 text-white"></i>
-            <span id="username"></span
-          ></a>
+          <a class="nav-link text-white fs-2 dropdown-toggle" href="#" data-bs-toggle="dropdown"><i
+              class="fa-solid fa-user fs-2 text-white"></i>
+            <span id="username"></span></a>
           <ul class="dropdown-menu">
             <li>
-              <a class="dropdown-item text-warning fs-2" id="logout" href="#"
-                >Logout</a
-              >
+              <a class="dropdown-item text-warning fs-2" id="logout" href="#">Logout</a>
             </li>
           </ul>
         </li>
 
         <li class="nav-item dropdown admin-link">
-          <a
-            class="nav-link dropdown-toggle text-white fs-2"
-            data-bs-toggle="dropdown"
-            href="#"
-            ><i class="fa-solid fa-user-tie"></i> AdminMenu</a
-          >
+          <a class="nav-link dropdown-toggle text-white fs-2" data-bs-toggle="dropdown" href="#"><i
+              class="fa-solid fa-user-tie"></i> AdminMenu</a>
           <ul class="dropdown-menu">
             <li>
-              <a class="dropdown-item text-warning fs-2" href="/pages/admin-user.html"
-                >Users</a
-              >
+              <a class="dropdown-item text-warning fs-2" href="/pages/admin-user.html">Users</a>
             </li>
             <li>
-              <a
-                class="dropdown-item text-warning fs-2"
-                href="/pages/admin-product.html"
-                >Products</a
-              >
+              <a class="dropdown-item text-warning fs-2" href="/pages/admin-product.html">Products</a>
             </li>
             <li>
-              <a
-                class="dropdown-item text-warning fs-2"
-                href="/pages/admin-category.html"
-                >Categories</a
-              >
+              <a class="dropdown-item text-warning fs-2" href="/pages/admin-category.html">Categories</a>
             </li>
             <li>
-              <a class="dropdown-item text-warning fs-2" href="/pages/admin-order.html"
-                >Orders</a
-              >
+              <a class="dropdown-item text-warning fs-2" href="/pages/admin-order.html">Orders</a>
             </li>
           </ul>
         </li>
 
         <li class="nav-item me-5">
-          <a
-            class="nav-link text-white fs-2"
-            data-bs-toggle="offcanvas"
-            href="#offcanvasNavbar"
-            role="button"
-            aria-controls="offcanvasNavbar"
-            ><i class="fa-solid fa-basket-shopping fs-2 text-white"></i
-          ></a>
+          <a class="nav-link text-white fs-2 nav-link-basket" href="#" role="button" aria-controls="customModal">
+            <i class="fa-solid fa-basket-shopping fs-2 text-white"></i>
+            <span id="cartInfo"> € 0.00</span>
+          </a>
         </li>
+        
       </ul>
     </div>
   </div>
 </nav>
+
+<!-- modal for cart -->
+<div class="modal fade" id="customModal" tabindex="-1" aria-labelledby="customModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <!-- modal content goes here -->
+      <div class="modal-header">
+        <h5 class="modal-title" id="customModalLabel">My Basket</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- cart content goes here -->
+      </div>
+    </div>
+  </div>
+</div>

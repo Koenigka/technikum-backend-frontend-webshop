@@ -1,3 +1,5 @@
+import config from "./config.js";
+
 // Function to close the edit window
 function closeEditWindow() {
   const addEditUser = $("#addEditUser");
@@ -191,7 +193,7 @@ $(document).on("click", "#showSearchUser", function (event) {
   closeEditWindow();
 
   $.ajax({
-    url: "http://localhost:8080/api/users/search",
+    url: config.baseUrl + config.user.search,
     type: "POST",
     dataType: "json",
     contentType: "application/json",
@@ -264,7 +266,7 @@ $(document).on("click", ".editUser", function (event) {
   const id = event.target.value;
 
   $.ajax({
-    url: "http://localhost:8080/api/users/" + id,
+    url: config.baseUrl + config.user.findById + id,
     type: "GET",
     dataType: "json",
     contentType: "application/json",
@@ -540,7 +542,7 @@ $(document).on("click", "#saveEditUser", function (event) {
         // Proceed with editing if no validation errors
 
         $.ajax({
-          url: "http://localhost:8080/api/users/update",
+          url: config.baseUrl + config.user.update,
           type: "PUT",
           dataType: "json",
           contentType: "application/json",
@@ -580,7 +582,7 @@ $(document).on("click", ".delete", function (event) {
   // When the delete button in the modal is clicked, perform the deletion
   $("#confirmDelete").click(function () {
     $.ajax({
-      url: "http://localhost:8080/api/users/delete/" + deleteId,
+      url: config.baseUrl + config.user.delete  + deleteId,
       type: "DELETE",
       dataType: "text",
       contentType: "application/json",

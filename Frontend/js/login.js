@@ -113,6 +113,12 @@ $(document).ready(function () {
           sessionStorage.setItem("userRole", JSON.stringify(userRole));
           console.log("UserRoleLogIn:", userRole);
 
+
+          var userId = decodedToken.sub;
+          // Benutzer-ID im Session Storage speichern
+          sessionStorage.setItem("userId", userId);
+          console.log("userId: " + userId);
+
           //Zugriff auf den Token über: var accessToken = sessionStorage.getItem("accessToken");
           sessionStorage.setItem("loginMessage", "Login successfull!");
           if (rememberEmail) {
