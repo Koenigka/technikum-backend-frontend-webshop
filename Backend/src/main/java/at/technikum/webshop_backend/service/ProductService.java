@@ -28,6 +28,9 @@ public class ProductService {
         this.categoryService = categoryService;
     }
 
+    public void save(Product product) {
+        productRepository.save(product);
+    }
 
 
     public Product createProduct(ProductDto productDto) {
@@ -124,7 +127,7 @@ public class ProductService {
     }
 
 
-        private List<ProductDto> convertToProductDtoList(List<Product> products) {
+        public List<ProductDto> convertToProductDtoList(List<Product> products) {
         return products.stream()
                 .map(Product::convertToDto)
                 .collect(Collectors.toList());

@@ -187,7 +187,6 @@ $(document).on("click", "#showSearchUser", function (event) {
   }
 
   const filterJSON = JSON.stringify(filters);
-  console.log(filterJSON);
 
   // Close the edit window if it's open
   closeEditWindow();
@@ -286,11 +285,7 @@ $(document).on("click", ".editUser", function (event) {
   const addEditUser = $("#addEditUser");
   addEditUser.empty();
 
-  function editUser(user) {
-    console.log("User active: " + user.isActive);
-    console.log("User pw: " + user.password);
-
-    console.log(user.roles)
+  function editUser(user) {   
 
     const editUser = $(`
     <div class="container rounded my-5 border border-warning bg-light shadow-lg">
@@ -494,18 +489,17 @@ $(document).on("click", ".editUser", function (event) {
   $(".footer").removeClass("fixed-bottom");
 });
 
-let isValid; // Declare isValid in a wider scope
+let isValid; 
 let isValidAddress;
 // Bearbeiteten Benutzer speichern
 $(document).on("click", "#saveEditUser", function (event) {
-  isActive = $("#status").is(":checked") ? true : false;
+  var isActive = $("#status").is(":checked") ? true : false;
 
   // Passwort aus dem Eingabefeld abrufen
   const passwordInput = $("#password-edit").val();
   // Überprüfen, ob das Passwort einen Wert hat
   const password = passwordInput.trim() !== "" ? passwordInput : null;
 
-  console.log("passwort: " + password);
   const user = {
     id: $("#user-id-edit").val(),
     title: $("#title-edit").val(),
@@ -526,7 +520,6 @@ $(document).on("click", "#saveEditUser", function (event) {
     user.password = password;
   }
 
-  console.log("user passwort: " + user.password);
 
   // Call the validation function
   validateUser(user, validAddresses)

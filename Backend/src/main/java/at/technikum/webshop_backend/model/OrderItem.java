@@ -1,6 +1,9 @@
 package at.technikum.webshop_backend.model;
 
 
+import at.technikum.webshop_backend.dto.CartItemDto;
+import at.technikum.webshop_backend.dto.OrderItemDto;
+import at.technikum.webshop_backend.utils.ConvertableToDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -13,7 +16,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderItem {
+public class OrderItem implements ConvertableToDto<OrderItemDto>, Cloneable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -31,4 +34,17 @@ public class OrderItem {
     private int quantity;
 
     private Double price;
+
+    public OrderItemDto convertToDto() {
+        OrderItemDto orderItemDto = new OrderItemDto();
+        orderItemDto.setId(id);
+        orderItemDto.setCustomerOrderId(customerOrder.getId());
+        orderItemDto.setQuantity(quantity);
+        orderItemDto.setPrice(price);
+        orderItemDto.setProductId(product.getId());
+        orderItemDto.setTitle(product.getTitle());
+        orderItemDto.setDescription(product.getDescription());
+        orderItemDto.setImg(product.getImg());
+        return orderItemDto;
+    }
 }

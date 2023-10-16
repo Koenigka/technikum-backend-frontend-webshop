@@ -1,17 +1,22 @@
 package at.technikum.webshop_backend.service;
 
+import at.technikum.webshop_backend.dto.CustomerOrderDto;
+import at.technikum.webshop_backend.dto.ProductDto;
 import at.technikum.webshop_backend.enums.Status;
-import at.technikum.webshop_backend.model.CartItem;
-import at.technikum.webshop_backend.model.CustomerOrder;
-import at.technikum.webshop_backend.model.OrderItem;
-import at.technikum.webshop_backend.model.User;
+import at.technikum.webshop_backend.model.*;
 import at.technikum.webshop_backend.repository.OrderItemRepository;
 import at.technikum.webshop_backend.repository.OrderRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -20,14 +25,20 @@ public class OrderService {
     private CartService cartService;
     private UserService userService;
 
+    private ProductService productService;
+
     private OrderItemRepository orderItemRepository;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @Autowired
-    public OrderService(OrderRepository orderRepository, CartService cartService, UserService userService, OrderItemRepository orderItemRepository) {
+    public OrderService(OrderRepository orderRepository, CartService cartService, UserService userService, OrderItemRepository orderItemRepository, ProductService productService) {
         this.orderRepository = orderRepository;
         this.cartService = cartService;
         this.userService = userService;
         this.orderItemRepository = orderItemRepository;
+        this.productService = productService;
     }
 
     public CustomerOrder createOrderFromCart(Long userId) {
@@ -55,19 +66,14 @@ public class OrderService {
 
 
         for (CartItem cartItem : cartItems) {
+            deductProductQuantity(cartItem.getProduct().getId(), cartItem.getQuantity());
             OrderItem orderItem = new OrderItem();
             orderItem.setCustomerOrder(newCustomerOrder);
             orderItem.setProduct(cartItem.getProduct());
-            //TODO Check quantity:
             orderItem.setQuantity(cartItem.getQuantity());
             orderItem.setPrice(cartItem.getProduct().getPrice());
             orderItemRepository.save(orderItem);
-
             newCustomerOrder.getOrderItems().add(orderItem);
-
-            System.out.println(orderItem.getId());
-
-
 
         }
 
@@ -77,4 +83,144 @@ public class OrderService {
 
         return newCustomerOrder;
     }
+
+
+    public Map<Long, Integer> checkProductQuantities(Long userId) {
+
+        List<CartItem> cartItems = cartService.viewCart(userId);
+
+        Map<Long, Integer> insufficientQuantities = new HashMap<>();
+
+        for (CartItem cartItem : cartItems) {
+            Long productId = cartItem.getProduct().getId();
+            int requestedQuantity = cartItem.getQuantity();
+
+            int availableQuantity = getAvailableProductQuantity(productId);
+
+            if (availableQuantity < requestedQuantity) {
+                insufficientQuantities.put(cartItem.getProduct().getId(),  availableQuantity);
+            }
+        }
+
+        return insufficientQuantities;
+    }
+
+
+    public int getAvailableProductQuantity(Long productId) {
+        Optional<Product> optionalProduct = productService.findById(productId);
+
+        if (optionalProduct.isPresent()) {
+            Product product = optionalProduct.get();
+            return product.getStock();
+        } else {
+            throw new EntityNotFoundException("Product not found with ID: " + productId);
+        }
+    }
+
+
+
+    public void deductProductQuantity(Long productId, int quantityToDeduct) {
+        Optional<Product> optionalProduct = productService.findById(productId);
+
+        if (optionalProduct.isPresent()) {
+            Product product = optionalProduct.get();
+
+            if (product.getStock() >= quantityToDeduct) {
+                product.setStock(product.getStock() - quantityToDeduct);
+
+                productService.save(product);
+            } else {
+                throw new IllegalArgumentException("Insufficient product quantity for product with ID: " + productId);
+            }
+        } else {
+            throw new EntityNotFoundException("Product not found with ID: " + productId);
+        }
+    }
+
+
+    public List<CustomerOrder> getUserOrdersByUserId(Long userId) {
+        User user = userService.findById(userId);
+
+        if (user != null) {
+            return orderRepository.findByUser(user);
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    public CustomerOrder getUserOrderByOrderId(Long orderId) {
+        Optional<CustomerOrder> order = orderRepository.findById(orderId);
+        return order.orElse(null);
+    }
+
+    public List<CustomerOrder> findOrdersByFilters(Map<String, String> filters) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<CustomerOrder> query = criteriaBuilder.createQuery(CustomerOrder.class);
+        Root<CustomerOrder> root = query.from(CustomerOrder.class);
+
+        Predicate predicate = criteriaBuilder.conjunction();
+
+        String userEmail = filters.get("userEmail");
+        if (userEmail != null && !userEmail.isEmpty()) {
+            Join<CustomerOrder, User> userJoin = root.join("user");
+            predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(userJoin.get("email"), userEmail));
+        }
+
+        String userName = filters.get("userName");
+        if (userName != null && !userName.isEmpty()) {
+            Join<CustomerOrder, User> userJoin = root.join("user");
+            predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(userJoin.get("username"), userName));
+        }
+
+        String orderIdStr = filters.get("orderId");
+        if (orderIdStr != null && !orderIdStr.isEmpty()) {
+            Long orderId = Long.parseLong(orderIdStr);
+            predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("id"), orderId));
+        }
+
+        String orderDateStr = filters.get("orderDate");
+        if (orderDateStr != null && !orderDateStr.isEmpty()) {
+            LocalDate orderDate = LocalDate.parse(orderDateStr, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+            predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("orderDate").as(LocalDate.class), orderDate));
+        }
+
+        String orderStatusStr = filters.get("orderStatus");
+        if (orderStatusStr != null && !orderStatusStr.isEmpty()) {
+            try {
+                Status orderStatus = Status.valueOf(orderStatusStr);
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("status"), orderStatus));
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Illegal Status: " + orderStatusStr);
+            }
+        }
+
+        query.where(predicate);
+
+        return entityManager.createQuery(query).getResultList();
+    }
+
+
+
+    public List<CustomerOrderDto> convertToOrderDtoList(List<CustomerOrder> customerOrder) {
+        return customerOrder.stream()
+                .map(CustomerOrder::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    public CustomerOrder updateOrder(CustomerOrderDto orderDto) {
+        Long orderId = orderDto.getId();
+        Status newStatus = orderDto.getStatus();
+        Optional<CustomerOrder> optionalOrder = orderRepository.findById(orderId);
+
+        if (optionalOrder.isPresent()) {
+            CustomerOrder order = optionalOrder.get();
+            order.setStatus(newStatus);
+
+            order = orderRepository.save(order);
+            return order;
+        } else {
+            throw new EntityNotFoundException("Order not found with ID: " + orderId);
+        }
+    }
+
 }
