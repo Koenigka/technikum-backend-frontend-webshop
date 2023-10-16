@@ -3,6 +3,7 @@ package at.technikum.webshop_backend.controller;
 import at.technikum.webshop_backend.dto.CartItemDto;
 import at.technikum.webshop_backend.dto.ProductDto;
 import at.technikum.webshop_backend.model.CartItem;
+import at.technikum.webshop_backend.security.UserPrincipal;
 import at.technikum.webshop_backend.service.CartService;
 import at.technikum.webshop_backend.service.EntityNotFoundException;
 import jakarta.validation.Valid;
@@ -47,10 +48,13 @@ public class CartItemController {
     }
 
     @GetMapping("/myCart")
-    public ResponseEntity<List<CartItemDto>> viewCart(@RequestParam Long userId) {
+    public ResponseEntity<List<CartItemDto>> viewCart() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication.isAuthenticated()) {
+
+            UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+            Long userId = userPrincipal.getUserId();
             try {
                 List<CartItem> cartItems = cartService.viewCart(userId);
                 List<CartItemDto> cartItemDtoList = new ArrayList<>();
