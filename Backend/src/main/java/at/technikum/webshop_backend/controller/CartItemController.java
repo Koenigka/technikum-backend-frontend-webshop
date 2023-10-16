@@ -8,6 +8,7 @@ import at.technikum.webshop_backend.service.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
@@ -47,6 +48,7 @@ public class CartItemController {
     }
 
     @GetMapping("/myCart")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<List<CartItemDto>> viewCart(@RequestParam Long userId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -94,6 +96,7 @@ public class CartItemController {
 
 
     @DeleteMapping("/remove")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<String> removeFromCart(@RequestParam Long cartItemId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.isAuthenticated()) {

@@ -2,10 +2,12 @@ package at.technikum.webshop_backend.controller;
 
 
 import at.technikum.webshop_backend.model.CustomerOrder;
+import at.technikum.webshop_backend.security.UserPrincipal;
 import at.technikum.webshop_backend.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -23,18 +25,21 @@ public class OrderController {
         this.orderService = orderService;
     }
     @PostMapping("/create")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<CustomerOrder> createOrder(@RequestParam Long userId) {
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication.isAuthenticated()) {
+            Long loggedInUserId = ((UserPrincipal) authentication.getPrincipal()).getUserId();
 
-            CustomerOrder newCustomerOrder = orderService.createOrderFromCart(userId);
-
-            return ResponseEntity.ok(newCustomerOrder);
+            if (loggedInUserId.equals(userId)) {
+                CustomerOrder newCustomerOrder = orderService.createOrderFromCart(userId);
+                return ResponseEntity.ok(newCustomerOrder);
+            } else {
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            }
         } else {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-
         }
     }
 

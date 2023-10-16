@@ -3,8 +3,6 @@ $(document).ready(function () {
   if (sessionStorage.getItem("accessToken")) {
     // User is logged in
     const userId = sessionStorage.getItem("userId");
-    // Display the username from the session
-    // $("#userName").text(userId);
 
     // Make an AJAX request to fetch user data
     $.ajax({
@@ -53,6 +51,8 @@ $(document).ready(function () {
           event.preventDefault();
           paypalDetails.style.display = "none";
         });
+        // Fetch and display cart items
+        fetchAndDisplayCartItems(userId);
       },
       error: function (xhr, status, error) {
         // Handle errors, such as user not found
@@ -64,6 +64,135 @@ $(document).ready(function () {
     // User is not logged in
     // Handle the case where user data is not available
     console.log("User data not found.");
+  }
+
+  function fetchAndDisplayCartItems(userId) {
+    var totalPrice = 0;
+    const productQuantities = {}; // To keep track of product quantities
+    // Make an AJAX request to fetch cart items
+    $.ajax({
+      url: "http://localhost:8080/api/cart/myCart" + "?userId=" + userId,
+      type: "GET",
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
+      },
+      success: function (cartItems) {
+        // Check if cartItems is not empty
+        if (cartItems.length > 0) {
+          // Display cart items in the cartItemsContainer
+          const cartItemsContainer = $("#orderItemsContainer");
+          var cartContentHtml = "";
+
+          cartItems.forEach(function (cartItem) {
+            var itemPrice = cartItem.price * cartItem.quantity;
+            totalPrice += itemPrice;
+
+            // Check if the product is already in the productQuantities object
+            if (productQuantities[cartItem.title]) {
+              productQuantities[cartItem.title] += cartItem.quantity;
+            } else {
+              productQuantities[cartItem.title] = cartItem.quantity;
+            }
+
+            // Create the order object using cartItem data
+            const order = {
+              userId: userId,
+              cartItemId: cartItem.id,
+              price: cartItem.price,
+              quantity: cartItem.quantity,
+            };
+            console.log(order);
+
+            // Generate HTML for each product
+            cartContentHtml += `
+            <div class="row border border-warning rounded m-5 shadow-sm mt-2 cart-item" data-id="${
+              cartItem.id
+            }" data-price="${cartItem.price}">
+              <div class="col p-2">
+                <img src="http://localhost:8080/api/files/${
+                  cartItem.img
+                }" alt="${cartItem.title}" class="cart-item-image" />
+              </div>
+              <div class="col p-4 fs-5 cart-item-info">
+                <p>
+                  <span class="cart-quantity">${cartItem.quantity} x</span> ${
+              cartItem.title
+            }
+                </p>
+                <p class="price">€ ${(
+                  cartItem.price * cartItem.quantity
+                ).toFixed(2)}</p>
+              </div>
+            </div>
+          `;
+          });
+
+          // Append the subtotal at the bottom
+          cartContentHtml += `
+          <div class="row mx-5">
+            <div class="col p-2">
+              <p class="fs-3">Subtotal: </p>
+            </div>
+            <div class="col p-2">
+               <p class="fs-3" id="totalPrice">€ ${totalPrice.toFixed(2)}</p>
+            </div>
+          </div>
+        `;
+
+          cartContentHtml += `
+          <div class="row mx-5 mb-5">
+            <div class="col">
+              <button class="btn btn-warning text-white shadow fs-5 ">
+                <a href="shop.html" class="text-white text-decoration-none">Back to Shop</a>
+              </button>
+            </div>
+            <div class="col">
+              <button class="btn btn-success text-white shadow fs-5 " id="orderNowButton">
+               <a href="#" class="text-white text-decoration-none"> Order Now</a>
+              </button>
+            </div>
+          </div>
+        `;
+
+          cartItemsContainer.append(cartContentHtml);
+
+          // When the "Order Now" button is clicked
+          $("#orderNowButton").on("click", function (event) {
+            event.preventDefault();
+            console.log("Order Now button clicked.");
+
+            // Send an AJAX request to create the order
+            $.ajax({
+              url: "http://localhost:8080/api/order/create",
+              type: "POST",
+              headers: {
+                Authorization: `Bearer ${sessionStorage.getItem(
+                  "accessToken"
+                )}`,
+              },
+              success: function (order) {
+                // Handle the success response, e.g., show a confirmation message
+                console.log("Order created:", order);
+                // You can show a confirmation message or redirect the user to an order confirmation page.
+              },
+              error: function (xhr, status, error) {
+                // Handle errors, e.g., display an error message to the user
+                console.error("Error creating order:", error);
+                // You can show an error message to the user.
+              },
+            });
+          });
+        } else {
+          // Handle the case where the cart is empty
+          $("#cartItemsContainer").html("<p>Your cart is empty</p>");
+        }
+      },
+      error: function (xhr, status, error) {
+        // Handle errors, e.g., unauthorized or server error
+        console.error("Error fetching cart items: " + error);
+        // Optionally, display an error message to the user
+      },
+    });
   }
 
   function displayUserDetails(user) {
@@ -118,7 +247,7 @@ $(document).ready(function () {
         </div>
       </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-6 mt-4 ">
       <div class="container rounded border border-warning bg-light shadow-lg">
         <div class="col">
           <p class="fs-4 fw-bold pt-2">Payment Methods</p>
@@ -196,5 +325,29 @@ $(document).ready(function () {
 
     // Append the user details HTML to the container
     $("#userDetailsContainer").html(userDetails);
+  }
+  function fetchAndDisplayCartItemImages(cartItems) {
+    cartItems.forEach(function (cartItem) {
+      const apiUrl = "http://localhost:8080/api/files/" + cartItem.img;
+
+      fetch(apiUrl)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          return response.blob();
+        })
+        .then((blob) => {
+          const blobUrl = window.URL.createObjectURL(blob);
+
+          const cartItemElement = $(`.cart-item[data-id="${cartItem.id}"]`);
+          const imgElement = cartItemElement.find(".cart-item-image");
+
+          imgElement.attr("src", blobUrl);
+        })
+        .catch((error) => {
+          console.error("Fetch error:", error);
+        });
+    });
   }
 });

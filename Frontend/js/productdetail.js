@@ -1,7 +1,6 @@
-import config from './config.js';
+import config from "./config.js";
 
 $(document).ready(function () {
-
   let product;
 
   const params = new Proxy(new URLSearchParams(window.location.search), {
@@ -53,67 +52,70 @@ $(document).ready(function () {
             <input type="number" class="count" name="qty" id="quantityInput" value="1" />
             <span class="plus bg-light fs-3">+</span>
           </div>
-          <button id="addToBasketButton" class="btn btn-warning mt-auto text-white">Add to Basket</button>
+          <button id="addToBasketButton" class="btn btn-warning mt-auto mb-5 text-white">Add to Basket</button>
           </div>
       </div>`);
 
     productd.append(productdetail);
 
-  const img = productdetail.find('img');
-  const baseUrl = config.baseUrl;
-  const filesEndpoint = config.file.files;
-  const imageReference = product.img;
-  const apiUrl = `${baseUrl}${filesEndpoint}/${imageReference}`;
+    const img = productdetail.find("img");
+    const baseUrl = config.baseUrl;
+    const filesEndpoint = config.file.files;
+    const imageReference = product.img;
+    const apiUrl = `${baseUrl}${filesEndpoint}/${imageReference}`;
 
-  fetch(apiUrl)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      return response.blob();
-    })
-    .then((blob) => {
-      const blobUrl = window.URL.createObjectURL(blob);
-      img.attr("src", blobUrl);
-    })
-    .catch((error) => {
-      console.error("Fetch error:", error);
-    });
+    fetch(apiUrl)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.blob();
+      })
+      .then((blob) => {
+        const blobUrl = window.URL.createObjectURL(blob);
+        img.attr("src", blobUrl);
+      })
+      .catch((error) => {
+        console.error("Fetch error:", error);
+      });
   }
 
-
-  $(document).on("click", "#addToBasketButton", function  () {
-    console.log("click")
+  $(document).on("click", "#addToBasketButton", function () {
+    console.log("click");
 
     var accessToken = sessionStorage.getItem("accessToken");
     if (!accessToken) {
-     // User is not logged in, redirect to login page with a message
-     window.location.href =
-     "login.html?message=If you are not logged in, you can not proceed Please first log in and then you can continue your action.";
+      // User is not logged in, redirect to login page with a message
+      window.location.href =
+        "login.html?message=If you are not logged in, you can not proceed Please first log in and then you can continue your action.";
     } else {
       const productId = product.id;
       const quantity = parseInt(document.getElementById("quantityInput").value);
-  
+
       const cartItemDto = {
         userId: sessionStorage.getItem("userId"),
         productId: productId,
         quantity: quantity,
       };
-  
-      
+
       $.ajax({
-        url: config.baseUrl + config.cartItem.addToCart, 
+        url: config.baseUrl + config.cartItem.addToCart,
         type: "POST",
         dataType: "json",
         contentType: "application/json",
         beforeSend: function (xhr) {
           var accessToken = sessionStorage.getItem("accessToken");
           xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-        }, 
-        data: JSON.stringify(cartItemDto), 
+        },
+        data: JSON.stringify(cartItemDto),
         success: function (response) {
-          
-          alert(`"${product.title}" added to basket!`);
+          if (response.quantity !== undefined) {
+            // Update the quantity in your product object
+            product.quantity = response.quantity;
+          }
+          clearToasts();
+          showProductAddedToast(product);
+          // alert(`"${product.title}" added to basket!`);
         },
         error: function (error) {
           console.error(error);
@@ -121,6 +123,4 @@ $(document).ready(function () {
       });
     }
   });
-  
-
 });
