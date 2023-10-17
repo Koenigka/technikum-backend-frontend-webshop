@@ -64,7 +64,7 @@ $(document).ready(function () {
       $(".admin-link").hide();
       $(".cart-link").hide();
       $(".fa-basket-shopping").hide();
-      $("cartInfo").hide();
+      $("#cartInfo").hide();
       
     }
   });

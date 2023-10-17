@@ -4,11 +4,14 @@ $(document).ready(function () {
     const userId = sessionStorage.getItem("userId");
 
     $.ajax({
-      url: `http://localhost:8080/api/users/${userId}`,
+      url: `http://localhost:8080/api/users/myProfile`, 
       type: "GET",
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`, // Include the JWT token
-      },
+      dataType: "json",
+    contentType: "application/json",
+    beforeSend: function (xhr) {
+      var accessToken = sessionStorage.getItem("accessToken");
+      xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+    },
       success: function (userData) {
         // Call the function to display user details
         fetchAndDisplayCartItems(userId);
@@ -29,11 +32,14 @@ $(document).ready(function () {
     const productQuantities = {}; // To keep track of product quantities
     // Make an AJAX request to fetch cart items
     $.ajax({
-      url: "http://localhost:8080/api/cart/myCart" + "?userId=" + userId, // Update the URL as needed
+      url: "http://localhost:8080/api/cart/myCart",
       type: "GET",
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
-      },
+      dataType: "json",
+    contentType: "application/json",
+    beforeSend: function (xhr) {
+      var accessToken = sessionStorage.getItem("accessToken");
+      xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+    },
       success: function (cartItems) {
         // Check if cartItems is not empty
         if (cartItems.length > 0) {
