@@ -95,13 +95,8 @@ public class CartItemController {
 
     }
 
-
-    //TODO Checkout Controller for proofing quantity
-
-
-    @DeleteMapping("/remove")
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<String> removeFromCart(@RequestParam Long cartItemId) {
+    @DeleteMapping("/remove/{cartItemId}")
+    public ResponseEntity<String> removeFromCart(@PathVariable Long cartItemId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.isAuthenticated()) {
             try {
