@@ -10,6 +10,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -153,7 +154,45 @@ public class OrderService {
         return order.orElse(null);
     }
 
+
     public List<CustomerOrder> findOrdersByFilters(Map<String, String> filters) {
+        Specification<CustomerOrder> spec = (root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            String userEmail = filters.get("email");
+            if (userEmail != null && !userEmail.isEmpty()) {
+                predicates.add(criteriaBuilder.like(root.join("user").get("email"), userEmail + "%"));
+            }
+
+
+            String orderIdStr = filters.get("orderId");
+            if (orderIdStr != null) {
+                Long orderId = Long.parseLong(orderIdStr);
+                predicates.add(criteriaBuilder.equal(root.get("id"), orderId));
+            }
+
+            String orderDateStr = filters.get("orderDate");
+            if (orderDateStr != null) {
+                LocalDate orderDate = LocalDate.parse(orderDateStr, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+                predicates.add(criteriaBuilder.equal(root.get("orderDate").as(LocalDate.class), orderDate));
+            }
+
+            String orderStatusStr = filters.get("orderStatus");
+            if (orderStatusStr != null) {
+                Status orderStatus = Status.valueOf(orderStatusStr);
+                predicates.add(criteriaBuilder.equal(root.get("status"), orderStatus));
+            }
+
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
+
+        return orderRepository.findAll(spec);
+    }
+
+
+
+
+   /*public List<CustomerOrder> findOrdersByFilters(Map<String, String> filters) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<CustomerOrder> query = criteriaBuilder.createQuery(CustomerOrder.class);
         Root<CustomerOrder> root = query.from(CustomerOrder.class);
@@ -197,7 +236,7 @@ public class OrderService {
         query.where(predicate);
 
         return entityManager.createQuery(query).getResultList();
-    }
+    }*/
 
 
 
@@ -207,7 +246,7 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    public CustomerOrder updateOrder(CustomerOrderDto orderDto) {
+   /* public CustomerOrder updateOrder(CustomerOrderDto orderDto) {
         Long orderId = orderDto.getId();
         Status newStatus = orderDto.getStatus();
         Optional<CustomerOrder> optionalOrder = orderRepository.findById(orderId);
@@ -218,6 +257,32 @@ public class OrderService {
 
             order = orderRepository.save(order);
             return order;
+        } else {
+            throw new EntityNotFoundException("Order not found with ID: " + orderId);
+        }
+    }*/
+
+    public CustomerOrder updateOrder(CustomerOrderDto orderDto) {
+        Long orderId = orderDto.getId();
+        Status newStatus = orderDto.getStatus();
+        Optional<CustomerOrder> optionalOrder = orderRepository.findById(orderId);
+
+        if (optionalOrder.isPresent()) {
+            CustomerOrder customerOrder = optionalOrder.get();
+
+            if (newStatus == Status.CANCELED) {
+                Set<OrderItem> orderItems = customerOrder.getOrderItems();
+                for (OrderItem orderItem : orderItems) {
+                    Product product = orderItem.getProduct();
+                    int canceledQuantity = orderItem.getQuantity();
+                    product.increaseStock(canceledQuantity);
+                }
+            }
+
+            customerOrder.setStatus(newStatus);
+
+            customerOrder = orderRepository.save(customerOrder);
+            return customerOrder;
         } else {
             throw new EntityNotFoundException("Order not found with ID: " + orderId);
         }

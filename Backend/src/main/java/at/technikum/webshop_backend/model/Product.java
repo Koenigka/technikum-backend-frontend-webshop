@@ -57,4 +57,7 @@ public class Product implements ConvertableToDto<ProductDto>, Cloneable{
         return new ProductDto(id, title, description, img, price, stock, active, category.getId());
     }
 
+    public void increaseStock(int quantity) {
+        this.stock += quantity;
+    }
 }

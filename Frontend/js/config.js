@@ -38,6 +38,11 @@ cartItem: {
 
 },
 order: {
+search: "/order/search",
+findById: "/order/orderByOrderId/", 
+findbyUserId: "/order/ordersByUserId/",
+update: "/order/update",
+
 
 }, 
 auth: {
