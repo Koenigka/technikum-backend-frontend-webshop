@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.print.DocFlavor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -86,11 +87,11 @@ public class OrderService {
     }
 
 
-    public Map<Long, Integer> checkProductQuantities(Long userId) {
+    public Map<String, Integer> checkProductQuantities(Long userId) {
 
         List<CartItem> cartItems = cartService.viewCart(userId);
 
-        Map<Long, Integer> insufficientQuantities = new HashMap<>();
+        Map<String, Integer> insufficientQuantities = new HashMap<>();
 
         for (CartItem cartItem : cartItems) {
             Long productId = cartItem.getProduct().getId();
@@ -99,7 +100,7 @@ public class OrderService {
             int availableQuantity = getAvailableProductQuantity(productId);
 
             if (availableQuantity < requestedQuantity) {
-                insufficientQuantities.put(cartItem.getProduct().getId(),  availableQuantity);
+                insufficientQuantities.put(cartItem.getProduct().getTitle(),  availableQuantity);
             }
         }
 

@@ -133,7 +133,7 @@ function loadCartContent(userId, accessToken) {
           </div>
         </div>
         `;
-      $(".modal-body").html(cartContentHtml);
+      $(".cart-content-modal").html(cartContentHtml);
 
       fetchAndDisplayCartItemImages(data);
 

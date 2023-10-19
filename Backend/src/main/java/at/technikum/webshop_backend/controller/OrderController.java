@@ -43,7 +43,7 @@ public class OrderController {
 
         if (authentication.isAuthenticated()) {
             Long userId = ((UserPrincipal) authentication.getPrincipal()).getUserId();
-            Map<Long, Integer> insufficientQuantities = orderService.checkProductQuantities(userId);
+            Map<String, Integer> insufficientQuantities = orderService.checkProductQuantities(userId);
             if (!insufficientQuantities.isEmpty()) {
                 return ResponseEntity.badRequest().body(insufficientQuantities);
             } else {
