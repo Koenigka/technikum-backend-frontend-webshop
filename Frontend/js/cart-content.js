@@ -2,6 +2,9 @@ import config from "./config.js";
 
 $(document).ready(function () {
 
+  const userId = sessionStorage.getItem("userId");
+  const accessToken = sessionStorage.getItem("accessToken");
+  
   fetchAndDisplayCartItems();
   function fetchAndDisplayCartItems() {
     var totalPrice = 0;
@@ -135,6 +138,9 @@ $(document).ready(function () {
           const totalPrice = (pricePerItem * quantity).toFixed(2);
           priceElement.text(`€ ${totalPrice}`);
           updateCartItem(cartItemId, quantity, productId); 
+          //TODO check Sum in Cart
+          loadCartContent(userId, accessToken);
+
           updateTotalPrice();
         }
       });
@@ -147,6 +153,9 @@ $(document).ready(function () {
         const totalPrice = (pricePerItem * quantity).toFixed(2);
         priceElement.text(`€ ${totalPrice}`);
         updateCartItem(cartItemId, quantity, productId); 
+        loadCartContent(userId, accessToken);
+          //TODO check Sum in Cart
+
         updateTotalPrice();
       });
   
@@ -248,15 +257,7 @@ $(document).ready(function () {
       beforeSend: function (xhr) {
         xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
       },
-      success: function () {
-        /* const cartItemElement = $(`[data-id="${updatedCartItem.id}"]`);
-        const quantityElement = cartItemElement.find(".quantity");
-        const priceElement = cartItemElement.find(".price");
-
-        quantityElement.text(updatedCartItem.quantity);
-        priceElement.text(`€ ${updatedCartItem.price.toFixed(2)}`);
-
-        updateTotalPrice(); */
+      success: function () {       
       },
       error: function (xhr, status, error) {
         console.error("Error updating cart item: " + error);
