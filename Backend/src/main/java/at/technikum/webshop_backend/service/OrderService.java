@@ -20,6 +20,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Service class for managing customer orders, order items, and order-related operations.
+ */
 @Service
 public class OrderService {
 
@@ -43,6 +46,13 @@ public class OrderService {
         this.productService = productService;
     }
 
+    /**
+     * Creates a new customer order from the user's cart and deducts product quantities.
+     *
+     * @param userId The ID of the user for whom the order is created.
+     * @return The created CustomerOrder.
+     * @throws EntityNotFoundException if the user is not found or the cart is empty.
+     */
     public CustomerOrder createOrderFromCart(Long userId) {
 
         User user = userService.findById(userId);
@@ -87,6 +97,12 @@ public class OrderService {
     }
 
 
+    /**
+     * Checks product quantities in the user's cart against available quantities.
+     *
+     * @param userId The ID of the user whose cart is checked.
+     * @return A map containing products with insufficient quantities and their available quantities.
+     */
     public Map<String, Integer> checkProductQuantities(Long userId) {
 
         List<CartItem> cartItems = cartService.viewCart(userId);
@@ -107,7 +123,13 @@ public class OrderService {
         return insufficientQuantities;
     }
 
-
+    /**
+     * Retrieves the available quantity of a product by its ID.
+     *
+     * @param productId The ID of the product to check.
+     * @return The available quantity of the product.
+     * @throws EntityNotFoundException if the product is not found.
+     */
     public int getAvailableProductQuantity(Long productId) {
         Optional<Product> optionalProduct = productService.findById(productId);
 
@@ -120,7 +142,13 @@ public class OrderService {
     }
 
 
-
+    /**
+     * Deducts product quantity from stock.
+     *
+     * @param productId       The ID of the product to deduct from.
+     * @param quantityToDeduct The quantity to deduct.
+     * @throws EntityNotFoundException if the product is not found or IllegalArgumentException if the quantity is insufficient.
+     */
     public void deductProductQuantity(Long productId, int quantityToDeduct) {
         Optional<Product> optionalProduct = productService.findById(productId);
 
@@ -139,7 +167,12 @@ public class OrderService {
         }
     }
 
-
+    /**
+     * Retrieves a list of user orders by user ID.
+     *
+     * @param userId The ID of the user.
+     * @return A list of CustomerOrder objects belonging to the user.
+     */
     public List<CustomerOrder> getUserOrdersByUserId(Long userId) {
         User user = userService.findById(userId);
 
@@ -150,12 +183,24 @@ public class OrderService {
         }
     }
 
+    /**
+     * Retrieves a user order by its order ID.
+     *
+     * @param orderId The ID of the order to retrieve.
+     * @return The CustomerOrder object with the specified ID or null if not found.
+     */
     public CustomerOrder getUserOrderByOrderId(Long orderId) {
         Optional<CustomerOrder> order = orderRepository.findById(orderId);
         return order.orElse(null);
     }
 
 
+    /**
+     * Retrieves a list of customer orders based on specified filters.
+     *
+     * @param filters A map of filter criteria for querying orders.
+     * @return A list of CustomerOrder objects matching the filter criteria.
+     */
     public List<CustomerOrder> findOrdersByFilters(Map<String, String> filters) {
         Specification<CustomerOrder> spec = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
@@ -240,7 +285,12 @@ public class OrderService {
     }*/
 
 
-
+    /**
+     * Converts a list of CustomerOrder objects to a list of CustomerOrderDto objects.
+     *
+     * @param customerOrder The list of CustomerOrder objects to convert.
+     * @return A list of CustomerOrderDto objects.
+     */
     public List<CustomerOrderDto> convertToOrderDtoList(List<CustomerOrder> customerOrder) {
         return customerOrder.stream()
                 .map(CustomerOrder::convertToDto)
@@ -263,6 +313,14 @@ public class OrderService {
         }
     }*/
 
+
+    /**
+     * Updates the status of a customer order and, if canceled, increases product quantities.
+     *
+     * @param orderDto The CustomerOrderDto containing the updated status.
+     * @return The updated CustomerOrder.
+     * @throws EntityNotFoundException if the order is not found.
+     */
     public CustomerOrder updateOrder(CustomerOrderDto orderDto) {
         Long orderId = orderDto.getId();
         Status newStatus = orderDto.getStatus();

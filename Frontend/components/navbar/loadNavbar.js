@@ -125,11 +125,11 @@ function loadCartContent(userId, accessToken) {
       cartContentHtml += `
       <div class="row">
           <div class="col">
-            <button class="btn btn-warning text-white shadow"><a href="shop.html" class="text-white text-decoration-none">back to shop</a>
+            <button class="btn btn-warning text-white shadow"><a href="/pages/shop.html" class="text-white text-decoration-none">back to shop</a>
              </button>
           </div>
           <div class="col">
-            <button class="btn btn-warning text-white shadow"><a href="cart.html" class="text-white text-decoration-none">show basket</button>
+            <button class="btn btn-warning text-white shadow"><a href="/pages/cart.html" class="text-white text-decoration-none">show basket</button>
           </div>
         </div>
         `;
