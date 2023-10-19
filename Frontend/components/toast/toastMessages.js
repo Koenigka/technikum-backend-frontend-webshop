@@ -79,7 +79,7 @@ function fetchAndDisplayToastMessageImage(imageReference, targetElement) {
 // Function to show a success toast for adding a product to the cart
 function showProductAddedToast(product) {
   const toast = `
-    <div class="toast bg-success" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast bg-warning" role="alert" aria-live="assertive" aria-atomic="true">
       <div class="toast-header" style="font-size: large">
        <p  class="me-auto">The product<strong> ${
          product.title
@@ -89,10 +89,10 @@ function showProductAddedToast(product) {
       <div class="toast-body text-white" style="font-size: large">
         <img src="${product.img}" alt="${
     product.title
-  }" class="mr-2" style="max-width: 50px; max-height: 50px">
-         <p>Quantity: ${product.quantity} x Price: €${product.price.toFixed(
-    2
-  )}</p>
+  }" class="mr-2" style="max-width: 50px; max-height: 50px"  <p> Quantity: ${
+    product.quantity
+  } x Price: €${product.price.toFixed(2)}</p>
+       
       </div>
     </div>`;
 

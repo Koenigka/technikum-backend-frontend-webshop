@@ -6,14 +6,14 @@ $(document).ready(function () {
 
     // Make an AJAX request to fetch user data
     $.ajax({
-      url: `http://localhost:8080/api/users/myProfile`, 
+      url: `http://localhost:8080/api/users/myProfile`,
       type: "GET",
       dataType: "json",
-    contentType: "application/json",
-    beforeSend: function (xhr) {
-      var accessToken = sessionStorage.getItem("accessToken");
-      xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-    },
+      contentType: "application/json",
+      beforeSend: function (xhr) {
+        var accessToken = sessionStorage.getItem("accessToken");
+        xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+      },
       success: function (userData) {
         // Call the function to display user details
         displayUserDetails(userData);
@@ -77,11 +77,11 @@ $(document).ready(function () {
       url: "http://localhost:8080/api/cart/myCart",
       type: "GET",
       dataType: "json",
-    contentType: "application/json",
-    beforeSend: function (xhr) {
-      var accessToken = sessionStorage.getItem("accessToken");
-      xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-    },
+      contentType: "application/json",
+      beforeSend: function (xhr) {
+        var accessToken = sessionStorage.getItem("accessToken");
+        xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+      },
       success: function (cartItems) {
         // Check if cartItems is not empty
         if (cartItems.length > 0) {
@@ -172,15 +172,23 @@ $(document).ready(function () {
               url: "http://localhost:8080/api/order/create",
               type: "POST",
               dataType: "json",
-          contentType: "application/json",
-          beforeSend: function (xhr) {
-            var accessToken = sessionStorage.getItem("accessToken");
-            xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-          },
+              contentType: "application/json",
+              beforeSend: function (xhr) {
+                var accessToken = sessionStorage.getItem("accessToken");
+                xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+              },
               success: function (order) {
+                // Order created successfully, show the Bootstrap modal
+                $("#successModal").modal("show");
                 // Handle the success response, e.g., show a confirmation message
                 console.log("Order created:", order);
                 // You can show a confirmation message or redirect the user to an order confirmation page.
+                // Handle the "Back to Index" button click in the modal
+                $("#backToIndexButton").on("click", function () {
+                  // Redirect to the index page
+                  window.location.href = "/pages/shop.html"; // Replace "index.html" with the actual URL of your index page
+                });
+                $(".footer").addClass("fixed-bottom");
               },
               error: function (xhr, status, error) {
                 // Handle errors, e.g., display an error message to the user
