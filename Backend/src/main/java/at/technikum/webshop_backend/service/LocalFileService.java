@@ -12,6 +12,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
+/**
+ * Implementation of the {@link FileService} interface for managing files stored locally.
+ * This service provides methods for uploading, retrieving, updating, and deleting files
+ * from a local directory.
+ */
 @Service
 public class LocalFileService implements FileService{
 

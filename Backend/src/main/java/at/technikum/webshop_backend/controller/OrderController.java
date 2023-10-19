@@ -21,6 +21,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The {@code OrderController} class handles HTTP requests related to order operations.
+ * It exposes endpoints for creating orders.
+ *
+ */
 @RestController
 @RequestMapping("/api/order")
 public class OrderController {
@@ -36,6 +41,11 @@ public class OrderController {
         this.orderService = orderService;
     }
 
+    /**
+     * Handles an HTTP POST request to create a new order.
+     *
+     * @return A ResponseEntity with an appropriate HTTP status code and response body.
+     */
     @PostMapping("/create")
     public ResponseEntity<?> createOrder() {
 
@@ -58,6 +68,13 @@ public class OrderController {
 
 
 
+    /**
+     * Handles an HTTP GET request to retrieve a list of customer orders by user ID.
+     *
+     * @param userId The ID of the user for whom orders are to be retrieved.
+     * @return A ResponseEntity with a list of CustomerOrderDto representing customer orders,
+     *         and an appropriate HTTP status code, or a forbidden status if the requester is not an admin.
+     */
     @GetMapping("/ordersByUserId/{userId}")
     public ResponseEntity<List<CustomerOrderDto>> getUserOrdersByUserId(@PathVariable Long userId) {
 
@@ -76,6 +93,13 @@ public class OrderController {
     }
 
 
+    /**
+     * Handles an HTTP GET request to retrieve a customer order by its order ID.
+     *
+     * @param orderId The ID of the order to be retrieved.
+     * @return A ResponseEntity with a CustomerOrderDto representing the customer order,
+     *         and an appropriate HTTP status code, or a forbidden status if the requester is not an admin.
+     */
     @GetMapping("/orderByOrderId/{orderId}")
     public ResponseEntity<CustomerOrderDto> getUserOrdersByOrderId(@PathVariable Long orderId) {
 
@@ -92,7 +116,14 @@ public class OrderController {
 
         return ResponseEntity.ok(userOrder.convertToDto());
     }
-  
+
+    /**
+     * Handles an HTTP POST request to search for customer orders based on specified filters.
+     *
+     * @param filters A map of key-value pairs representing filters for order search.
+     * @return A ResponseEntity with a list of CustomerOrderDto representing orders matching the filters
+     *         and an appropriate HTTP status code, or a forbidden status if the requester is not an admin.
+     */
     @PostMapping("/search")
     public ResponseEntity<List<CustomerOrderDto>> searchOrders(@RequestBody Map<String, String> filters) {
 
@@ -112,6 +143,13 @@ public class OrderController {
         return new ResponseEntity<>(orderDtoList, HttpStatus.OK);
     }
 
+    /**
+     * Handles an HTTP PUT request to update a customer order.
+     *
+     * @param orderDto The CustomerOrderDto containing the updated order information.
+     * @return A ResponseEntity with the updated CustomerOrderDto and an appropriate HTTP status code,
+     *         or a forbidden status if the requester is not an admin.
+     */
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/update")
     public ResponseEntity<?> updateOrder(@RequestBody CustomerOrderDto orderDto) {
