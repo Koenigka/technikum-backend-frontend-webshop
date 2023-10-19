@@ -100,6 +100,7 @@ function showProductAddedToast(product) {
   // Find the img element within the newly added toast
   const toastImageElement = $("#toastContainer .toast img");
 
+  // TODO - here is 403 error????
   // Fetch and display the product image using the fetchAndDisplayToastMessageImage function
   fetchAndDisplayToastMessageImage(product.img, toastImageElement);
   $(".toast").toast({ autohide: true, delay: 3000 }).toast("show");

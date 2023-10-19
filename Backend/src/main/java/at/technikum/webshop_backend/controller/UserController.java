@@ -59,27 +59,31 @@ public class UserController {
     public ResponseEntity<UserDto> findById(@PathVariable Long id) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-      //  boolean isAdmin = authentication.getAuthorities().stream()
-         //       .map(GrantedAuthority::toString)
-         //       .anyMatch(val -> val.equals(authorityAdmin));
-        // Initialize loggedInUserId to null
-        Long loggedInUserId = null;
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::toString)
+                .anyMatch(val -> val.equals(authorityAdmin));
 
-        if (authentication != null) {
-            Object principal = authentication.getPrincipal();
-            if (principal instanceof UserPrincipal) {
-                loggedInUserId = ((UserPrincipal) principal).getUserId();
-            }
-        }
-
-        if (id.equals(loggedInUserId)) {
+        if (isAdmin) {
             User user = userService.findById(id);
+            UserDto userDto = user.convertToDto();
+            return ResponseEntity.ok(userDto);
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
+
+    @GetMapping("/myProfile")
+    public ResponseEntity<UserDto> findById() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.isAuthenticated()) {
+
+            UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+            Long userId = userPrincipal.getUserId();
+
+            User user = userService.findById(userId);
             if (user != null) {
                 UserDto userDto = user.convertToDto();
-
-                // Include the userId in the UserDto
-                userDto.setId(id);
-
                 return ResponseEntity.ok(userDto);
             } else {
                 return ResponseEntity.notFound().build();
@@ -87,14 +91,9 @@ public class UserController {
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-      //  if (isAdmin) {
-       //     User user = userService.findById(id);
-       //     UserDto userDto = user.convertToDto();
-       //     return ResponseEntity.ok(userDto);
-      //  } else {
-      //      return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-      //  }
+
     }
+
 
     @GetMapping("/findByEmail/{emailPrefix}")
     public ResponseEntity<List<UserDto>> getUsersByEmailPrefix(@PathVariable String emailPrefix) {

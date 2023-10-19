@@ -29,15 +29,23 @@ user: {
   findById: "/users/", 
   update: "/users/update",
   delete: "/users/delete/",
+  myProfile: "/users/myProfile"
 
 },
 
 cartItem: {
   addToCart: "/cart/add",
   myCart: "/cart/myCart",
+  delete: "/cart/remove/",
+  update: "/cart/update",
 
 },
 order: {
+search: "/order/search",
+findById: "/order/orderByOrderId/", 
+findbyUserId: "/order/ordersByUserId/",
+update: "/order/update",
+
 
 }, 
 auth: {

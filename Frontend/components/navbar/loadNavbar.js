@@ -129,7 +129,7 @@ function loadCartContent(userId, accessToken) {
              </button>
           </div>
           <div class="col">
-            <button class="btn btn-warning text-white shadow"><a href="#" class="text-white text-decoration-none">show basket</button>
+            <button class="btn btn-warning text-white shadow"><a href="cart.html" class="text-white text-decoration-none">show basket</button>
           </div>
         </div>
         `;

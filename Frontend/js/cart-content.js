@@ -1,38 +1,23 @@
+import config from "./config.js";
+
 $(document).ready(function () {
-  if (sessionStorage.getItem("accessToken")) {
-    // User is logged in
-    const userId = sessionStorage.getItem("userId");
 
-    $.ajax({
-      url: `http://localhost:8080/api/users/${userId}`,
-      type: "GET",
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`, // Include the JWT token
-      },
-      success: function (userData) {
-        // Call the function to display user details
-        fetchAndDisplayCartItems(userId);
-      },
-      error: function (xhr, status, error) {
-        // Handle errors, such as user not found
-        console.error("Error fetching user data: " + error);
-      },
-    });
-  } else {
-    // User is not logged in
-    // Handle the case where user data is not available
-    console.log("User data not found.");
-  }
-
-  function fetchAndDisplayCartItems(userId) {
+  const userId = sessionStorage.getItem("userId");
+  const accessToken = sessionStorage.getItem("accessToken");
+  
+  fetchAndDisplayCartItems();
+  function fetchAndDisplayCartItems() {
     var totalPrice = 0;
     const productQuantities = {}; // To keep track of product quantities
     // Make an AJAX request to fetch cart items
     $.ajax({
-      url: "http://localhost:8080/api/cart/myCart" + "?userId=" + userId, // Update the URL as needed
+      url: config.baseUrl + config.cartItem.myCart,
       type: "GET",
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
+      dataType: "json",
+      contentType: "application/json",
+      beforeSend: function (xhr) {
+        var accessToken = sessionStorage.getItem("accessToken");
+        xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
       },
       success: function (cartItems) {
         // Check if cartItems is not empty
@@ -58,9 +43,7 @@ $(document).ready(function () {
               cartItem.id
             }" data-price="${cartItem.price}">
               <div class="col p-2">
-                <img src="http://localhost:8080/api/files/${
-                  cartItem.img
-                }" alt="${cartItem.title}" class="cart-item-image" />
+                <img src="" alt="${cartItem.title}" class="cart-item-image" />
               </div>
               <div class="col p-4 fs-5 cart-item-info">
               <p>
@@ -80,6 +63,8 @@ $(document).ready(function () {
                   ).toFixed(2)}</p>
                    
               </div>
+              <input type="hidden" name="productId" value="${cartItem.productId}" />
+
             </div>
           `;
           });
@@ -115,6 +100,8 @@ $(document).ready(function () {
 
           // Call the function after displaying cart items
           updateCartItemQuantityAndPrice();
+          fetchAndDisplayCartItemImages(cartItems);
+
         } else {
           // Handle the case where the cart is empty
           $("#cartItemsContainer").html("<p>Your cart is empty</p>");
@@ -127,6 +114,7 @@ $(document).ready(function () {
       },
     });
   }
+
   function updateCartItemQuantityAndPrice() {
     $(".cart-item").each(function () {
       const cartItem = $(this);
@@ -137,6 +125,9 @@ $(document).ready(function () {
       const cartQuantityElement = cartItem.find(".cart-quantity");
       const priceElement = cartItem.find(".price");
       const pricePerItem = parseFloat(cartItem.data("price"));
+      const cartItemId = cartItem.data("id");
+      const productId = cartItem.find('input[name="productId"]').val(); 
+
 
       minusBtn.on("click", function () {
         let quantity = parseInt(quantityElement.text());
@@ -146,10 +137,14 @@ $(document).ready(function () {
           cartQuantityElement.text(`${quantity} x`);
           const totalPrice = (pricePerItem * quantity).toFixed(2);
           priceElement.text(`€ ${totalPrice}`);
+          updateCartItem(cartItemId, quantity, productId); 
+          //TODO check Sum in Cart
+          loadCartContent(userId, accessToken);
+
           updateTotalPrice();
         }
       });
-
+  
       plusBtn.on("click", function () {
         let quantity = parseInt(quantityElement.text());
         quantity++;
@@ -157,16 +152,19 @@ $(document).ready(function () {
         cartQuantityElement.text(`${quantity} x`);
         const totalPrice = (pricePerItem * quantity).toFixed(2);
         priceElement.text(`€ ${totalPrice}`);
+        updateCartItem(cartItemId, quantity, productId); 
+        loadCartContent(userId, accessToken);
+          //TODO check Sum in Cart
+
         updateTotalPrice();
       });
+  
       removeBtn.on("click", function () {
         const cartItemId = cartItem.data("id");
-
         // Remove the item from the cart
         $.ajax({
-          url: "http://localhost:8080/api/cart/remove?cartItemId=" + cartItemId,
+          url: config.baseUrl + config.cartItem.delete + cartItemId,
           type: "DELETE",
-          dataType: "text",
           contentType: "application/json",
           beforeSend: function (xhr) {
             var accessToken = sessionStorage.getItem("accessToken");
@@ -187,11 +185,14 @@ $(document).ready(function () {
             // Handle errors, e.g., unauthorized or server error
             console.error("Error removing cart item: " + error);
             // Optionally, display an error message to the user
-          },
+          }
         });
       });
     });
   }
+  
+
+   
 
   function updateTotalPrice() {
     let totalPrice = 0;
@@ -207,7 +208,12 @@ $(document).ready(function () {
 
   function fetchAndDisplayCartItemImages(cartItems) {
     cartItems.forEach(function (cartItem) {
-      const apiUrl = "http://localhost:8080/api/files/" + cartItem.img;
+      const imageReference = cartItem.img;
+      const baseUrl = config.baseUrl;
+      const filesEndpoint = config.file.files;
+      const apiUrl = `${baseUrl}${filesEndpoint}/${imageReference}`;
+
+      const imgElement = $(`[data-id="${cartItem.id}"] .cart-item-image`);
 
       fetch(apiUrl)
         .then((response) => {
@@ -218,10 +224,6 @@ $(document).ready(function () {
         })
         .then((blob) => {
           const blobUrl = window.URL.createObjectURL(blob);
-
-          const cartItemElement = $(`.cart-item[data-id="${cartItem.id}"]`);
-          const imgElement = cartItemElement.find(".cart-item-image");
-
           imgElement.attr("src", blobUrl);
         })
         .catch((error) => {
@@ -229,4 +231,40 @@ $(document).ready(function () {
         });
     });
   }
+
+  function updateCartItem(cartItemId, newQuantity, productId) {
+
+    const updateUrl = config.baseUrl + config.cartItem.update;
+    const accessToken = sessionStorage.getItem("accessToken");
+    const userId = sessionStorage.getItem("userId");
+
+  
+  
+
+    const requestData = {
+      id: cartItemId,
+      productId: productId,
+      userId: userId,
+      quantity: newQuantity,
+    };
+
+    $.ajax({
+      url: updateUrl,
+      type: "PUT",
+      data: JSON.stringify(requestData),
+      dataType: "json",
+      contentType: "application/json",
+      beforeSend: function (xhr) {
+        xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+      },
+      success: function () {       
+      },
+      error: function (xhr, status, error) {
+        console.error("Error updating cart item: " + error);
+      },
+    });
+  }
+
+  
+
 });

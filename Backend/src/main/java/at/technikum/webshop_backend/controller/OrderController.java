@@ -58,8 +58,8 @@ public class OrderController {
 
 
 
-    @GetMapping("/ordersByUserId")
-    public ResponseEntity<List<CustomerOrderDto>> getUserOrdersByUserId(@RequestParam Long userId) {
+    @GetMapping("/ordersByUserId/{userId}")
+    public ResponseEntity<List<CustomerOrderDto>> getUserOrdersByUserId(@PathVariable Long userId) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         boolean isAdmin = authentication.getAuthorities().stream()
@@ -76,8 +76,8 @@ public class OrderController {
     }
 
 
-    @GetMapping("/orderByOrderId")
-    public ResponseEntity<CustomerOrderDto> getUserOrdersByOrderId(@RequestParam Long orderId) {
+    @GetMapping("/orderByOrderId/{orderId}")
+    public ResponseEntity<CustomerOrderDto> getUserOrdersByOrderId(@PathVariable Long orderId) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         boolean isAdmin = authentication.getAuthorities().stream()
@@ -93,7 +93,7 @@ public class OrderController {
         return ResponseEntity.ok(userOrder.convertToDto());
     }
   
-    @GetMapping("/search")
+    @PostMapping("/search")
     public ResponseEntity<List<CustomerOrderDto>> searchOrders(@RequestBody Map<String, String> filters) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

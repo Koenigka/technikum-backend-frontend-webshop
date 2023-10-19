@@ -6,11 +6,14 @@ $(document).ready(function () {
 
     // Make an AJAX request to fetch user data
     $.ajax({
-      url: `http://localhost:8080/api/users/${userId}`, // Update the URL to match your API endpoint
+      url: `http://localhost:8080/api/users/myProfile`, 
       type: "GET",
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`, // Include the JWT token
-      },
+      dataType: "json",
+    contentType: "application/json",
+    beforeSend: function (xhr) {
+      var accessToken = sessionStorage.getItem("accessToken");
+      xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+    },
       success: function (userData) {
         // Call the function to display user details
         displayUserDetails(userData);
@@ -71,11 +74,14 @@ $(document).ready(function () {
     const productQuantities = {}; // To keep track of product quantities
     // Make an AJAX request to fetch cart items
     $.ajax({
-      url: "http://localhost:8080/api/cart/myCart" + "?userId=" + userId,
+      url: "http://localhost:8080/api/cart/myCart",
       type: "GET",
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
-      },
+      dataType: "json",
+    contentType: "application/json",
+    beforeSend: function (xhr) {
+      var accessToken = sessionStorage.getItem("accessToken");
+      xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+    },
       success: function (cartItems) {
         // Check if cartItems is not empty
         if (cartItems.length > 0) {
@@ -165,11 +171,12 @@ $(document).ready(function () {
             $.ajax({
               url: "http://localhost:8080/api/order/create",
               type: "POST",
-              headers: {
-                Authorization: `Bearer ${sessionStorage.getItem(
-                  "accessToken"
-                )}`,
-              },
+              dataType: "json",
+          contentType: "application/json",
+          beforeSend: function (xhr) {
+            var accessToken = sessionStorage.getItem("accessToken");
+            xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+          },
               success: function (order) {
                 // Handle the success response, e.g., show a confirmation message
                 console.log("Order created:", order);
