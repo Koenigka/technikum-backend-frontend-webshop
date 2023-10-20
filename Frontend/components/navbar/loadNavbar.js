@@ -31,7 +31,6 @@ $(document).ready(function () {
       $(".fa-basket-shopping").show();
       $("#cartInfo").show();
 
-
       var userId = sessionStorage.getItem("userId");
       var accessToken = sessionStorage.getItem("accessToken");
 
@@ -65,7 +64,6 @@ $(document).ready(function () {
       $(".cart-link").hide();
       $(".fa-basket-shopping").hide();
       $("#cartInfo").hide();
-      
     }
   });
 });
@@ -81,8 +79,6 @@ function loadCartContent(userId, accessToken) {
       xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
     },
     success: function (data) {
-     
-
       var cartContentHtml = "";
 
       data.forEach(function (cartItem) {
@@ -114,7 +110,7 @@ function loadCartContent(userId, accessToken) {
       cartContentHtml += `
           <div class="row">
               <div class="col p-2">
-                  <p class="fs-3">Subtotal: </p>
+                  <p class="fs-3">Total: </p>
               </div>
               <div class="col p-2">
                   <p class="fs-3">€ ${totalPrice.toFixed(2)}</p>
