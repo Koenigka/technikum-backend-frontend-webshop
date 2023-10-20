@@ -1,10 +1,18 @@
 import config from "./config.js";
 
 $(document).ready(function () {
-
   const userId = sessionStorage.getItem("userId");
   const accessToken = sessionStorage.getItem("accessToken");
-  
+
+  // Function to check and update footer class based on cart items count
+  function updateFooterClass() {
+    const cartItems = $(".cart-item");
+    if (cartItems.length <= 1) {
+      $(".footer").addClass("fixed-bottom");
+    } else {
+      $(".footer").removeClass("fixed-bottom");
+    }
+  }
   fetchAndDisplayCartItems();
   function fetchAndDisplayCartItems() {
     var totalPrice = 0;
@@ -63,7 +71,9 @@ $(document).ready(function () {
                   ).toFixed(2)}</p>
                    
               </div>
-              <input type="hidden" name="productId" value="${cartItem.productId}" />
+              <input type="hidden" name="productId" value="${
+                cartItem.productId
+              }" />
 
             </div>
           `;
@@ -101,10 +111,11 @@ $(document).ready(function () {
           // Call the function after displaying cart items
           updateCartItemQuantityAndPrice();
           fetchAndDisplayCartItemImages(cartItems);
-
+          updateFooterClass();
         } else {
           // Handle the case where the cart is empty
           $("#cartItemsContainer").html("<p>Your cart is empty</p>");
+          $(".footer").addClass("fixed-bottom");
         }
       },
       error: function (xhr, status, error) {
@@ -126,8 +137,7 @@ $(document).ready(function () {
       const priceElement = cartItem.find(".price");
       const pricePerItem = parseFloat(cartItem.data("price"));
       const cartItemId = cartItem.data("id");
-      const productId = cartItem.find('input[name="productId"]').val(); 
-
+      const productId = cartItem.find('input[name="productId"]').val();
 
       minusBtn.on("click", function () {
         let quantity = parseInt(quantityElement.text());
@@ -137,14 +147,13 @@ $(document).ready(function () {
           cartQuantityElement.text(`${quantity} x`);
           const totalPrice = (pricePerItem * quantity).toFixed(2);
           priceElement.text(`€ ${totalPrice}`);
-          updateCartItem(cartItemId, quantity, productId); 
-          //TODO check Sum in Cart
+          updateCartItem(cartItemId, quantity, productId);
           loadCartContent(userId, accessToken);
 
           updateTotalPrice();
         }
       });
-  
+
       plusBtn.on("click", function () {
         let quantity = parseInt(quantityElement.text());
         quantity++;
@@ -152,13 +161,12 @@ $(document).ready(function () {
         cartQuantityElement.text(`${quantity} x`);
         const totalPrice = (pricePerItem * quantity).toFixed(2);
         priceElement.text(`€ ${totalPrice}`);
-        updateCartItem(cartItemId, quantity, productId); 
+        updateCartItem(cartItemId, quantity, productId);
         loadCartContent(userId, accessToken);
-          //TODO check Sum in Cart
 
         updateTotalPrice();
       });
-  
+
       removeBtn.on("click", function () {
         const cartItemId = cartItem.data("id");
         // Remove the item from the cart
@@ -174,25 +182,29 @@ $(document).ready(function () {
             // Assuming your server returns a success response
             // Remove the HTML element for the cart item
             cartItem.remove();
+
             updateTotalPrice();
+            // Check and update the footer class after removing an item
+
+            // Call loadCartContent to update cart info immediately after cart data changes
+            loadCartContent(userId, accessToken);
+
             showDeleteToast("Product successfully deleted from shopping cart.");
             const toast = new bootstrap.Toast(
               document.getElementById("toastContainer")
             );
             toast.show();
+            updateFooterClass();
           },
           error: function (xhr, status, error) {
             // Handle errors, e.g., unauthorized or server error
             console.error("Error removing cart item: " + error);
             // Optionally, display an error message to the user
-          }
+          },
         });
       });
     });
   }
-  
-
-   
 
   function updateTotalPrice() {
     let totalPrice = 0;
@@ -233,13 +245,9 @@ $(document).ready(function () {
   }
 
   function updateCartItem(cartItemId, newQuantity, productId) {
-
     const updateUrl = config.baseUrl + config.cartItem.update;
     const accessToken = sessionStorage.getItem("accessToken");
     const userId = sessionStorage.getItem("userId");
-
-  
-  
 
     const requestData = {
       id: cartItemId,
@@ -257,14 +265,13 @@ $(document).ready(function () {
       beforeSend: function (xhr) {
         xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
       },
-      success: function () {       
+      success: function () {
+        // Call loadCartContent to update cart info immediately after cart data changes
+        loadCartContent(userId, accessToken);
       },
       error: function (xhr, status, error) {
         console.error("Error updating cart item: " + error);
       },
     });
   }
-
-  
-
 });

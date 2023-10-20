@@ -149,7 +149,7 @@ $(document).ready(function () {
     cardbody.append(`</div>`);
     wrapper.append(`</div>`);
 
-    button.on("click", function () {
+    button.on("click", function (event) {
       var accessToken = sessionStorage.getItem("accessToken");
       if (!accessToken) {
         // User is not logged in, redirect to login page with a message
@@ -176,7 +176,6 @@ $(document).ready(function () {
           },
           data: JSON.stringify(cartItemDto),
           success: function (response) {
-            
             var userId = sessionStorage.getItem("userId");
             var accessToken = sessionStorage.getItem("accessToken");
             loadCartContent(userId, accessToken);
@@ -186,7 +185,7 @@ $(document).ready(function () {
               product.quantity = response.quantity;
             }
             clearToasts();
-            showProductAddedToast(product);
+            showProductAddedToast(product, event);
             // alert(`"${product.title}" added to basket!`);
           },
           error: function (error) {
