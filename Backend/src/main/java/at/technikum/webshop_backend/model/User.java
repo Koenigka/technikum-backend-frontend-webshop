@@ -65,7 +65,7 @@ public class User implements ConvertableToDto<UserDto>, Cloneable{
     private Boolean isActive;
 
     // TODO - Implement a List of Roles instead of a single role
-    private String roles = "USER";
+    private String roles = "ROLE_USER";
 
 
     @OneToMany(mappedBy = "user")
@@ -80,7 +80,7 @@ public class User implements ConvertableToDto<UserDto>, Cloneable{
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         this.password = passwordEncoder.encode(password);
 
-        System.out.println("Password: " + this.password);
+        //System.out.println("Password: " + this.password);
     }
 
     public Boolean getIsActive() {
