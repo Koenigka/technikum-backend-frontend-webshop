@@ -61,16 +61,16 @@ function fetchAndDisplayToastMessageImage(imageReference) {
     const apiUrl = `http://localhost:8080/api/files/${imageReference}`;
 
     fetch(apiUrl)
-      .then(response => {
+      .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         return response.blob();
       })
-      .then(blob => {
-        resolve(window.URL.createObjectURL(blob)); 
+      .then((blob) => {
+        resolve(window.URL.createObjectURL(blob));
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("Fetch error:", error);
         reject(error); // Rückgabe des Fehlers im Fehlerfall
       });
@@ -79,7 +79,9 @@ function fetchAndDisplayToastMessageImage(imageReference) {
 
 // Function to show a success toast for adding a product to the cart
 function showProductAddedToast(product, clickEvent) {
-  const toast = `
+  fetchAndDisplayToastMessageImage(product.img)
+    .then((blobUrl) => {
+      const toast = `
     <div class="toast bg-warning position-fixed" role="alert" aria-live="assertive" aria-atomic="true">
       <div class="toast-header" style="font-size: large">
         <p class="me-auto">The product <strong>${
@@ -88,31 +90,34 @@ function showProductAddedToast(product, clickEvent) {
         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
       <div class="toast-body text-white" style="font-size: large">
-        <img src="${product.img}" alt="${
-    product.title
-  }" class="mr-2" style="max-width: 50px; max-height: 50px">
+        <img src="${blobUrl}"  alt="${
+        product.title
+      }" class="mr-2" style="max-width: 50px; max-height: 50px">
         <p>Quantity: ${product.quantity} x Price: €${product.price.toFixed(
-    2
-  )}</p>
+        2
+      )}</p>
       </div>
     </div>`;
 
-  // Append the toast to the body
-  $("body").append(toast);
+      // Append the toast to the body
+      $("body").append(toast);
 
-  // Calculate the position based on the click event
-  const toastContainer = $(".toast.position-fixed");
-  toastContainer.css("top", clickEvent.clientY - 180); // You can adjust the position as needed
+      // Calculate the position based on the click event
+      const toastContainer = $(".toast.position-fixed");
+      toastContainer.css("top", clickEvent.clientY - 180); // You can adjust the position as needed
 
-  // Find the img element within the newly added toast
-  const toastImageElement = $(".toast img");
+      // Find the img element within the newly added toast
+      const toastImageElement = $(".toast img");
 
-  // Fetch and display the product image using the fetchAndDisplayToastMessageImage function
-  fetchAndDisplayToastMessageImage(product.img, toastImageElement);
+      // Fetch and display the product image using the fetchAndDisplayToastMessageImage function
+      fetchAndDisplayToastMessageImage(product.img, toastImageElement);
 
-  // Show the toast
-  $(".toast").toast({ autohide: true, delay: 3000 }).toast("show");
-
+      // Show the toast
+      $(".toast").toast({ autohide: true, delay: 3000 }).toast("show");
+    })
+    .catch((error) => {
+      console.error("Fetch error:", error);
+    });
 }
 
 function showInsufficientQuantityToast(products) {
