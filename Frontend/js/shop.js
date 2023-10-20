@@ -90,7 +90,6 @@ $(document).ready(function () {
   }
 
   function addProducts(products) {
-
     const allProducts = $("#products");
     allProducts.empty();
     for (let product of products) {
@@ -99,7 +98,6 @@ $(document).ready(function () {
   }
 
   function createProduct(product) {
-
     const title = $(
       `<a href="productdetail.html?product=${product.id}" class="text-decoration-none text-warning"><h5 class="card-title text-warning">${product.title}</h5></a>`
     );
@@ -133,10 +131,10 @@ $(document).ready(function () {
         return response.blob();
       })
       .then((blob) => {
-        console.log('Bild erfolgreich geladen'); 
+        //console.log('Bild erfolgreich geladen');
 
-        const blobUrl = window.URL.createObjectURL(blob);       
-        
+        const blobUrl = window.URL.createObjectURL(blob);
+
         img.attr("src", blobUrl);
       })
       .catch((error) => {
@@ -151,7 +149,6 @@ $(document).ready(function () {
     cardbody.append(`</div>`);
     wrapper.append(`</div>`);
 
-    // Add a click event to the button that checks if the user is logged in before redirecting
     button.on("click", function () {
       var accessToken = sessionStorage.getItem("accessToken");
       if (!accessToken) {
@@ -159,8 +156,43 @@ $(document).ready(function () {
         window.location.href =
           "login.html?message=If you are not logged in, you can not proceed Please first log in and then you can continue your action.";
       } else {
-        //***** Implement the logic to add the product to the cart here ********
-        alert(`"${product.title}" added to cart!`);
+        const productId = product.id;
+        const quantity = 1;
+
+        const cartItemDto = {
+          userId: sessionStorage.getItem("userId"),
+          productId: productId,
+          quantity: quantity,
+        };
+
+        $.ajax({
+          url: config.baseUrl + config.cartItem.addToCart,
+          type: "POST",
+          dataType: "json",
+          contentType: "application/json",
+          beforeSend: function (xhr) {
+            var accessToken = sessionStorage.getItem("accessToken");
+            xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+          },
+          data: JSON.stringify(cartItemDto),
+          success: function (response) {
+            
+            var userId = sessionStorage.getItem("userId");
+            var accessToken = sessionStorage.getItem("accessToken");
+            loadCartContent(userId, accessToken);
+
+            if (response.quantity !== undefined) {
+              // Update the quantity in your product object
+              product.quantity = response.quantity;
+            }
+            clearToasts();
+            showProductAddedToast(product);
+            // alert(`"${product.title}" added to basket!`);
+          },
+          error: function (error) {
+            console.error(error);
+          },
+        });
       }
     });
 

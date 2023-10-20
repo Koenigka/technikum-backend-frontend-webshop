@@ -18,7 +18,6 @@
     crossorigin="anonymous"></script>
   <script src="/components/navbar/loadNavbar.js" defer></script>
   <script src="/components/footer/loadStickyFooter.js" defer></script>
-  <script src="/components/cart/loadCart.js" defer></script>
   <script type="module" src="../js/admin-product.js" defer></script>
   <script src="/components/toast/toastMessages.js"></script>
 </head>
@@ -102,7 +101,8 @@
             </div>
             <div class="col-md-6">
               <label for="product-img-preview" class="fs-5">Product Image Preview</label>
-              <img id="product-image-preview-create" src="" alt="Product Image" width="200" height="200" style="border-radius: 10px;">           
+              <img id="product-image-preview-create" src="" alt="Product Image" width="200" height="200"
+                style="border-radius: 10px" />
             </div>
           </div>
           <button class="btn btn-warning text-white float-end mt-2 mb-2" id="createProductButton">
@@ -190,9 +190,7 @@
           <h5 class="modal-title" id="deleteProductModalLabel">
             Confirm Deletion
           </h5>
-          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">            
-            <span aria-hidden="true">&times;</span>
-          </button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           Are you sure you want to delete this product?

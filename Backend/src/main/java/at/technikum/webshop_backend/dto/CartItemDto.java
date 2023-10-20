@@ -2,12 +2,15 @@ package at.technikum.webshop_backend.dto;
 
 import at.technikum.webshop_backend.model.Product;
 import at.technikum.webshop_backend.utils.DataTransferObject;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDateTime;
 
@@ -28,4 +31,13 @@ public class CartItemDto implements DataTransferObject {
     @PositiveOrZero(message = "The 'quantity' field must be a positive number or zero.")
     private int quantity;
     private LocalDateTime creationDate;
+
+    private String title;
+
+    private String description;
+
+    private String img;
+
+    private double price;
+
 }

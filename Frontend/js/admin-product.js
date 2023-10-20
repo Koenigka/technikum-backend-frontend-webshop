@@ -222,7 +222,6 @@ $(document).ready(function () {
     }
 
     const filterJSON = JSON.stringify(filters);
-    console.log(filterJSON);
 
     // Close the edit window if it's open
     closeEditWindow();
@@ -277,7 +276,6 @@ $(document).ready(function () {
   }
 
   function createProduct(product) {
-    console.log("In createProduct-Funktion. Product:", product);
     const searchedProduct = $(`<tr>
       <td scope="col">${product.id}</td>
       <td scope="col">${product.title ? product.title : ""}</td>     
@@ -297,7 +295,6 @@ $(document).ready(function () {
   //LOAD PRODUCT TO EDIT FORM
   $(document).on("click", ".editProduct", function (event) {
     const id = event.target.value;
-    console.log(id);
 
     // Scroll to the top of the edit window
     $("html, body").animate(
@@ -321,7 +318,6 @@ $(document).ready(function () {
         type: "GET",
         cors: true,
         success: function (categories) {
-          console.log("load categories");
           // Dann die Produktinformationen laden und bearbeiten
           $.ajax({
             url: config.baseUrl + config.product.findById + id,
@@ -630,6 +626,8 @@ $(document).on("click", ".delete", function (event) {
 
     // Show the delete confirmation modal
     $("#deleteProductModal").modal("show");
+
+    $("#confirmDelete").off("click");
 
     // When the delete button in the modal is clicked, perform the deletion
     $("#confirmDelete").click(function () {

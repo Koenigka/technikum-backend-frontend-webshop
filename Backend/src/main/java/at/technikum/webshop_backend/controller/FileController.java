@@ -8,12 +8,18 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * The {@code FileController} class handles HTTP requests related to file uploads.
+ * It exposes endpoints for uploading files.
+ *
+ */
 @RestController
 @RequestMapping("/api/files")
 public class FileController {
@@ -27,6 +33,14 @@ public class FileController {
     private static final String authorityAdmin = "ROLE_ADMIN";
 
 
+
+    /**
+     * Handles an HTTP POST request to upload a file.
+     *
+     * @param file The uploaded MultipartFile.
+     * @return A ResponseEntity with a FileUploadResponse indicating the success of the upload
+     *         and an appropriate HTTP status code.
+     */
     @PostMapping
     public ResponseEntity<FileUploadResponse>  upload(
             @RequestParam("file") MultipartFile file
@@ -45,6 +59,13 @@ public class FileController {
         }
     }
 
+    /**
+     * Handles an HTTP GET request to retrieve a file by its reference.
+     *
+     * @param reference The reference identifier for the file.
+     * @return A ResponseEntity with the requested file as a Resource and appropriate HTTP headers
+     *         indicating the file type and disposition, or a ResponseEntity with a "not found" status.
+     */
     @GetMapping("/{reference}")
     public ResponseEntity<Resource> getFile(@PathVariable String reference) {
         Resource fileResource = fileService.get(reference);
@@ -72,6 +93,14 @@ public class FileController {
         }
     }
 
+    /**
+     * Handles an HTTP DELETE request to delete a file by its reference.
+     *
+     * @param reference The reference identifier for the file to be deleted.
+     * @return A ResponseEntity with an appropriate HTTP status code, either indicating
+     *         the successful deletion (204 No Content) or a "not found" status.
+     */
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{reference}")
     public ResponseEntity<Void> deleteFile(@PathVariable String reference) {
         boolean deleted = fileService.delete(reference);

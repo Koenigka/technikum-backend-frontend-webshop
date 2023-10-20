@@ -138,3 +138,11 @@ input:disabled {
 #category-image-preview {
   border-radius: 10px; 
 }
+
+.cart-item-image {
+  width: 100px; 
+  height: 100px;
+  object-fit: cover; 
+  border-radius: 10px; 
+
+}

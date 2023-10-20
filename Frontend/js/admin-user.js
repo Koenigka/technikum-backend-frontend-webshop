@@ -1,3 +1,5 @@
+import config from "./config.js";
+
 // Function to close the edit window
 function closeEditWindow() {
   const addEditUser = $("#addEditUser");
@@ -185,13 +187,12 @@ $(document).on("click", "#showSearchUser", function (event) {
   }
 
   const filterJSON = JSON.stringify(filters);
-  console.log(filterJSON);
 
   // Close the edit window if it's open
   closeEditWindow();
 
   $.ajax({
-    url: "http://localhost:8080/api/users/search",
+    url: config.baseUrl + config.user.search,
     type: "POST",
     dataType: "json",
     contentType: "application/json",
@@ -264,7 +265,7 @@ $(document).on("click", ".editUser", function (event) {
   const id = event.target.value;
 
   $.ajax({
-    url: "http://localhost:8080/api/users/" + id,
+    url: config.baseUrl + config.user.findById + id,
     type: "GET",
     dataType: "json",
     contentType: "application/json",
@@ -284,11 +285,7 @@ $(document).on("click", ".editUser", function (event) {
   const addEditUser = $("#addEditUser");
   addEditUser.empty();
 
-  function editUser(user) {
-    console.log("User active: " + user.isActive);
-    console.log("User pw: " + user.password);
-
-    console.log(user.roles)
+  function editUser(user) {   
 
     const editUser = $(`
     <div class="container rounded my-5 border border-warning bg-light shadow-lg">
@@ -492,18 +489,17 @@ $(document).on("click", ".editUser", function (event) {
   $(".footer").removeClass("fixed-bottom");
 });
 
-let isValid; // Declare isValid in a wider scope
+let isValid; 
 let isValidAddress;
 // Bearbeiteten Benutzer speichern
 $(document).on("click", "#saveEditUser", function (event) {
-  isActive = $("#status").is(":checked") ? true : false;
+  var isActive = $("#status").is(":checked") ? true : false;
 
   // Passwort aus dem Eingabefeld abrufen
   const passwordInput = $("#password-edit").val();
   // Überprüfen, ob das Passwort einen Wert hat
   const password = passwordInput.trim() !== "" ? passwordInput : null;
 
-  console.log("passwort: " + password);
   const user = {
     id: $("#user-id-edit").val(),
     title: $("#title-edit").val(),
@@ -524,7 +520,6 @@ $(document).on("click", "#saveEditUser", function (event) {
     user.password = password;
   }
 
-  console.log("user passwort: " + user.password);
 
   // Call the validation function
   validateUser(user, validAddresses)
@@ -540,7 +535,7 @@ $(document).on("click", "#saveEditUser", function (event) {
         // Proceed with editing if no validation errors
 
         $.ajax({
-          url: "http://localhost:8080/api/users/update",
+          url: config.baseUrl + config.user.update,
           type: "PUT",
           dataType: "json",
           contentType: "application/json",
@@ -580,7 +575,7 @@ $(document).on("click", ".delete", function (event) {
   // When the delete button in the modal is clicked, perform the deletion
   $("#confirmDelete").click(function () {
     $.ajax({
-      url: "http://localhost:8080/api/users/delete/" + deleteId,
+      url: config.baseUrl + config.user.delete  + deleteId,
       type: "DELETE",
       dataType: "text",
       contentType: "application/json",

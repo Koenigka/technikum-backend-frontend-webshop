@@ -13,6 +13,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Service class for managing users, including creation, updating, deletion, and retrieval operations.
+ */
 @Service
 public class UserService {
     private UserRepository userRepository;
@@ -23,7 +26,12 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-
+    /**
+     * Creates a new user from a UserDto.
+     *
+     * @param userDto The UserDto containing user information.
+     * @return The created User.
+     */
     public User save(UserDto userDto) {
         User user = new User();
         user.setTitle(userDto.getTitle());
@@ -47,6 +55,13 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    /**
+     * Updates an existing user using information from a UserDto.
+     *
+     * @param userDto The UserDto containing updated user information.
+     * @return The updated User.
+     * @throws EntityNotFoundException if the user to update is not found.
+     */
     public User update(UserDto userDto) {
         User existingUser = userRepository.findById(userDto.getId())
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userDto.getId()));
@@ -75,15 +90,33 @@ public class UserService {
         return userRepository.save(existingUser);
     }
 
+    /**
+     * Retrieves a list of all users in the database.
+     *
+     * @return A list of User objects representing all users.
+     */
     public List<User> findAll() {
         return userRepository.findAll();
     }
 
+    /**
+     * Retrieves a user by their ID.
+     *
+     * @param id The ID of the user to retrieve.
+     * @return The User if found, or null if not found.
+     * @throws EntityNotFoundException if the user is not found.
+     */
     public User findById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + id));
     }
 
+    /**
+     * Retrieves a user by their email address.
+     *
+     * @param email The email address of the user to retrieve.
+     * @return An optional containing the User if found, or empty if not found.
+     */
     public Optional<User> findByEmail(String email) {
         Optional<User> userOptional = userRepository.findByEmail(email);
         if (userOptional.isEmpty()) {
@@ -92,17 +125,35 @@ public class UserService {
         return userOptional;
     }
 
+    /**
+     * Retrieves a list of users whose email addresses start with a given prefix.
+     *
+     * @param emailPrefix The prefix to filter user email addresses.
+     * @return A list of UserDto objects matching the email prefix.
+     */
     public List<UserDto> getUsersByEmailPrefix(String emailPrefix) {
         List<User> users = userRepository.findByEmailStartingWith(emailPrefix);
         return users.stream().map(User::convertToDto).collect(Collectors.toList());
     }
 
+    /**
+     * Deletes a user by their ID.
+     *
+     * @param id The ID of the user to delete.
+     * @throws EntityNotFoundException if the user to delete is not found.
+     */
     public void deleteById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + id));
         userRepository.deleteById(id);
     }
 
+    /**
+     * Retrieves a list of users based on specified filters.
+     *
+     * @param filters A map of filter criteria for querying users.
+     * @return A list of UserDto objects matching the filter criteria.
+     */
     public List<UserDto> findUsersByFilters(Map<String, String> filters) {
         String emailPrefix = filters.get("email");
         String username = filters.get("username");
@@ -130,6 +181,13 @@ public class UserService {
 
         return convertToUserDtoList(users);
     }
+
+    /**
+     * Converts a list of User objects to a list of UserDto objects.
+     *
+     * @param users The list of User objects to convert.
+     * @return A list of UserDto objects.
+     */
     private List<UserDto> convertToUserDtoList(List<User> users) {
         return users.stream()
                 .map(User::convertToDto)

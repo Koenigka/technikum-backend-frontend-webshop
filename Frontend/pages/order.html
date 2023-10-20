@@ -3,10 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="/css/main.min.css" rel="stylesheet" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -14,7 +11,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="../css/style_bootstrap.css" />
-    <title>Brownie with white Chocolate</title>
+    <title>Order</title>
     <script
       src="https://kit.fontawesome.com/e85167c40f.js"
       crossorigin="anonymous"
@@ -29,24 +26,28 @@
       integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
       crossorigin="anonymous"
     ></script>
-    <script  src="/components/navbar/loadNavbar.js" defer></script>
-    <script src="/components/footer/loadStickyFooter.js" defer></script>
-    <script type="module" src="../js/productdetail.js" defer></script>
-    <script src="../js/counter.js"></script>
+    <script src="/components/navbar/loadNavbar.js" defer></script>
+    <script src="/components/footer/loadFooter.js" defer></script>
     <script src="/components/toast/toastMessages.js"></script>
+    <script src="/js/order.js"></script>
   </head>
 
   <body>
     <div id="navbarContainer"></div>
 
+    <div id="userDetailsContainer"></div>
+    <div class="container-sm mt-5" style="max-width: 85%">
+      <div
+        id="orderItemsContainer"
+        class="container rounded border border-warning mt-2 bg-light shadow-lg"
+      >
+        <div class="row">
+          <p class="fs-4 fw-bold mx-5 pt-2">My Order</p>
+        </div>
+      </div>
+    </div>
     <!-- Toast Notification -->
-    <div
-      id="toastContainer"
-      class="toast-container position-absolute p-3 top-0 end-0"
-    ></div>
-
-    <div class="container text-center mt-3" id="product"></div>
+    <div id="toastContainer"></div>
     <div id="footerContainer"></div>
-
   </body>
 </html>
