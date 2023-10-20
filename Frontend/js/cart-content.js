@@ -4,6 +4,15 @@ $(document).ready(function () {
   const userId = sessionStorage.getItem("userId");
   const accessToken = sessionStorage.getItem("accessToken");
 
+  // Function to check and update footer class based on cart items count
+  function updateFooterClass() {
+    const cartItems = $(".cart-item");
+    if (cartItems.length <= 1) {
+      $(".footer").addClass("fixed-bottom");
+    } else {
+      $(".footer").removeClass("fixed-bottom");
+    }
+  }
   fetchAndDisplayCartItems();
   function fetchAndDisplayCartItems() {
     var totalPrice = 0;
@@ -102,9 +111,11 @@ $(document).ready(function () {
           // Call the function after displaying cart items
           updateCartItemQuantityAndPrice();
           fetchAndDisplayCartItemImages(cartItems);
+          updateFooterClass();
         } else {
           // Handle the case where the cart is empty
           $("#cartItemsContainer").html("<p>Your cart is empty</p>");
+          $(".footer").addClass("fixed-bottom");
         }
       },
       error: function (xhr, status, error) {
@@ -137,7 +148,6 @@ $(document).ready(function () {
           const totalPrice = (pricePerItem * quantity).toFixed(2);
           priceElement.text(`€ ${totalPrice}`);
           updateCartItem(cartItemId, quantity, productId);
-          //TODO check Sum in Cart
           loadCartContent(userId, accessToken);
 
           updateTotalPrice();
@@ -152,11 +162,9 @@ $(document).ready(function () {
         const totalPrice = (pricePerItem * quantity).toFixed(2);
         priceElement.text(`€ ${totalPrice}`);
         updateCartItem(cartItemId, quantity, productId);
-
-        //TODO check Sum in Cart
+        loadCartContent(userId, accessToken);
 
         updateTotalPrice();
-        loadCartContent(userId, accessToken);
       });
 
       removeBtn.on("click", function () {
@@ -174,12 +182,19 @@ $(document).ready(function () {
             // Assuming your server returns a success response
             // Remove the HTML element for the cart item
             cartItem.remove();
+
             updateTotalPrice();
+            // Check and update the footer class after removing an item
+
+            // Call loadCartContent to update cart info immediately after cart data changes
+            loadCartContent(userId, accessToken);
+
             showDeleteToast("Product successfully deleted from shopping cart.");
             const toast = new bootstrap.Toast(
               document.getElementById("toastContainer")
             );
             toast.show();
+            updateFooterClass();
           },
           error: function (xhr, status, error) {
             // Handle errors, e.g., unauthorized or server error

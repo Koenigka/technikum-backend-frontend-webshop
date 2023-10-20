@@ -77,32 +77,39 @@ function fetchAndDisplayToastMessageImage(imageReference, targetElement) {
 }
 
 // Function to show a success toast for adding a product to the cart
-function showProductAddedToast(product) {
+function showProductAddedToast(product, clickEvent) {
   const toast = `
-    <div class="toast bg-warning" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast bg-warning position-fixed" role="alert" aria-live="assertive" aria-atomic="true">
       <div class="toast-header" style="font-size: large">
-       <p  class="me-auto">The product<strong> ${
-         product.title
-       } </strong>is added successfully into the basket</p>
+        <p class="me-auto">The product <strong>${
+          product.title
+        }</strong> is added successfully into the basket</p>
         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
       <div class="toast-body text-white" style="font-size: large">
         <img src="${product.img}" alt="${
     product.title
-  }" class="mr-2" style="max-width: 50px; max-height: 50px"  <p> Quantity: ${
-    product.quantity
-  } x Price: €${product.price.toFixed(2)}</p>
-       
+  }" class="mr-2" style="max-width: 50px; max-height: 50px">
+        <p>Quantity: ${product.quantity} x Price: €${product.price.toFixed(
+    2
+  )}</p>
       </div>
     </div>`;
 
-  $("#toastContainer").append(toast);
-  // Find the img element within the newly added toast
-  const toastImageElement = $("#toastContainer .toast img");
+  // Append the toast to the body
+  $("body").append(toast);
 
-  // TODO - here is 403 error????
+  // Calculate the position based on the click event
+  const toastContainer = $(".toast.position-fixed");
+  toastContainer.css("top", clickEvent.clientY - 180); // You can adjust the position as needed
+
+  // Find the img element within the newly added toast
+  const toastImageElement = $(".toast img");
+
   // Fetch and display the product image using the fetchAndDisplayToastMessageImage function
   fetchAndDisplayToastMessageImage(product.img, toastImageElement);
+
+  // Show the toast
   $(".toast").toast({ autohide: true, delay: 3000 }).toast("show");
 }
 
