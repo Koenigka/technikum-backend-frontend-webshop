@@ -155,7 +155,6 @@ $(document).ready(function () {
     }
 
     const filterJSON = JSON.stringify(filters);
-    console.log(filterJSON);
 
     // Close the edit window if it's open
     closeEditWindow();
@@ -369,7 +368,6 @@ $(document).ready(function () {
 
         if (newFile) {
           const blobUrl = URL.createObjectURL(newFile);
-          console.log(blobUrl);
           imagePreviewEdit.src = blobUrl;
         }
       });
@@ -471,6 +469,9 @@ $(document).ready(function () {
       // Show the delete confirmation modal
       $("#deleteCategoryModal").modal("show");
 
+      $("#deleteCategoryModal").off("click");
+
+
       // When the delete button in the modal is clicked, perform the deletion
       $("#confirmDelete").click(function () {
         $.ajax({
@@ -483,7 +484,6 @@ $(document).ready(function () {
             xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
           },
           success: function (response) {
-            console.log("Successfully deleted:", response);
 
             // After successfully deleting the product, delete the old file
             if (imageReference) {
@@ -520,7 +520,6 @@ $(document).ready(function () {
       },
       success: function (response) {
         // Das alte Bild wurde erfolgreich gelöscht
-        console.log("Old file deleted successfully:", response);
       },
       error: function (xhr, textStatus, error) {
         console.error("Error deleting old file:", error);

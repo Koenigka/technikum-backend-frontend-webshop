@@ -55,25 +55,26 @@ function showDeleteToast(message) {
   $("#toastContainer").append(toast);
   $(".toast").toast({ autohide: true, delay: 3000 }).toast("show");
 }
-function fetchAndDisplayToastMessageImage(imageReference, targetElement) {
-  const apiUrl = `http://localhost:8080/api/files/${imageReference}`;
+// Function to fetch and return a Blob URL for an image
+function fetchAndDisplayToastMessageImage(imageReference) {
+  return new Promise((resolve, reject) => {
+    const apiUrl = `http://localhost:8080/api/files/${imageReference}`;
 
-  fetch(apiUrl)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      return response.blob();
-    })
-    .then((blob) => {
-      const blobUrl = window.URL.createObjectURL(blob);
-
-      // Set the image source for the target element (e.g., an <img> element in your toast)
-      targetElement.attr("src", blobUrl);
-    })
-    .catch((error) => {
-      console.error("Fetch error:", error);
-    });
+    fetch(apiUrl)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.blob();
+      })
+      .then(blob => {
+        resolve(window.URL.createObjectURL(blob)); 
+      })
+      .catch(error => {
+        console.error("Fetch error:", error);
+        reject(error); // Rückgabe des Fehlers im Fehlerfall
+      });
+  });
 }
 
 // Function to show a success toast for adding a product to the cart
@@ -111,6 +112,7 @@ function showProductAddedToast(product, clickEvent) {
 
   // Show the toast
   $(".toast").toast({ autohide: true, delay: 3000 }).toast("show");
+
 }
 
 function showInsufficientQuantityToast(products) {
