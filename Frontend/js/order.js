@@ -194,6 +194,21 @@ $(document).ready(function () {
                 // Handle errors, e.g., display an error message to the user
                 console.error("Error creating order:", error);
                 // You can show an error message to the user.
+                if (xhr.status === 400) {
+                  // This means there are insufficient quantities
+                  var errorResponse = JSON.parse(xhr.responseText);
+                  var insufficientProducts = [];
+                  for (var productName in errorResponse) {
+                    var availableQuantity = errorResponse[productName];
+                    insufficientProducts.push({
+                      name: productName,
+                      availableQuantity: availableQuantity,
+                    });
+                  }
+
+                  // Display a toast message for all products with insufficient quantity
+                  showInsufficientQuantityToast(insufficientProducts);
+                }
               },
             });
           });

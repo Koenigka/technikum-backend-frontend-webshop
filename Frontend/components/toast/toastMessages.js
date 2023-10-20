@@ -106,6 +106,40 @@ function showProductAddedToast(product) {
   $(".toast").toast({ autohide: true, delay: 3000 }).toast("show");
 }
 
+function showInsufficientQuantityToast(products) {
+  const toast = `
+    <div class="toast position-fixed bottom-0 start-0 mb-5" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header" style="color: red; font-size: x-large">
+        <strong class="me-auto">Insufficient Quantity</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body" style="font-size: x-large;">
+        <ul>
+          ${products
+            .map(
+              (product) =>
+                `<li style= " list-style-type: none;"><i class='fas fa-cookie-bite fa-bounce'></i><strong> ${product.name}: Only ${product.availableQuantity}</strong> items available</li>
+                
+       `
+            )
+            .join("")}
+        </ul>
+        <p>   Please reduce the quantity of this product or choose something else.<br>
+        Sorry for the inconvenience!</p>
+         <button class="btn btn-warning mt-3 text-white fs-4" id="backToCartButton">Back to Cart</button>
+      </div>
+    </div>`;
+
+  $("#toastContainer").append(toast);
+  $(".toast").toast({ autohide: true, delay: 7000 }).toast("show");
+
+  // Handle the "Back to Cart" button click
+  $("#backToCartButton").on("click", function () {
+    // Redirect the user back to the cart page
+    window.location.href = "/pages/cart.html"; // Replace with the actual URL of your cart page
+  });
+}
+
 // Function to clear all toasts
 function clearToasts() {
   $("#toastContainer").empty();
