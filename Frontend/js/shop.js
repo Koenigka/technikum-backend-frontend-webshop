@@ -215,9 +215,9 @@ $(document).ready(function () {
       success: function (products) {
         addProducts(products);
         // Check if there are no products for this category
-        if (products.length === 0) {
+        /*  if (products.length === 0) {
           $(".footer").addClass("fixed-bottom");
-        }
+        } */
       },
       error: function (error) {
         console.error(error);

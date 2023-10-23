@@ -5,16 +5,16 @@
 html,
 body {
   background-color: #f7eed2;
-  font-family: "Shadows Into Light", cursive;;
+  font-family: "Shadows Into Light", cursive;
   /*font-family: "Comic Neue", cursive;
   cursor: url("img/cookieIcon.png"), auto;*/
 }
 /* //"Shadows Into Light", cursive; */
 
-.help, .impressum{
+.help,
+.impressum {
   font-family: "Comic Neue", cursive;
 }
-
 
 .card-img-top {
   width: 100%;
@@ -44,7 +44,6 @@ body {
 .dropdown-toggle::after {
   content: none;
 }
-
 
 .inner-img {
   transition: 0.3s;
@@ -116,14 +115,13 @@ input:disabled {
   background-color: white;
 }
 
-.dropdown-menu-shop{
-  background-color:  #2cb8b8ce ;
-  --bs-dropdown-link-active-bg: #2cb8b8 ;
-  --bs-dropdown-link-hover-bg: #2cb8b8 
+.dropdown-menu-shop {
+  background-color: #2cb8b8ce;
+  --bs-dropdown-link-active-bg: #2cb8b8;
+  --bs-dropdown-link-hover-bg: #2cb8b8;
 }
 
-.navbar .dropdown-menu{
-
+.navbar .dropdown-menu {
   --bs-dropdown-link-active-bg: white;
 }
 
@@ -132,17 +130,16 @@ input:disabled {
 }*/
 
 #product-image-preview {
-  border-radius: 10px; 
+  border-radius: 10px;
 }
 
 #category-image-preview {
-  border-radius: 10px; 
+  border-radius: 10px;
 }
 
 .cart-item-image {
-  width: 100px; 
+  width: 100px;
   height: 100px;
-  object-fit: cover; 
-  border-radius: 10px; 
-
+  object-fit: cover;
+  border-radius: 10px;
 }
