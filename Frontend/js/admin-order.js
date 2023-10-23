@@ -53,7 +53,7 @@ $(document).ready(function () {
       data: filterJSON,
       success: function (orders) {
         addOrders(orders);
-        if (orders.length > 3) {
+        if (orders.length > 2) {
           $(".footer").removeClass("fixed-bottom");
         } else {
           $(".footer").addClass("fixed-bottom");
@@ -205,8 +205,10 @@ $(document).ready(function () {
           document.getElementById("toastContainer")
         );
         toast.show();
-       
-
+        // Reload the page after a delay (e.g., 2 seconds)
+        setTimeout(function () {
+          location.reload();
+        }, 2000);
         $(".footer").addClass("fixed-bottom");
       },
       error: console.error,
