@@ -200,7 +200,6 @@ $(document).ready(function () {
 
   //Clickfunction Button by value (id)
   $(document).on("click", ".getProductsById", function (event) {
-    console.log("value clicked");
     var id = $(this).attr("value");
 
     const apiUrl = `${config.baseUrl}${config.product.findByCategory(
