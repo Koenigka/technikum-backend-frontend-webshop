@@ -2,9 +2,7 @@ package at.technikum.webshop_backend.controller;
 
 
 import at.technikum.webshop_backend.dto.CustomerOrderDto;
-import at.technikum.webshop_backend.enums.Status;
 import at.technikum.webshop_backend.model.CustomerOrder;
-import at.technikum.webshop_backend.model.Product;
 
 import at.technikum.webshop_backend.security.UserPrincipal;
 import at.technikum.webshop_backend.service.OrderService;
@@ -17,7 +15,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 

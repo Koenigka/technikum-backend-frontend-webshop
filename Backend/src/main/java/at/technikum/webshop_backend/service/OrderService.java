@@ -1,7 +1,6 @@
 package at.technikum.webshop_backend.service;
 
 import at.technikum.webshop_backend.dto.CustomerOrderDto;
-import at.technikum.webshop_backend.dto.ProductDto;
 import at.technikum.webshop_backend.enums.Status;
 import at.technikum.webshop_backend.model.*;
 import at.technikum.webshop_backend.repository.OrderItemRepository;
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.print.DocFlavor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

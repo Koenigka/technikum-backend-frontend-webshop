@@ -35,7 +35,7 @@ VALUES
 
 -- Address
 INSERT INTO address (address, city, zip)
-    VALUES
+VALUES
     ('Teststr. 1', 'Vienna', 1100);
 -- Users
 -- PW: test12!

@@ -1,4 +1,6 @@
+
 package at.technikum.webshop_backend.serviceTest;
+
 
 import at.technikum.webshop_backend.model.LoginResponse;
 import at.technikum.webshop_backend.model.User;
@@ -6,6 +8,7 @@ import at.technikum.webshop_backend.security.JwtIssuer;
 import at.technikum.webshop_backend.security.UserPrincipal;
 import at.technikum.webshop_backend.service.AuthService;
 import at.technikum.webshop_backend.service.UserService;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
