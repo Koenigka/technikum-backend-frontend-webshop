@@ -107,7 +107,6 @@ $(document).ready(function () {
               price: cartItem.price,
               quantity: cartItem.quantity,
             };
-            console.log(order);
 
             // Generate HTML for each product
             cartContentHtml += `

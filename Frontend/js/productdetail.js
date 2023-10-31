@@ -8,7 +8,6 @@ $(document).ready(function () {
   });
   // Get the value of "some_key" in eg "https://example.com/?some_key=some_value"
   let value = params.product; // "some_value"
-  console.log(value);
 
   $.ajax({
     url: config.baseUrl + config.product.findById + value,
@@ -80,8 +79,7 @@ $(document).ready(function () {
       });
   }
 
-  $(document).on("click", "#addToBasketButton", function () {
-    console.log("click");
+  $(document).on("click", "#addToBasketButton", function (event) {
 
     var accessToken = sessionStorage.getItem("accessToken");
     if (!accessToken) {
@@ -119,7 +117,7 @@ $(document).ready(function () {
             product.quantity = response.quantity;
           }
           clearToasts();
-          showProductAddedToast(product);
+          showProductAddedToast(product, event);
           // alert(`"${product.title}" added to basket!`);
         },
         error: function (error) {
