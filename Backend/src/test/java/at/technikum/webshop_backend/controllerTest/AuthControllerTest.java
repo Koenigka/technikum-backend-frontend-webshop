@@ -90,6 +90,7 @@ public class AuthControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.accessToken").value(token));
     }
 
+
     @Test
     public void testFailedAuthentication() throws Exception {
         // Mock the AuthenticationManager behavior to throw an AuthenticationException
