@@ -1,6 +1,5 @@
 package at.technikum.webshop_backend.model;
 
-import at.technikum.webshop_backend.dto.CartItemDto;
 import at.technikum.webshop_backend.dto.CustomerOrderDto;
 import at.technikum.webshop_backend.enums.Status;
 import at.technikum.webshop_backend.utils.ConvertableToDto;

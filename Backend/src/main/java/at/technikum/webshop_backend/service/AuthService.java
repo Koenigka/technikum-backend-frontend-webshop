@@ -16,6 +16,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+/**
+ * Provides authentication services. This service is responsible for handling user
+ * authentication and generating the necessary access tokens for authenticated users.
+ *
+ */
 @Service
 public class AuthService {
     private final AuthenticationManager authenticationManager;

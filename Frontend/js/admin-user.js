@@ -224,7 +224,8 @@ function addUsers(users) {
   allSearchedUsers.empty();
 
   if (users.length === 0) {
-    isActive = $("#search-status").prop("checked");
+   /*  var isActive;
+    isActive = $("#search-status").prop("checked"); */
     clearToasts();
     showErrorToast(
       `No ${statusMessage} users found with the given email or username.`
